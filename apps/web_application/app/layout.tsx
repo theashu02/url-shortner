@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Geist, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 
-const fontSans = Inter({
+const fontSans = Geist({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
-const fontHeading = Plus_Jakarta_Sans({
+const fontHeading = DM_Sans({
   subsets: ["latin"],
   variable: "--font-heading",
 });

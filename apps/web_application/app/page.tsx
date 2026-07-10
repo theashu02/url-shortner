@@ -1,67 +1,165 @@
-import Image from "next/image";
+'use client';
+
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
+import { Link2, BarChart2, Zap, Shield, Copy, Check, ArrowRight } from 'lucide-react';
+import { ModeToggle } from '@/components/mode-toggle';
 
 export default function Home() {
+  const [url, setUrl] = useState('');
+  const [shortened, setShortened] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleShorten = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!url) return;
+    setShortened(true);
+    setCopied(false);
+  };
+
+  const handleCopy = () => {
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-          style={{ width: "auto", height: "auto" }}
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="min-h-screen bg-zinc-50 dark:bg-black font-sans selection:bg-primary selection:text-primary-foreground">
+      {/* Navigation */}
+      <nav className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto max-w-6xl px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
+              <Link2 className="w-5 h-5" />
+            </div>
+            <span className="font-heading font-bold text-xl tracking-tight">MiniLink</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hidden md:block">Features</a>
+            <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hidden md:block">Pricing</a>
+            <div className="w-px h-4 bg-border hidden md:block"></div>
+            <ModeToggle />
+            <Button variant="ghost" size="sm">Log in</Button>
+            <Button size="sm">Sign up</Button>
+          </div>
+        </div>
+      </nav>
+
+      <main className="container mx-auto max-w-6xl px-4 pt-20 pb-16">
+        {/* Hero Section */}
+        <section className="flex flex-col items-center text-center space-y-8 mb-24">
+          <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
+            <span className="flex h-2 w-2 rounded-full bg-primary mr-2"></span>
+            MiniLink 2.0 is now live
+          </div>
+          
+          <h1 className="font-heading text-5xl md:text-7xl font-bold tracking-tighter max-w-3xl">
+            Short links, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blue-400 dark:to-violet-400">big results</span>.
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+            A powerful URL shortener that helps you manage, track, and optimize your links. 
+            Build your brand and engage your audience with every click.
+          </p>
+
+          {/* URL Input Form */}
+          <div className="w-full max-w-2xl mt-8">
+            <Card className="shadow-xl shadow-blue-500/5 dark:shadow-blue-500/10 border-border/50">
+              <CardContent className="p-2">
+                {!shortened ? (
+                  <form onSubmit={handleShorten} className="flex flex-col sm:flex-row gap-2">
+                    <div className="relative flex-1">
+                      <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-muted-foreground">
+                        <Link2 className="h-5 w-5" />
+                      </div>
+                      <Input 
+                        type="url" 
+                        placeholder="Paste your long link here..." 
+                        required
+                        className="pl-10 h-14 text-base bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                        value={url}
+                        onChange={(e) => setUrl(e.target.value)}
+                      />
+                    </div>
+                    <Button type="submit" size="lg" className="h-14 px-8 shrink-0">
+                      Shorten Now
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </form>
+                ) : (
+                  <div className="flex flex-col sm:flex-row items-center gap-4 p-2">
+                    <div className="flex-1 truncate px-4 py-2 bg-secondary/50 rounded-md font-mono text-sm">
+                      minilink.co/x7y9z
+                    </div>
+                    <div className="flex gap-2 w-full sm:w-auto">
+                      <Button variant="outline" className="flex-1 sm:flex-none h-12" onClick={handleCopy}>
+                        {copied ? <Check className="mr-2 h-4 w-4 text-green-500" /> : <Copy className="mr-2 h-4 w-4" />}
+                        {copied ? 'Copied!' : 'Copy'}
+                      </Button>
+                      <Button variant="secondary" className="flex-1 sm:flex-none h-12" onClick={() => { setShortened(false); setUrl(''); }}>
+                        New
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+          
+          <p className="text-sm text-muted-foreground mt-4">
+            By clicking Shorten Now, you agree to our Terms of Service.
+          </p>
+        </section>
+
+        {/* Features Section */}
+        <section className="py-12 border-t border-border/40">
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="flex flex-col space-y-3">
+              <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                <Zap className="h-6 w-6" />
+              </div>
+              <h3 className="font-heading text-xl font-bold">Lightning Fast</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Our globally distributed edge network ensures your links redirect instantly, anywhere in the world.
+              </p>
+            </div>
+            
+            <div className="flex flex-col space-y-3">
+              <div className="w-12 h-12 rounded-xl bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center text-violet-600 dark:text-violet-400">
+                <BarChart2 className="h-6 w-6" />
+              </div>
+              <h3 className="font-heading text-xl font-bold">Deep Analytics</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Track clicks, referrers, and geolocations in real-time. Make data-driven decisions for your campaigns.
+              </p>
+            </div>
+            
+            <div className="flex flex-col space-y-3">
+              <div className="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                <Shield className="h-6 w-6" />
+              </div>
+              <h3 className="font-heading text-xl font-bold">Enterprise Secure</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Advanced link filtering and automatic malware scanning keeps your audience safe from malicious destinations.
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-border/40 bg-muted/20 py-8">
+        <div className="container mx-auto max-w-6xl px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <Link2 className="w-5 h-5 text-muted-foreground" />
+            <span className="font-heading font-semibold text-muted-foreground">MiniLink</span>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} MiniLink Inc. All rights reserved.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-              style={{ width: "auto", height: "auto" }}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </footer>
     </div>
   );
 }

@@ -9,3 +9,4 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **Ask before adding.** If you are unsure whether a feature, dependency, or block of code is needed, ask the user first. Do not assume or over-engineer.
 - **Clean and readable.** Write clean, self-explanatory code so any developer can easily understand how things work without cognitive overhead.
 - **Production-Ready & Robust.** Write minimal, highly optimal code designed for production environments. Ensure the code is robust, thoroughly handles edge cases, and will not break in production.
+- **colors-guidence** use colors from the global.css so colors should be work for dark and light mode and align with ui looks smoothing and standard and beautiful.

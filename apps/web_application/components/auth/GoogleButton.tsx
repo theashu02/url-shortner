@@ -12,7 +12,7 @@ export function GoogleButton() {
   return (
     <Button
       variant="outline"
-      className="h-12 w-full px-6 rounded-md"
+      className="h-12 w-full px-6 rounded-none font-semibold uppercase tracking-wider text-xs border border-border"
       disabled={pending}
       onClick={() => start(() => { void signIn("google", { callbackUrl: "/dashboard" }); })}
     >

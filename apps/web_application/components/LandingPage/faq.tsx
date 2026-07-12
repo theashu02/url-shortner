@@ -34,19 +34,19 @@ export function FAQ() {
     <section className="py-24 px-4 md:px-6">
       <div className="container mx-auto max-w-3xl">
         <div className="text-center mb-16">
-          <h2 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-zinc-950 mb-4">
+          <h2 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
             Frequently Asked Questions
           </h2>
         </div>
 
-        <div className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-lg shadow-zinc-200/30">
+        <div className="bg-card/45 backdrop-blur-md border border-border/40 rounded-none p-6 md:p-8 shadow-sm">
           <Accordion className="w-full">
             {faqs.map((faq, index) => (
               <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="text-left font-heading text-lg font-semibold text-zinc-800 hover:text-[#4a044e] transition-colors">
+                <AccordionTrigger className="text-left font-heading text-sm font-semibold uppercase tracking-wider text-foreground hover:text-primary transition-colors">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-zinc-600 leading-relaxed text-base">
+                <AccordionContent className="text-muted-foreground leading-relaxed text-xs">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>

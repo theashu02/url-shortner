@@ -3,15 +3,15 @@ import { ArrowRight, Database, Activity, User, ExternalLink } from "lucide-react
 
 export function SpeedMatrix() {
   return (
-    <section className="py-24 px-4 md:px-6 bg-white/40">
+    <section className="py-24 px-4 md:px-6 bg-card/25 border-y border-border/10">
       <div className="container mx-auto max-w-5xl">
         <div className="flex flex-col md:flex-row items-center gap-16">
           
           <div className="flex-1 md:pr-10">
-            <h2 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-[#4a044e] mb-6">
+            <h2 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-primary mb-6">
               Why are we faster?
             </h2>
-            <p className="text-lg text-zinc-600 leading-relaxed">
+            <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
               We separate link creation from redirection. Redirect requests are served directly from Redis with sub-10ms 302 responses while analytics are processed asynchronously, ensuring every click remains extremely fast regardless of traffic volume.
             </p>
           </div>
@@ -19,47 +19,47 @@ export function SpeedMatrix() {
           <div className="flex-1 w-full max-w-md">
             <div className="flex flex-col gap-4 relative">
               {/* Connecting line */}
-              <div className="absolute left-8 top-12 bottom-12 w-0.5 bg-[#e0f2fe]" />
+              <div className="absolute left-7 top-10 bottom-10 w-0.5 bg-primary/20" />
               
               <div className="flex items-center gap-4 relative z-10">
-                <div className="w-16 h-16 rounded-2xl bg-white border border-[#e0f2fe] shadow-sm flex items-center justify-center text-zinc-400 shrink-0">
-                  <User className="h-6 w-6" />
+                <div className="w-14 h-14 rounded-none bg-card border border-border flex items-center justify-center text-muted-foreground shrink-0 shadow-sm">
+                  <User className="h-5 w-5" />
                 </div>
-                <div className="bg-white/80 backdrop-blur-sm border border-white p-4 rounded-xl shadow-sm flex-1">
-                  <p className="font-heading font-semibold text-zinc-900">User Click</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4 relative z-10">
-                <div className="w-16 h-16 rounded-2xl bg-[#4a044e] shadow-md flex items-center justify-center text-white shrink-0">
-                  <Database className="h-6 w-6" />
-                </div>
-                <div className="bg-white/80 backdrop-blur-sm border border-white p-4 rounded-xl shadow-sm flex-1">
-                  <p className="font-heading font-semibold text-zinc-900">Redis Edge Cache</p>
-                  <p className="text-xs text-zinc-500 font-mono mt-1">Sub-10ms lookup</p>
+                <div className="bg-card/65 backdrop-blur-sm border border-border/40 p-4 rounded-none shadow-sm flex-1">
+                  <p className="font-heading text-xs font-semibold uppercase tracking-wider text-foreground">User Click</p>
                 </div>
               </div>
 
               <div className="flex items-center gap-4 relative z-10">
-                <div className="w-16 h-16 rounded-2xl bg-[#eac2ff]/40 border border-[#eac2ff] flex items-center justify-center text-[#4a044e] shrink-0">
-                  <ExternalLink className="h-6 w-6" />
+                <div className="w-14 h-14 rounded-none bg-primary flex items-center justify-center text-primary-foreground shrink-0 shadow-sm">
+                  <Database className="h-5 w-5" />
                 </div>
-                <div className="bg-white/80 backdrop-blur-sm border border-white p-4 rounded-xl shadow-sm flex-1 flex justify-between items-center">
+                <div className="bg-card/65 backdrop-blur-sm border border-border/40 p-4 rounded-none shadow-sm flex-1">
+                  <p className="font-heading text-xs font-semibold uppercase tracking-wider text-foreground">Redis Edge Cache</p>
+                  <p className="text-[10px] text-muted-foreground font-mono mt-0.5">Sub-10ms lookup</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 relative z-10">
+                <div className="w-14 h-14 rounded-none bg-primary/10 border border-primary/25 flex items-center justify-center text-primary shrink-0 shadow-sm">
+                  <ExternalLink className="h-5 w-5" />
+                </div>
+                <div className="bg-card/65 backdrop-blur-sm border border-border/40 p-4 rounded-none shadow-sm flex-1 flex justify-between items-center">
                   <div>
-                    <p className="font-heading font-semibold text-zinc-900">302 Redirect</p>
-                    <p className="text-xs text-zinc-500 font-mono mt-1">Instant delivery</p>
+                    <p className="font-heading text-xs font-semibold uppercase tracking-wider text-foreground">302 Redirect</p>
+                    <p className="text-[10px] text-muted-foreground font-mono mt-0.5">Instant delivery</p>
                   </div>
-                  <ArrowRight className="h-4 w-4 text-zinc-300" />
+                  <ArrowRight className="h-4 w-4 text-muted-foreground/40" />
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 relative z-10 ml-8">
-                <div className="absolute -left-12 top-1/2 w-8 h-0.5 bg-zinc-200 border-l border-b border-transparent rounded-bl-lg" />
-                <div className="w-12 h-12 rounded-xl bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-500 shrink-0">
-                  <Activity className="h-5 w-5" />
+              <div className="flex items-center gap-4 relative z-10 ml-7">
+                <div className="absolute -left-11 top-1/2 w-8 h-0.5 bg-border border-l border-b border-transparent" />
+                <div className="w-10 h-10 rounded-none bg-muted border border-border flex items-center justify-center text-muted-foreground shrink-0 shadow-sm">
+                  <Activity className="h-4 w-4" />
                 </div>
-                <div className="bg-white/60 backdrop-blur-sm border border-white p-3 rounded-xl flex-1">
-                  <p className="font-heading text-sm font-semibold text-zinc-700">Async Analytics</p>
+                <div className="bg-card/45 backdrop-blur-sm border border-border/40 p-3 rounded-none flex-1">
+                  <p className="font-heading text-[11px] font-semibold uppercase tracking-wider text-foreground/80">Async Analytics</p>
                 </div>
               </div>
 

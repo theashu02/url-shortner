@@ -76,7 +76,7 @@ export function EmailAuthForm() {
 
       {error && <p className="text-red-500 text-sm">{error}</p>}
 
-      <Button type="submit" disabled={loading} className="w-full gap-2.5 text-sm sm:text-[13px]">
+      <Button type="submit" disabled={loading} className="w-full h-10 gap-2.5 text-sm sm:text-[13px] rounded-md">
         {loading ? "Please wait..." : mode === "signin" ? "Sign In" : "Create Account"}
         <MoveRight className="h-8 w-8" />
       </Button>

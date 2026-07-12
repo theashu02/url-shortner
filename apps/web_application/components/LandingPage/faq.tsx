@@ -40,7 +40,7 @@ export function FAQ() {
         </div>
 
         <div className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-lg shadow-zinc-200/30">
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion className="w-full">
             {faqs.map((faq, index) => (
               <AccordionItem key={index} value={`item-${index}`}>
                 <AccordionTrigger className="text-left font-heading text-lg font-semibold text-zinc-800 hover:text-[#4a044e] transition-colors">

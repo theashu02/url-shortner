@@ -9,12 +9,14 @@ global._mongooseConn = cached;
 
 export async function connectToDatabase() {
   if (cached.conn) return cached.conn;
+  
   const uri = process.env.MONGODB_URI;
   if (!uri) throw new Error("MONGODB_URI is not set");
+  
   if (!cached.promise) {
     console.log("[MongoDB] Connecting to database...");
-    cached.promise = mongoose
-      .connect(uri, { dbName: process.env.MONGODB_DB })
+    
+    cached.promise = mongoose.connect(uri, { dbName: process.env.MONGODB_DB })
       .then((m) => {
         console.log("[MongoDB] Connected successfully!");
         return m;
@@ -25,6 +27,7 @@ export async function connectToDatabase() {
         throw err;
       });
   }
+  
   cached.conn = await cached.promise;
   return cached.conn;
 }

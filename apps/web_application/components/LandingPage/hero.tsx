@@ -4,18 +4,52 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Link2, Zap } from "lucide-react";
+import { Link2, Zap, Copy, Check, ExternalLink, Loader2 } from "lucide-react";
+import { api } from "@/lib/eden";
 
 export function Hero() {
   const [url, setUrl] = useState("");
-  const [shortened, setShortened] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [shortenedUrl, setShortenedUrl] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [copied, setCopied] = useState(false);
 
-  const handleShorten = (e: React.FormEvent) => {
+  const handleShorten = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (url) {
-      setShortened(true);
-      setTimeout(() => setShortened(false), 3000); // Reset for demo
+    if (!url.trim()) return;
+
+    setLoading(true);
+    setErrorMsg("");
+    setShortenedUrl("");
+
+    let formattedUrl = url.trim();
+    if (!/^https?:\/\//i.test(formattedUrl)) {
+      formattedUrl = `https://${formattedUrl}`;
     }
+
+    try {
+      const res = await api.url.create.post({ url: formattedUrl });
+      if (res.error) {
+        const errObj = res.error.value as { message?: string };
+        setErrorMsg(errObj?.message || "Failed to shorten URL. Try again.");
+      } else if (res.data?.shortCode) {
+        const origin = typeof window !== "undefined" ? window.location.origin : "";
+        setShortenedUrl(`${origin}/${res.data.shortCode}`);
+        setUrl("");
+      }
+    } catch (err) {
+      console.error("Hero shorten error:", err);
+      setErrorMsg("An unexpected error occurred.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const copyToClipboard = () => {
+    if (!shortenedUrl) return;
+    navigator.clipboard.writeText(shortenedUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -42,7 +76,7 @@ export function Hero() {
         </p>
 
         {/* URL Shortener Form */}
-        <div className="w-full max-w-2xl relative z-10">
+        <div className="w-full max-w-2xl relative z-10 space-y-4">
           <div className="p-2 bg-card/60 backdrop-blur-xl border border-border/45 shadow-lg rounded-none">
             <form onSubmit={handleShorten} className="flex flex-col sm:flex-row gap-2 relative">
               <div className="relative flex-1">
@@ -50,7 +84,7 @@ export function Hero() {
                   <Link2 className="h-5 w-5" />
                 </div>
                 <Input
-                  type="url"
+                  type="text"
                   placeholder="Paste your long link here..."
                   required
                   value={url}
@@ -60,12 +94,49 @@ export function Hero() {
               </div>
               <Button
                 type="submit"
-                className="h-14 px-8 shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold text-xs uppercase tracking-wider rounded-none transition-colors"
+                disabled={loading || !url.trim()}
+                className="h-14 px-8 shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold text-xs uppercase tracking-wider rounded-none transition-colors gap-2"
               >
-                {shortened ? "Shortened!" : "Shorten"}
+                {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+                {loading ? "Shortening..." : "Shorten"}
               </Button>
             </form>
           </div>
+
+          {/* Shortened URL Result */}
+          {shortenedUrl && (
+            <div className="p-4 bg-card/80 backdrop-blur-xl border border-primary/30 shadow-md text-left flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in slide-in-from-bottom-2">
+              <div className="space-y-1 overflow-hidden w-full">
+                <span className="text-xs font-semibold text-primary uppercase tracking-wider block">
+                  Successfully Shortened!
+                </span>
+                <a
+                  href={shortenedUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-mono text-sm font-bold text-foreground hover:text-primary transition-colors flex items-center gap-1.5 truncate"
+                >
+                  {shortenedUrl}
+                  <ExternalLink className="h-3.5 w-3.5 shrink-0 text-primary" />
+                </a>
+              </div>
+              <Button
+                type="button"
+                onClick={copyToClipboard}
+                variant="outline"
+                className="shrink-0 h-10 px-4 gap-2 text-xs font-semibold uppercase tracking-wider border-primary/30 hover:bg-primary/10 rounded-none w-full sm:w-auto"
+              >
+                {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
+                {copied ? "Copied!" : "Copy"}
+              </Button>
+            </div>
+          )}
+
+          {errorMsg && (
+            <div className="p-3 bg-destructive/10 text-destructive text-sm font-medium border border-destructive/20 text-center">
+              {errorMsg}
+            </div>
+          )}
         </div>
       </div>
     </section>

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-const PROTECTED_ROUTES = ["/dashboard"];
+const PROTECTED_ROUTES = ["/appv1/dashboard"];
 const AUTH_ROUTES = ["/auth"];
 
 export async function proxy(req: NextRequest) {
@@ -17,14 +17,14 @@ export async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL("/auth", req.url));
   }
 
-  // Authenticated user trying to access auth page → redirect to /dashboard
+  // Authenticated user trying to access auth page → redirect to /appv1/dashboard
   if (isAuthRoute && token) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+    return NextResponse.redirect(new URL("/appv1/dashboard", req.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/auth/:path*"],
+  matcher: ["/appv1/dashboard/:path*", "/auth/:path*"],
 };

@@ -14,7 +14,7 @@ export function GoogleButton() {
       variant="outline"
       className="h-12 w-full px-6 rounded-none font-semibold uppercase tracking-wider text-xs border border-border"
       disabled={pending}
-      onClick={() => start(() => { void signIn("google", { callbackUrl: "/dashboard" }); })}
+      onClick={() => start(() => { void signIn("google", { callbackUrl: "/appv1/dashboard" }); })}
     >
       <span className="grid min-w-60 grid-cols-[1.5rem_auto] items-center justify-center gap-3">
         <span className="flex size-6 items-center justify-center justify-self-center">

@@ -1,18 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, DM_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 
-const fontSans = Geist({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
-});
-
-const fontHeading = DM_Sans({
-  subsets: ["latin"],
-  variable: "--font-heading",
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -28,10 +23,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", fontSans.variable, fontHeading.variable, fontSans.className)}
+      className={cn("h-full", "antialiased", inter.variable, inter.className)}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+      <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

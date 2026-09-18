@@ -31,15 +31,15 @@ export function Pricing() {
             <CardContent className="flex-1">
               <ul className="space-y-4 text-xs text-muted-foreground">
                 <li className="flex items-center gap-3">
-                  <Check className="h-4 w-4 text-emerald-500 shrink-0" />
+                  <Check className="h-4 w-4 text-primary shrink-0" />
                   <span>25 links / month</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Check className="h-4 w-4 text-emerald-500 shrink-0" />
+                  <Check className="h-4 w-4 text-primary shrink-0" />
                   <span>Standard analytics</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Check className="h-4 w-4 text-emerald-500 shrink-0" />
+                  <Check className="h-4 w-4 text-primary shrink-0" />
                   <span>Generic minilink.co domain</span>
                 </li>
               </ul>

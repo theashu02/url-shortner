@@ -21,10 +21,10 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden pt-32 pb-20 md:pt-48 md:pb-32">
       {/* Blurred Background Elements */}
-      <div className="absolute top-1/2 left-1/2 -z-10 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] opacity-20 dark:opacity-10 blur-[130px] pointer-events-none flex">
-        <div className="w-1/3 h-full bg-cyan-500 rounded-full" />
-        <div className="w-1/3 h-full bg-purple-500 rounded-full -translate-x-1/4" />
-        <div className="w-1/3 h-full bg-pink-500 rounded-full -translate-x-2/4" />
+      <div className="absolute top-1/2 left-1/2 -z-10 -translate-x-1/2 -translate-y-1/2 w-200 h-100 opacity-20 dark:opacity-10 blur-[130px] pointer-events-none flex">
+        <div className="w-1/3 h-full bg-primary rounded-full" />
+        <div className="w-1/3 h-full bg-secondary rounded-full -translate-x-1/4" />
+        <div className="w-1/3 h-full bg-accent rounded-full -translate-x-2/4" />
       </div>
 
       <div className="container mx-auto max-w-4xl px-4 flex flex-col items-center text-center">
@@ -37,7 +37,7 @@ export function Hero() {
           Short Links, <br className="hidden md:block" /> <span className="text-primary">Big Impact.</span>
         </h1>
 
-        <p className="max-w-2xl text-base md:text-lg text-muted-foreground mb-10 leading-relaxed font-sans">
+        <p className="max-w-2xl text-base md:text-lg text-muted-foreground mb-10 leading-relaxed">
           Enterprise-grade URL shortening with sub-millisecond redirection, advanced analytics, and custom domains. Built for speed.
         </p>
 

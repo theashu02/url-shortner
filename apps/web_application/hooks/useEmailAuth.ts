@@ -41,7 +41,7 @@ export function useEmailAuth() {
         name: form.name,
         isRegister: mode === "register" ? "true" : "false",
         redirect: false,
-        callbackUrl: "/dashboard",
+        callbackUrl: "/appv1/dashboard",
       });
 
       if (result?.error) {

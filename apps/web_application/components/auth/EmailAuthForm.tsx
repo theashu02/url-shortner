@@ -57,7 +57,7 @@ function EmailAuthFormContent() {
         />
       </div>
 
-      {error && <p className="text-red-500 text-xs font-medium">{error}</p>}
+      {error && <p className="text-destructive text-xs font-medium">{error}</p>}
 
       <Button type="submit" disabled={loading} size="lg" className="w-full h-10 gap-2 text-xs sm:text-[13px] bg-primary text-primary-foreground hover:bg-primary/90 rounded-none border-0 font-semibold tracking-wider uppercase mt-2">
         {loading ? "Please wait..." : mode === "signin" ? "Sign In" : "Create Account"}
@@ -79,9 +79,9 @@ export function EmailAuthForm() {
   return (
     <Suspense fallback={
       <div className="flex flex-col gap-4 w-full animate-pulse">
-        <div className="h-14 bg-zinc-100 dark:bg-zinc-800 rounded-none" />
-        <div className="h-14 bg-zinc-100 dark:bg-zinc-800 rounded-none" />
-        <div className="h-10 bg-zinc-200 dark:bg-zinc-700 rounded-none mt-2" />
+        <div className="h-14 bg-muted rounded-none" />
+        <div className="h-14 bg-muted rounded-none" />
+        <div className="h-10 bg-muted/80 rounded-none mt-2" />
       </div>
     }>
       <EmailAuthFormContent />

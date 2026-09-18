@@ -30,16 +30,16 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-8 flex flex-col items-start gap-6 font-sans">
+    <div className="min-h-screen bg-background p-8 flex flex-col items-start gap-6">
       <div className="flex items-center justify-between w-full max-w-xl">
         <div>
-          <h1 className="text-3xl font-bold font-heading text-primary">Dashboard</h1>
-          <p className="text-zinc-600 mt-2">Welcome to your dashboard</p>
+          <h1 className="text-3xl font-bold font-heading text-foreground">Dashboard</h1>
+          <p className="text-muted-foreground mt-2">Welcome to your dashboard</p>
         </div>
         <Button
           variant="outline"
           onClick={() => signOut({ callbackUrl: "/" })}
-          className="gap-2 text-zinc-600 hover:text-red-600 hover:border-red-200"
+          className="gap-2 text-muted-foreground hover:text-destructive hover:border-destructive/30"
         >
           <LogOut className="h-4 w-4" />
           Sign Out
@@ -56,7 +56,7 @@ export default function DashboardPage() {
       </Button>
 
       {user && (
-        <div className="w-full max-w-xl p-6 bg-card/70 backdrop-blur-md border border-border/40 rounded-2xl shadow-sm space-y-4">
+        <div className="w-full max-w-xl p-6 bg-card backdrop-blur-md border border-border rounded-2xl shadow-sm space-y-4 text-card-foreground">
           <div className="flex items-center gap-4">
             {user.image ? (
               <Image src={user.image} alt={user.name ?? "Avatar"} width={30} height={30} className="h-14 w-14 rounded-full border-2 border-primary/20" />
@@ -66,40 +66,40 @@ export default function DashboardPage() {
               </div>
             )}
             <div>
-              <p className="text-lg font-semibold text-zinc-900">{user.name ?? "—"}</p>
-              <p className="text-sm text-zinc-500 capitalize">{user.provider} account</p>
+              <p className="text-lg font-semibold text-foreground">{user.name ?? "—"}</p>
+              <p className="text-sm text-muted-foreground capitalize">{user.provider} account</p>
             </div>
           </div>
 
           <div className="grid gap-3 text-sm">
-            <div className="flex items-center gap-2 text-zinc-700">
-              <Mail className="h-4 w-4 text-zinc-400" />
+            <div className="flex items-center gap-2 text-foreground">
+              <Mail className="h-4 w-4 text-muted-foreground" />
               <span>{user.email ?? "—"}</span>
               {user.emailVerified && (
-                <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Verified</span>
+                <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">Verified</span>
               )}
             </div>
             {user.country && (
-              <div className="flex items-center gap-2 text-zinc-700">
-                <Globe className="h-4 w-4 text-zinc-400" />
+              <div className="flex items-center gap-2 text-foreground">
+                <Globe className="h-4 w-4 text-muted-foreground" />
                 <span>{user.country}</span>
               </div>
             )}
-            {user.bio && <p className="text-zinc-600 italic">&quot;{user.bio}&quot;</p>}
+            {user.bio && <p className="text-muted-foreground italic">&quot;{user.bio}&quot;</p>}
           </div>
 
-          <div className="pt-3 border-t border-zinc-100 grid grid-cols-2 gap-3 text-xs text-zinc-500">
-            <div>Login count: <span className="font-medium text-zinc-700">{user.loginCount}</span></div>
-            <div>Last login: <span className="font-medium text-zinc-700">{user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString() : "—"}</span></div>
-            <div>Handle: <span className="font-medium text-zinc-700">{user.handle ?? "Not set"}</span></div>
-            <div>Joined: <span className="font-medium text-zinc-700">{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "—"}</span></div>
+          <div className="pt-3 border-t border-border grid grid-cols-2 gap-3 text-xs text-muted-foreground">
+            <div>Login count: <span className="font-medium text-foreground">{user.loginCount}</span></div>
+            <div>Last login: <span className="font-medium text-foreground">{user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString() : "—"}</span></div>
+            <div>Handle: <span className="font-medium text-foreground">{user.handle ?? "Not set"}</span></div>
+            <div>Joined: <span className="font-medium text-foreground">{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "—"}</span></div>
           </div>
         </div>
       )}
 
       {error && (
-        <div className="p-4 bg-red-50/80 backdrop-blur-md border border-red-200 rounded-xl shadow-sm">
-          <p className="text-sm font-mono text-red-600">Error: {error}</p>
+        <div className="p-4 bg-destructive/10 backdrop-blur-md border border-destructive/20 rounded-xl shadow-sm">
+          <p className="text-sm font-mono text-destructive">Error: {error}</p>
         </div>
       )}
     </div>

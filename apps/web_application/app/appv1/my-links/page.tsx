@@ -4,28 +4,28 @@ import { useState, useRef } from "react";
 import { Link2, ArrowUp, Sparkles } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { api } from "@/lib/eden";
+import { useFetchApi } from "@/hooks/useFetchApi";
 
 export default function MyLinksPage() {
   const [url, setUrl] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleSubmit = (e?: React.FormEvent) => {
+  const { data, error, loading, execute } = useFetchApi<
+    { shortCode: string; originalUrl: string },
+    { message: string }
+  >();
+  
+  const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!url.trim()) return;
     
-    setIsLoading(true);
+    await execute(() => api.url.create.post({ url }));
     
-    // Simulate API request
-    setTimeout(() => {
-      setIsLoading(false);
-      setUrl(""); // Clear input on success
-      
-      // Reset textarea height back to single line
-      if (textareaRef.current) {
-        textareaRef.current.style.height = "auto";
-      }
-    }, 1000); 
+    setUrl(""); 
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -37,14 +37,12 @@ export default function MyLinksPage() {
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setUrl(e.target.value);
-    // Auto-expand logic
     e.target.style.height = "auto";
     e.target.style.height = `${Math.min(e.target.scrollHeight, 200)}px`;
   };
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4 sm:px-6 md:px-8 mt-16 md:mt-24 space-y-8">
-      {/* Header */}
       <div className="text-center space-y-2">
         <h2 className="text-3xl md:text-4xl font-bold flex items-center justify-center gap-2">
           <Sparkles className="h-6 w-6 text-primary" /> Shorten a link
@@ -75,17 +73,34 @@ export default function MyLinksPage() {
 
         <Button
           type="submit"
-          disabled={isLoading || !url.trim()}
+          disabled={loading || !url.trim()}
           size="icon"
           className="h-10 w-10 shrink-0 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all mb-0.5 mx-1"
         >
-          {isLoading ? (
+          {loading ? (
             <div className="h-4 w-4 border-2 border-primary-foreground/30 border-t-primary-foreground animate-spin rounded-full" />
           ) : (
             <ArrowUp className="h-5 w-5" />
           )}
         </Button>
       </form>
+
+      {/* Result Display */}
+      {data && (
+        <div className="p-4 bg-primary/10 text-primary rounded-xl border border-primary/20 text-center animate-in fade-in slide-in-from-bottom-2">
+          Successfully shortened:{" "}
+          <a href={`/${data.shortCode}`} target="_blank" rel="noreferrer" className="font-bold underline hover:text-primary/80 transition-colors">
+            {typeof window !== "undefined" ? window.location.origin : ""}/{data.shortCode}
+          </a>
+        </div>
+      )}
+      
+      {/* Error Display */}
+      {error && (
+        <div className="p-4 bg-destructive/10 text-destructive rounded-xl border border-destructive/20 text-center animate-in fade-in slide-in-from-bottom-2">
+          {error}
+        </div>
+      )}
     </div>
   );
 }

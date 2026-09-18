@@ -7,12 +7,15 @@ const getRedisUrl = () => {
   return "redis://127.0.0.1:6379";
 };
 
-const globalForRedis = globalThis as unknown as {
-  redis: Redis | undefined;
-};
+declare global {
+  var _redis: Redis | undefined;
+}
 
 const createRedisInstance = () => {
-  const client = new Redis(getRedisUrl());
+  const client = new Redis(getRedisUrl(), {
+    maxRetriesPerRequest: 3,
+    lazyConnect: false,
+  });
 
   client.on("connect", () => {
     console.log("[Redis] Connecting...");
@@ -29,11 +32,10 @@ const createRedisInstance = () => {
   return client;
 };
 
-const redis = globalForRedis.redis ?? createRedisInstance();
-
-if (process.env.NODE_ENV !== "production") {
-  globalForRedis.redis = redis;
-}
+// Always cache on globalThis so Turbopack/HMR module re-evaluations reuse the same connection
+const redis = globalThis._redis ?? createRedisInstance();
+globalThis._redis = redis;
 
 export { redis };
 export default redis;
+

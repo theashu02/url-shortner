@@ -16,7 +16,11 @@ export function useFetchApi<TSuccess, TError extends ApiError = ApiError>() {
   const [loading, setLoading] = useState(false);
 
   const isSuccessPayload = (payload: unknown): payload is TSuccess => {
-    if (payload === null || payload === undefined || typeof payload !== "object") {
+    if (
+      payload === null ||
+      payload === undefined ||
+      typeof payload !== "object"
+    ) {
       return false;
     }
 
@@ -24,14 +28,20 @@ export function useFetchApi<TSuccess, TError extends ApiError = ApiError>() {
   };
 
   const isErrorPayload = (payload: unknown): payload is TError => {
-    if (payload === null || payload === undefined || typeof payload !== "object") {
+    if (
+      payload === null ||
+      payload === undefined ||
+      typeof payload !== "object"
+    ) {
       return false;
     }
 
     return "message" in payload;
   };
 
-  const execute = async (apiCall: () => Promise<TreatyLikeResponse<TSuccess, TError>>) => {
+  const execute = async (
+    apiCall: () => Promise<TreatyLikeResponse<TSuccess, TError>>,
+  ): Promise<TSuccess | null> => {
     setLoading(true);
     setError(null);
 
@@ -41,31 +51,50 @@ export function useFetchApi<TSuccess, TError extends ApiError = ApiError>() {
 
       if (isSuccessPayload(payload)) {
         setData(payload);
-        return;
+        return payload;
       }
 
       if (isErrorPayload(payload)) {
         setError(String(payload.message ?? "An error occurred"));
-        return;
+        return null;
       }
 
       if (res.error) {
-        const errorMsg =
-          res.error.value !== undefined && res.error.value !== null
-            ? String(res.error.value)
-            : res.error.message || "An error occurred";
+        let errorMsg = res.error.message || "An error occurred";
+        if (res.error.value !== undefined && res.error.value !== null) {
+          if (
+            typeof res.error.value === "object" &&
+            res.error.value !== null &&
+            "message" in (res.error.value as Record<string, unknown>)
+          ) {
+            errorMsg = String(
+              (res.error.value as { message: unknown }).message,
+            );
+          } else if (typeof res.error.value === "string") {
+            errorMsg = res.error.value;
+          } else {
+            errorMsg = JSON.stringify(res.error.value);
+          }
+        }
         setError(errorMsg);
-        return;
+        return null;
       }
 
       setError("An error occurred");
+      return null;
     } catch (err) {
       console.error(err);
       setError("An unexpected error occurred while fetching.");
+      return null;
     } finally {
       setLoading(false);
     }
   };
 
-  return { data, error, loading, execute };
+  const reset = () => {
+    setData(null);
+    setError(null);
+  };
+
+  return { data, error, loading, execute, reset, setData };
 }

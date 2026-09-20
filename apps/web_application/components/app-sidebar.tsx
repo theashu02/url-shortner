@@ -104,7 +104,7 @@ export function AppSidebar() {
                 />
                 <span
                   className={cn(
-                    "truncate transition-all duration-300",
+                    "truncate transition-all duration-300 text-sm text-foreground",
                     isCollapsed ? "md:hidden" : "block"
                   )}
                 >

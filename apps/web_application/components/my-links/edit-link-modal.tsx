@@ -19,7 +19,7 @@ export function EditLinkModal() {
   const link = useAppSelector((s) => s.myLinks.editingLink)!;
 
   const origin = useMemo(
-    () => (typeof window !== "undefined" ? window.location.origin : "http://localhost:3000"),
+    () => (typeof window !== "undefined" ? window.location.origin : process.env.NEXTAUTH_URL ?? ""),
     [],
   );
 
@@ -40,7 +40,6 @@ export function EditLinkModal() {
     setError(null);
     try {
       await dispatch(updateLink({ id: link._id, url: formatted, slug: slug.trim() })).unwrap();
-      // On success, the thunk sets editingLink to null automatically
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {

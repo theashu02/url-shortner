@@ -12,6 +12,7 @@ import {
   ExternalLink,
   Plus,
   Loader2,
+  Share2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,7 +34,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useAppSelector, useAppDispatch } from "@/store";
-import { setEditingLink, setQrLink, deleteLink } from "@/store/my-links-slice";
+import { setEditingLink, setQrLink, setShareLink, deleteLink } from "@/store/my-links-slice";
 
 interface LinksTableProps {
   onCopy: (id: string, text: string) => void;
@@ -220,6 +221,15 @@ export const LinksTable = forwardRef<HTMLDivElement, LinksTableProps>(
                           <Button
                             variant="ghost"
                             size="icon"
+                            onClick={() => dispatch(setShareLink(link))}
+                            className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-none"
+                            title="Share"
+                          >
+                            <Share2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
                             onClick={() => dispatch(setEditingLink(link))}
                             className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-none"
                             title="Edit"
@@ -326,6 +336,15 @@ export const LinksTable = forwardRef<HTMLDivElement, LinksTableProps>(
                         className="h-7 px-2 text-xs rounded-none"
                       >
                         <QrCode className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => dispatch(setShareLink(link))}
+                        className="h-7 px-2 text-xs rounded-none"
+                        title="Share"
+                      >
+                        <Share2 className="h-3 w-3" />
                       </Button>
                       <Button
                         variant="outline"

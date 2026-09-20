@@ -19,6 +19,7 @@ export interface MyLinksState {
 
   editingLink: LinkItem | null;
   qrLink: LinkItem | null;
+  shareLink: LinkItem | null;
   deletingId: string | null;
   copiedId: string | null;
 
@@ -42,6 +43,7 @@ const initialState: MyLinksState = {
 
   editingLink: null,
   qrLink: null,
+  shareLink: null,
   deletingId: null,
   copiedId: null,
 
@@ -205,6 +207,9 @@ const myLinksSlice = createSlice({
     setQrLink(state, action: PayloadAction<LinkItem | null>) {
       state.qrLink = action.payload;
     },
+    setShareLink(state, action: PayloadAction<LinkItem | null>) {
+      state.shareLink = action.payload;
+    },
     setCopiedId(state, action: PayloadAction<string | null>) {
       state.copiedId = action.payload;
     },
@@ -276,6 +281,7 @@ export const {
   toggleSortOrder,
   setEditingLink,
   setQrLink,
+  setShareLink,
   setCopiedId,
 } = myLinksSlice.actions;
 

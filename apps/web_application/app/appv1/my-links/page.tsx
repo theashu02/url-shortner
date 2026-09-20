@@ -14,6 +14,7 @@ import { LinksSearchBar } from "@/components/my-links/links-search-bar";
 import { LinksTable } from "@/components/my-links/links-table";
 import { EditLinkModal } from "@/components/my-links/edit-link-modal";
 import { QrModal } from "@/components/my-links/qr-modal";
+import { ShareModal } from "@/components/my-links/shareModal";
 
 export default function MyLinksPage() {
   const dispatch = useAppDispatch();
@@ -27,6 +28,7 @@ export default function MyLinksPage() {
   const error = useAppSelector((s) => s.myLinks.error);
   const editingLink = useAppSelector((s) => s.myLinks.editingLink);
   const qrLink = useAppSelector((s) => s.myLinks.qrLink);
+  const shareLink = useAppSelector((s) => s.myLinks.shareLink);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -72,7 +74,7 @@ export default function MyLinksPage() {
   }, [hasMore, loading, loadingMore, page, dispatch]);
 
   return (
-    <div className="flex-1 w-full overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <div className="flex-1 w-full overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-6">
       <div className="w-full max-w-7xl mx-auto space-y-6">
         <LinksHeader />
 
@@ -99,6 +101,8 @@ export default function MyLinksPage() {
       {editingLink && <EditLinkModal />}
 
       {qrLink && <QrModal onCopy={handleCopy} />}
+
+      {shareLink && <ShareModal />}
     </div>
   );
 }

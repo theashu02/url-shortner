@@ -23,10 +23,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", inter.variable, inter.className)}
+      className={cn("h-full antialiased", inter.variable)}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
+      <body className="min-h-full flex flex-col font-inter" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

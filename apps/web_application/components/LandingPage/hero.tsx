@@ -32,7 +32,7 @@ export function Hero() {
       if (res.error) {
         const errObj = res.error.value as { message?: string };
         setErrorMsg(errObj?.message || "Failed to shorten URL. Try again.");
-      } else if (res.data?.shortCode) {
+      } else if (res.data && "shortCode" in res.data) {
         const origin = typeof window !== "undefined" ? window.location.origin : "";
         setShortenedUrl(`${origin}/${res.data.shortCode}`);
         setUrl("");

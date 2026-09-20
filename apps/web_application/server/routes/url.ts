@@ -1,82 +1,124 @@
 import { Elysia, t } from "elysia";
-import { redis } from "@/server/redis/redis";
-import { connectToDatabase } from "@/server/db/mongoose";
-import { UrlModel } from "@/server/models/url";
-import { generateShortCode } from "@/server/lib/base62";
+import { getAuthUserId } from "@/server/lib/auth";
+import {
+  createShortUrl,
+  getUserLinks,
+  updateLink,
+  deleteLink,
+} from "@/server/services/url";
 
-const CUSTOM_SLUG_RE = /^[a-zA-Z0-9-]{3,50}$/;
+export const urlRoute = new Elysia({ prefix: "/url" })
 
-export const urlRoute = new Elysia({ prefix: "/url" }).post(
-  "/create",
-  async ({ body, request, set }) => {
-    try {
-      const { url, customSlug } = body;
-      const ip = request.headers.get("x-forwarded-for") || "unknown";
-      const rateLimitKey = `ratelimit:${ip}`;
+  .post(
+    "/create",
+    async ({ body, request, set }) => {
+      try {
+        const ip = request.headers.get("x-forwarded-for") ?? "unknown";
+        const userId = await getAuthUserId(request);
+        const result = await createShortUrl(body.url, body.customSlug, userId, ip);
 
-      const requests = await redis.incr(rateLimitKey);
-      if (requests === 1) await redis.expire(rateLimitKey, 60);
+        if ("status" in result) {
+          set.status = result.status;
+          return { message: result.message };
+        }
 
-      if (requests > 100) {
-        set.status = 429;
-        return { message: "Rate limit exceeded (100 req/min)." };
+        set.status = 201;
+        return result;
+      } catch (err) {
+        console.error("[url] create:", err);
+        set.status = 500;
+        return { message: "Internal server error" };
       }
-
-      let shortCode: string;
-
-      if (customSlug) {
-        if (!CUSTOM_SLUG_RE.test(customSlug)) {
-          set.status = 400;
-          return { message: "Custom alias must be 3–50 characters (letters, numbers, hyphens only)." };
-        }
-
-        const cachedTaken = await redis.get(`slug:taken:${customSlug}`).catch(() => null);
-        if (cachedTaken) {
-          set.status = 409;
-          return { message: "This custom alias is already taken. Please choose another." };
-        }
-
-        await connectToDatabase();
-        const existsInDb = await UrlModel.exists({ shortCode: customSlug });
-        if (existsInDb) {
-          redis.set(`slug:taken:${customSlug}`, "1").catch(() => {});
-          set.status = 409;
-          return { message: "This custom alias is already taken. Please choose another." };
-        }
-        shortCode = customSlug;
-
-      } else {
-        await connectToDatabase();
-        shortCode = "";
-        for (let attempt = 0; attempt < 10; attempt++) {
-          const candidate = generateShortCode();
-          const exists = await UrlModel.exists({ shortCode: candidate });
-          if (!exists) { shortCode = candidate; break; }
-        }
-        if (!shortCode) {
-          set.status = 500;
-          return { message: "Failed to generate unique short code. Try again." };
-        }
-      }
-
-      await Promise.all([
-        UrlModel.create({ shortCode, url }),
-        redis.setex(`url:${shortCode}`, 7 * 24 * 60 * 60, url),
-        redis.set(`slug:taken:${shortCode}`, "1"),
-      ]);
-
-      set.status = 201;
-      return { shortCode, originalUrl: url };
-    } catch (err) {
-      console.error("Error creating short URL:", err);
-      set.status = 500;
-      return { message: "Internal server error" };
+    },
+    {
+      body: t.Object({
+        url: t.String({ format: "uri", error: "Invalid URL format" }),
+        customSlug: t.Optional(t.String()),
+      }),
     }
-  },
-  {
-    body: t.Object({
-      url: t.String({ format: "uri", error: "Invalid URL format" }),
-      customSlug: t.Optional(t.String()),
-    }),
-  }
-);
+  )
+
+  .get(
+    "/my-links",
+    async ({ query, request, set }) => {
+      try {
+        const userId = await getAuthUserId(request);
+        if (!userId) {
+          set.status = 401;
+          return { message: "Unauthorized. Please log in." };
+        }
+        return await getUserLinks(userId, query);
+      } catch (err) {
+        console.error("[url] my-links:", err);
+        set.status = 500;
+        return { message: "Internal server error" };
+      }
+    },
+    {
+      query: t.Object({
+        page: t.Optional(t.String()),
+        limit: t.Optional(t.String()),
+        search: t.Optional(t.String()),
+        sortBy: t.Optional(t.String()),
+        order: t.Optional(t.String()),
+      }),
+    }
+  )
+
+  .patch(
+    "/update",
+    async ({ body, request, set }) => {
+      try {
+        const userId = await getAuthUserId(request);
+        if (!userId) {
+          set.status = 401;
+          return { message: "Unauthorized. Please log in." };
+        }
+
+        const result = await updateLink(body.id, body.url, body.customSlug, userId);
+        if ("status" in result) {
+          set.status = result.status;
+          return { message: result.message };
+        }
+        return result;
+      } catch (err) {
+        console.error("[url] update:", err);
+        set.status = 500;
+        return { message: "Internal server error" };
+      }
+    },
+    {
+      body: t.Object({
+        id: t.String(),
+        url: t.String({ format: "uri", error: "Invalid URL format" }),
+        customSlug: t.Optional(t.String()),
+      }),
+    }
+  )
+
+  .delete(
+    "/remove/:id",
+    async ({ params: { id }, request, set }) => {
+      try {
+        const userId = await getAuthUserId(request);
+        if (!userId) {
+          set.status = 401;
+          return { message: "Unauthorized. Please log in." };
+        }
+
+        const result = await deleteLink(id, userId);
+        if ("status" in result) {
+          set.status = result.status;
+          return { message: result.message };
+        }
+        return result;
+      } catch (err) {
+        console.error("[url] delete:", err);
+        set.status = 500;
+        return { message: "Internal server error" };
+      }
+    },
+    {
+      params: t.Object({ id: t.String() }),
+    }
+  );

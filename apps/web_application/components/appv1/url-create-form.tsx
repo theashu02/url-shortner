@@ -10,7 +10,6 @@ import {
   Wand2,
   Star,
   QrCode,
-  Link2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -189,9 +188,7 @@ export const UrlCreateForm = memo(function UrlCreateForm({
                     {host}/
                   </span>
                   <Input
-                    id="customSlug"
                     ref={customSlugInputRef}
-                    type="text"
                     placeholder="my-brand"
                     value={customSlug}
                     onChange={handleSlugChange}
@@ -203,7 +200,7 @@ export const UrlCreateForm = memo(function UrlCreateForm({
 
             {/* Mode description hint */}
             {mode === "both" && (
-              <p className="text-xs text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 <Sparkles className="inline h-3.5 w-3.5 text-primary mr-1" />
                 This will simultaneously generate a trackable short URL and a high-resolution QR code.
               </p>
@@ -219,7 +216,7 @@ export const UrlCreateForm = memo(function UrlCreateForm({
         </form>
 
         {/* Right Column: 'Simplify your workflow' Feature Card */}
-        <div className="bg-gradient-to-br from-primary/[0.04] via-muted/30 to-background p-6 sm:p-8 flex flex-col justify-between gap-6">
+        <div className="bg-linear-to-br from-primary/4 via-muted/30 to-background p-6 sm:p-8 flex flex-col justify-between gap-6">
           <div className="space-y-5">
             {/* Sparkle Header */}
             <div>
@@ -227,7 +224,7 @@ export const UrlCreateForm = memo(function UrlCreateForm({
                 <Sparkles className="h-4 w-4 text-primary" />
                 <span>Simplify your workflow</span>
               </div>
-              <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+              <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
                 {mode === "qr"
                   ? "Generate crisp vector QR codes for print, packaging, and digital displays."
                   : "Explore smarter ways to create, customize, and track your branded links."}
@@ -239,19 +236,19 @@ export const UrlCreateForm = memo(function UrlCreateForm({
               {mode !== "qr" ? (
                 <>
                   <Button
-                    type="button"
                     variant="outline"
                     onClick={focusSlugInput}
-                    className="w-full justify-start h-10 text-sm font-medium gap-2 border-border/80 bg-card/80 hover:bg-card shadow-2xs transition-colors rounded-none px-4"
+                    size="lg"
+                    className="w-full justify-start text-sm gap-2 border-border/80 bg-card/80 hover:bg-card shadow-2xs transition-colors rounded-none px-4"
                   >
                     <Wand2 className="h-4 w-4 text-primary" />
                     <span>Personalize a short link</span>
                   </Button>
 
                   <Button
-                    type="button"
                     variant="outline"
-                    className="w-full justify-start h-10 text-sm font-medium gap-2 border-border/80 bg-card/80 hover:bg-card shadow-2xs transition-colors rounded-none px-4"
+                    size="lg"
+                    className="w-full justify-start text-sm gap-2 border-border/80 bg-card/80 hover:bg-card shadow-2xs transition-colors rounded-none px-4"
                   >
                     <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
                     <span>Make a unique link for every post</span>
@@ -260,18 +257,18 @@ export const UrlCreateForm = memo(function UrlCreateForm({
               ) : (
                 <>
                   <Button
-                    type="button"
                     variant="outline"
-                    className="w-full justify-start h-10 text-sm font-medium gap-2 border-border/80 bg-card/80 hover:bg-card shadow-2xs transition-colors rounded-none px-4"
+                    size="lg"
+                    className="w-full justify-start text-sm font-medium gap-2 border-border/80 bg-card/80 hover:bg-card shadow-2xs transition-colors rounded-none px-4"
                   >
                     <QrCode className="h-4 w-4 text-primary" />
                     <span>High-resolution vector QR</span>
                   </Button>
 
                   <Button
-                    type="button"
                     variant="outline"
-                    className="w-full justify-start h-10 text-sm font-medium gap-2 border-border/80 bg-card/80 hover:bg-card shadow-2xs transition-colors rounded-none px-4"
+                    size="lg"
+                    className="w-full justify-start text-sm font-medium gap-2 border-border/80 bg-card/80 hover:bg-card shadow-2xs transition-colors rounded-none px-4"
                   >
                     <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
                     <span>Scannable on all smartphone cameras</span>
@@ -284,8 +281,8 @@ export const UrlCreateForm = memo(function UrlCreateForm({
           {/* Upgrade CTA */}
           <div className="pt-4">
             <Button
-              type="button"
-              className="w-full h-11 font-semibold text-sm gap-2 bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs rounded-none"
+              size="lg"
+              className="w-full font-semibold text-sm gap-2 bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs rounded-none py-5"
             >
               <Crown className="h-4 w-4 text-amber-300 fill-amber-300" />
               <span>Upgrade to Create with AI</span>

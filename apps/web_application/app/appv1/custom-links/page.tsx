@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Link2, QrCode, Sparkles } from "lucide-react";
 import { api } from "@/lib/eden";
 import { useFetchApi } from "@/hooks/useFetchApi";
 import {
@@ -9,9 +8,7 @@ import {
   type CreateMode,
 } from "@/components/appv1/url-create-form";
 import { UrlResultCard } from "@/components/appv1/url-result-card";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
+import { CreateModeTabs } from "@/components/appv1/create-mode-tabs";
 
 type UrlCreated = { shortCode: string; originalUrl: string };
 type UrlError = { message: string };
@@ -50,25 +47,7 @@ export default function CustomLinksPage() {
   return (
     <div className="flex-1 w-full overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
       <div className="w-full max-w-7xl mx-auto space-y-6">
-        <Tabs
-          value={mode}
-          onValueChange={(v) => handleModeChange(v as CreateMode)}
-        >
-          <TabsList style={{ height: "3rem" }} className="gap-3">
-            <TabsTrigger value="link" className="text-md gap-2 data-active:bg-primary data-active:text-primary-foreground data-active:shadow-sm hover:data-active:text-primary-foreground px-3">
-              <Link2 />
-              Short link
-            </TabsTrigger>
-            <TabsTrigger value="qr" className="text-md gap-2 data-active:bg-primary data-active:text-primary-foreground data-active:shadow-sm hover:data-active:text-primary-foreground px-3">
-              <QrCode />
-              QR Code
-            </TabsTrigger>
-            <TabsTrigger value="both" className="text-md gap-2 data-active:bg-primary data-active:text-primary-foreground data-active:shadow-sm hover:data-active:text-primary-foreground px-3">
-              <Sparkles />
-              Link + QR Code
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <CreateModeTabs mode={mode} onModeChange={handleModeChange} />
 
         {/* Main Content Area */}
         {data ? (

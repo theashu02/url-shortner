@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,16 +11,18 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import type { LinkItem } from "./types";
+import { useAppSelector, useAppDispatch } from "@/store";
+import { setEditingLink, updateLink } from "@/store/my-links-slice";
 
-interface EditLinkModalProps {
-  link: LinkItem;
-  origin: string;
-  onClose: () => void;
-  onSave: (id: string, url: string, slug: string) => Promise<string | null>;
-}
+export function EditLinkModal() {
+  const dispatch = useAppDispatch();
+  const link = useAppSelector((s) => s.myLinks.editingLink)!;
 
-export function EditLinkModal({ link, origin, onClose, onSave }: EditLinkModalProps) {
+  const origin = useMemo(
+    () => (typeof window !== "undefined" ? window.location.origin : "http://localhost:3000"),
+    [],
+  );
+
   const [url, setUrl] = useState(link.url);
   const [slug, setSlug] = useState(link.shortCode);
   const [loading, setLoading] = useState(false);
@@ -28,15 +30,22 @@ export function EditLinkModal({ link, origin, onClose, onSave }: EditLinkModalPr
 
   const host = origin.replace(/^https?:\/\//, "");
 
+  const handleClose = () => dispatch(setEditingLink(null));
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formatted = /^https?:\/\//i.test(url.trim()) ? url.trim() : `https://${url.trim()}`;
 
     setLoading(true);
     setError(null);
-    const err = await onSave(link._id, formatted, slug.trim());
-    setLoading(false);
-    if (err) setError(err);
+    try {
+      await dispatch(updateLink({ id: link._id, url: formatted, slug: slug.trim() })).unwrap();
+      // On success, the thunk sets editingLink to null automatically
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,7 +59,7 @@ export function EditLinkModal({ link, origin, onClose, onSave }: EditLinkModalPr
                 Update destination URL and custom slug.
               </CardDescription>
             </div>
-            <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-none">
+            <Button variant="ghost" size="icon" onClick={handleClose} className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-none">
               <X className="h-4 w-4" />
             </Button>
           </div>
@@ -102,7 +111,7 @@ export function EditLinkModal({ link, origin, onClose, onSave }: EditLinkModalPr
           )}
 
           <div className="flex items-center justify-end gap-2 pt-3 border-t border-border/60">
-            <Button type="button" variant="outline" onClick={onClose} disabled={loading} className="h-9 px-4 text-xs rounded-none">
+            <Button type="button" variant="outline" onClick={handleClose} disabled={loading} className="h-9 px-4 text-xs rounded-none">
               Cancel
             </Button>
             <Button

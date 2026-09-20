@@ -4,34 +4,29 @@ import Link from "next/link";
 import { RefreshCw, Plus, Link2, MousePointerClick, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useAppSelector, useAppDispatch } from "@/store";
+import { fetchLinks } from "@/store/my-links-slice";
 
-interface LinksHeaderProps {
-  loading: boolean;
-  totalCount: number;
-  totalClicks: number;
-  loadedCount: number;
-  onRefresh: () => void;
-}
+export function LinksHeader() {
+  const dispatch = useAppDispatch();
+  const loading = useAppSelector((s) => s.myLinks.loading);
+  const totalCount = useAppSelector((s) => s.myLinks.totalCount);
+  const links = useAppSelector((s) => s.myLinks.links);
 
-export function LinksHeader({
-  loading,
-  totalCount,
-  totalClicks,
-  loadedCount,
-  onRefresh,
-}: LinksHeaderProps) {
+  const loadedCount = links.length;
+  const totalClicks = links.reduce((acc, l) => acc + (l.clicks || 0), 0);
+
   return (
     <div className="space-y-4">
-      {/* Title Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <p className="text-md text-muted-foreground">
+        <p className="text-lg text-muted-foreground">
           Manage, search, and track all your shortened URLs and QR codes.
         </p>
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
             size="sm"
-            onClick={onRefresh}
+            onClick={() => dispatch(fetchLinks({ page: 1, append: false, force: true }))}
             disabled={loading}
             className="gap-1.5 text-xs h-9 rounded-none"
           >
@@ -55,7 +50,7 @@ export function LinksHeader({
         {[
           { icon: Link2, label: "Total Links", value: totalCount },
           { icon: MousePointerClick, label: "Total Clicks", value: totalClicks },
-          { icon: Calendar, label: "Active Slugs", value: `${loadedCount} loaded`, span: true },
+          { icon: Calendar, label: "Active Links", value: `${loadedCount} loaded`, span: true },
         ].map(({ icon: Icon, label, value, span }) => (
           <Card
             key={label}
@@ -65,8 +60,8 @@ export function LinksHeader({
               <div className="h-9 w-9 bg-primary/10 text-primary flex items-center justify-center shrink-0">
                 <Icon className="h-4 w-4" />
               </div>
-              <div>
-                <p className="text-xs text-muted-foreground font-medium">{label}</p>
+              <div className="flex items-center justify-center gap-2">
+                <p className="text-lg text-muted-foreground font-medium">{label}</p>
                 <p className="text-xl font-bold text-foreground">{value}</p>
               </div>
             </div>

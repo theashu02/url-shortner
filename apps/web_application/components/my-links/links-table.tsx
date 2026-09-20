@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef } from "react";
+import { forwardRef, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Link2,
@@ -24,27 +24,40 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { LinksTableProps } from "./types";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useAppSelector, useAppDispatch } from "@/store";
+import { setEditingLink, setQrLink, deleteLink } from "@/store/my-links-slice";
+
+interface LinksTableProps {
+  onCopy: (id: string, text: string) => void;
+}
 
 export const LinksTable = forwardRef<HTMLDivElement, LinksTableProps>(
-  function LinksTable(
-    {
-      links,
-      loading,
-      loadingMore,
-      hasMore,
-      totalCount,
-      debouncedSearch,
-      copiedId,
-      deletingId,
-      origin,
-      onCopy,
-      onEdit,
-      onQr,
-      onDelete,
-    },
-    sentinelRef,
-  ) {
+  function LinksTable({ onCopy }, sentinelRef) {
+    const dispatch = useAppDispatch();
+    const links = useAppSelector((s) => s.myLinks.links);
+    const loading = useAppSelector((s) => s.myLinks.loading);
+    const loadingMore = useAppSelector((s) => s.myLinks.loadingMore);
+    const hasMore = useAppSelector((s) => s.myLinks.hasMore);
+    const totalCount = useAppSelector((s) => s.myLinks.totalCount);
+    const debouncedSearch = useAppSelector((s) => s.myLinks.debouncedSearch);
+    const copiedId = useAppSelector((s) => s.myLinks.copiedId);
+    const deletingId = useAppSelector((s) => s.myLinks.deletingId);
+
+    const [linkToDelete, setLinkToDelete] = useState<string | null>(null);
+
+    const origin = useMemo(
+      () => (typeof window !== "undefined" ? window.location.origin : process.env.NEXTAUTH_URL),
+      [],
+    );
+
     const formatDate = (iso: string) =>
       new Date(iso).toLocaleDateString(undefined, {
         month: "short",
@@ -52,8 +65,20 @@ export const LinksTable = forwardRef<HTMLDivElement, LinksTableProps>(
         year: "numeric",
       });
 
+    const handleDelete = (id: string) => {
+      setLinkToDelete(id);
+    };
+
+    const confirmDelete = () => {
+      if (linkToDelete) {
+        dispatch(deleteLink(linkToDelete));
+        setLinkToDelete(null);
+      }
+    };
+
     return (
-      <Card className="rounded-none border-border bg-card shadow-sm overflow-hidden p-0 ring-0">
+      <>
+        <Card className="rounded-none border-border bg-card shadow-sm overflow-hidden p-0 ring-0">
         {/* ── Desktop Table ── */}
         <div className="hidden md:block">
           <Table>
@@ -186,7 +211,7 @@ export const LinksTable = forwardRef<HTMLDivElement, LinksTableProps>(
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => onQr(link)}
+                            onClick={() => dispatch(setQrLink(link))}
                             className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-none"
                             title="QR Code"
                           >
@@ -195,7 +220,7 @@ export const LinksTable = forwardRef<HTMLDivElement, LinksTableProps>(
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => onEdit(link)}
+                            onClick={() => dispatch(setEditingLink(link))}
                             className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-none"
                             title="Edit"
                           >
@@ -204,10 +229,9 @@ export const LinksTable = forwardRef<HTMLDivElement, LinksTableProps>(
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => onDelete(link._id)}
+                            onClick={() => handleDelete(link._id)}
                             disabled={deletingId === link._id}
                             className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-none"
-                            title="Delete"
                           >
                             {deletingId === link._id ? (
                               <Loader2 className="h-4 w-4 animate-spin text-destructive" />
@@ -298,7 +322,7 @@ export const LinksTable = forwardRef<HTMLDivElement, LinksTableProps>(
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => onQr(link)}
+                        onClick={() => dispatch(setQrLink(link))}
                         className="h-7 px-2 text-xs rounded-none"
                       >
                         <QrCode className="h-3 w-3" />
@@ -306,7 +330,7 @@ export const LinksTable = forwardRef<HTMLDivElement, LinksTableProps>(
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => onEdit(link)}
+                        onClick={() => dispatch(setEditingLink(link))}
                         className="h-7 px-2 text-xs rounded-none"
                       >
                         <Pencil className="h-3 w-3" />
@@ -314,7 +338,7 @@ export const LinksTable = forwardRef<HTMLDivElement, LinksTableProps>(
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => onDelete(link._id)}
+                        onClick={() => handleDelete(link._id)}
                         disabled={deletingId === link._id}
                         className="h-7 px-2 text-xs text-destructive hover:bg-destructive/10 rounded-none"
                       >
@@ -340,12 +364,32 @@ export const LinksTable = forwardRef<HTMLDivElement, LinksTableProps>(
             </div>
           )}
           {!hasMore && links.length > 0 && (
-            <p className="text-xs text-muted-foreground py-1">
+            <p className="text-sm tracking-wide text-muted-foreground py-1">
               All {totalCount} links loaded
             </p>
           )}
         </div>
       </Card>
+
+      <Dialog open={!!linkToDelete} onOpenChange={(open) => !open && setLinkToDelete(null)}>
+        <DialogContent className="sm:max-w-md rounded-none border-border">
+          <DialogHeader>
+            <DialogTitle className="text-lg">Delete short link?</DialogTitle>
+            <DialogDescription className="text-md">
+              This action cannot be undone. This will permanently delete your short link and its analytics.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-3 sm:gap-2 mt-4">
+            <Button variant="outline" onClick={() => setLinkToDelete(null)} className="rounded-none">
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmDelete} className="rounded-none">
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
     );
   },
 );

@@ -35,13 +35,13 @@ export async function GET(
 
       if (!urlDoc?.url) {
         return NextResponse.redirect(
-          new URL("/?error=link_not_found", request.url)
+          new URL("/link-error?type=link_not_found", request.url)
         );
       }
 
       if (urlDoc.expiresAt && new Date(urlDoc.expiresAt) <= new Date()) {
         return NextResponse.redirect(
-          new URL("/?error=link_expired", request.url)
+          new URL("/link-error?type=link_expired", request.url)
         );
       }
 

@@ -9,3 +9,5 @@ export const SOCIAL_LOGOS = {
   telegram: "https://res.cloudinary.com/dntxrtlsj/image/upload/v1789936812/Logo_xh7d3n.svg", 
   mail: "https://res.cloudinary.com/dntxrtlsj/image/upload/v1766692665/gmail_gjz8kt.png",    
 };
+
+export const NotFoundURL = "https://res.cloudinary.com/dntxrtlsj/image/upload/v1790373595/404_faxvhq.avif"

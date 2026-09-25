@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { redis } from "@/server/redis/redis";
 import { connectToDatabase } from "@/server/db/mongoose";
 import { UrlModel } from "@/server/models/url";
+import { calculateRedisTTL } from "@/server/lib/expiration";
 import { NO_CACHE_HEADERS, resolveSafeUrl, SHORT_CODE_RE } from "@/lib/constant";
 
 function trackClick(shortCode: string): void {
@@ -38,11 +39,20 @@ export async function GET(
         );
       }
 
+      if (urlDoc.expiresAt && new Date(urlDoc.expiresAt) <= new Date()) {
+        return NextResponse.redirect(
+          new URL("/?error=link_expired", request.url)
+        );
+      }
+
       destinationUrl = urlDoc.url;
 
-      redis
-      .setex(`url:${shortCode}`, 7 * 24 * 60 * 60, destinationUrl)
-      .catch(() => {});
+      const redisTtl = calculateRedisTTL(urlDoc.expiresAt ? new Date(urlDoc.expiresAt).toISOString() : null);
+      if (redisTtl > 0) {
+        redis
+          .setex(`url:${shortCode}`, redisTtl, destinationUrl)
+          .catch(() => {});
+      }
     }
 
     const finalUrl = resolveSafeUrl(destinationUrl);

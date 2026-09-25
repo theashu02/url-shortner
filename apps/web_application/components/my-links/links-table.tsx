@@ -160,6 +160,9 @@ export const LinksTable = forwardRef<HTMLDivElement, LinksTableProps>(
                           >
                             /{link.shortCode}
                           </a>
+                          {link.expiresAt && new Date(link.expiresAt) < new Date() && (
+                            <Badge variant="destructive" className="ml-2 text-[10px] h-4 px-1 py-0 rounded-sm">Expired</Badge>
+                          )}
                           <button
                             onClick={() => onCopy(link._id, shortUrl)}
                             className="text-muted-foreground hover:text-foreground p-1 transition-colors"
@@ -227,15 +230,17 @@ export const LinksTable = forwardRef<HTMLDivElement, LinksTableProps>(
                           >
                             <Share2 className="h-4 w-4" />
                           </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => dispatch(setEditingLink(link))}
-                            className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-none"
-                            title="Edit"
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
+                          {!link.expiresAt || new Date(link.expiresAt) >= new Date() ? (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => dispatch(setEditingLink(link))}
+                              className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-none"
+                              title="Edit"
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                          ) : null}
                           <Button
                             variant="ghost"
                             size="icon"
@@ -293,6 +298,9 @@ export const LinksTable = forwardRef<HTMLDivElement, LinksTableProps>(
                       <span className="font-mono font-bold text-foreground text-sm truncate">
                         /{link.shortCode}
                       </span>
+                      {link.expiresAt && new Date(link.expiresAt) < new Date() && (
+                        <Badge variant="destructive" className="ml-2 text-[10px] h-4 px-1 py-0 rounded-sm">Expired</Badge>
+                      )}
                     </div>
                     <Badge
                       variant="secondary"
@@ -346,14 +354,16 @@ export const LinksTable = forwardRef<HTMLDivElement, LinksTableProps>(
                       >
                         <Share2 className="h-3 w-3" />
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => dispatch(setEditingLink(link))}
-                        className="h-7 px-2 text-xs rounded-none"
-                      >
-                        <Pencil className="h-3 w-3" />
-                      </Button>
+                      {!link.expiresAt || new Date(link.expiresAt) >= new Date() ? (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => dispatch(setEditingLink(link))}
+                          className="h-7 px-2 text-xs rounded-none"
+                        >
+                          <Pencil className="h-3 w-3" />
+                        </Button>
+                      ) : null}
                       <Button
                         variant="outline"
                         size="sm"

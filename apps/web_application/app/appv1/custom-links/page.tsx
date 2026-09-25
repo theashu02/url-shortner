@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { api } from "@/lib/eden";
 import { useFetchApi } from "@/hooks/useFetchApi";
 import {
@@ -9,6 +9,8 @@ import {
 } from "@/components/appv1/url-create-form";
 import { UrlResultCard } from "@/components/appv1/url-result-card";
 import { CreateModeTabs } from "@/components/appv1/create-mode-tabs";
+import { UtmParameters, type UtmParams } from "@/components/appv1/utmParameters";
+import { LinkExpiration } from "@/components/appv1/linkExpiration";
 
 type UrlCreated = { shortCode: string; originalUrl: string };
 type UrlError = { message: string };
@@ -21,6 +23,11 @@ export default function CustomLinksPage() {
     UrlError
   >();
 
+  const utmRef = useRef<UtmParams | null>(null);
+  const expiresAtRef = useRef<string | null>(null);
+
+  const [destinationUrl, setDestinationUrl] = useState("");
+
   const handleModeChange = useCallback(
     (newMode: CreateMode) => {
       setMode(newMode);
@@ -31,10 +38,13 @@ export default function CustomLinksPage() {
 
   const handleCreate = useCallback(
     async (url: string, slug: string) => {
+      setDestinationUrl(url);
       await execute(() =>
         api.url.create.post({
           url,
           ...(slug ? { customSlug: slug } : {}),
+          ...(utmRef.current ? { utmParams: utmRef.current } : {}),
+          ...(expiresAtRef.current ? { expiresAt: expiresAtRef.current } : {}),
         }),
       );
     },
@@ -65,6 +75,32 @@ export default function CustomLinksPage() {
             error={error}
             loading={loading}
           />
+        )}
+
+        {!data && (
+          <div className="w-full border border-border/60 bg-card divide-y divide-border/40">
+            {/* Section header */}
+            <div className="px-5 py-3 bg-muted/30">
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                Advanced Options
+              </p>
+            </div>
+
+            {/* UTM Parameters */}
+            <div className="px-5 py-4">
+              <UtmParameters
+                destinationUrl={destinationUrl}
+                onChange={(p) => { utmRef.current = p; }}
+              />
+            </div>
+
+            {/* Link Expiration */}
+            <div className="px-5 py-4">
+              <LinkExpiration
+                onChange={(d) => { expiresAtRef.current = d; }}
+              />
+            </div>
+          </div>
         )}
 
         <p className="text-center text-sm text-muted-foreground pt-2">

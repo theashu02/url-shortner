@@ -19,9 +19,22 @@ import { Card } from "@/components/ui/card";
 
 export type CreateMode = "link" | "qr" | "both";
 
+export interface UtmParamsBag {
+  source: string;
+  medium: string;
+  campaign: string;
+  term: string;
+  content: string;
+}
+
 interface UrlCreateFormProps {
   mode: CreateMode;
-  onSubmit: (url: string, slug: string) => Promise<void>;
+  onSubmit: (
+    url: string,
+    slug: string,
+    utmParams?: UtmParamsBag | null,
+    expiresAt?: string | null,
+  ) => Promise<void>;
   error: string | null;
   loading: boolean;
 }
@@ -49,6 +62,7 @@ export const UrlCreateForm = memo(function UrlCreateForm({
       setLongUrl("");
       setCustomSlug("");
     },
+     
     [longUrl, customSlug, loading, mode, onSubmit],
   );
 

@@ -5,5 +5,6 @@ export type LinkItem = {
   clicks: number;
   createdAt: string;
   updatedAt: string;
+  expiresAt?: string;
   __v?: number;
 };

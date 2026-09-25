@@ -15,7 +15,14 @@ export const urlRoute = new Elysia({ prefix: "/url" })
       try {
         const ip = request.headers.get("x-forwarded-for") ?? "unknown";
         const userId = await getAuthUserId(request);
-        const result = await createShortUrl(body.url, body.customSlug, userId, ip);
+        const result = await createShortUrl(
+          body.url,
+          body.customSlug,
+          userId,
+          ip,
+          body.expiresAt,
+          body.utmParams as any
+        );
 
         if ("status" in result) {
           set.status = result.status;
@@ -34,6 +41,16 @@ export const urlRoute = new Elysia({ prefix: "/url" })
       body: t.Object({
         url: t.String({ format: "uri", error: "Invalid URL format" }),
         customSlug: t.Optional(t.String()),
+        expiresAt: t.Optional(t.String()),
+        utmParams: t.Optional(
+          t.Object({
+            source: t.Optional(t.String()),
+            medium: t.Optional(t.String()),
+            campaign: t.Optional(t.String()),
+            term: t.Optional(t.String()),
+            content: t.Optional(t.String()),
+          })
+        ),
       }),
     }
   )

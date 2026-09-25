@@ -15,6 +15,14 @@ export type LinkDTO = {
   clicks: number;
   createdAt: string;
   updatedAt: string;
+  expiresAt?: string;
+  utm?: {
+    source?: string;
+    medium?: string;
+    campaign?: string;
+    term?: string;
+    content?: string;
+  };
   __v?: number;
 };
 
@@ -34,6 +42,8 @@ export function toDTO(link: any): LinkDTO {
     clicks: Number(link.clicks ?? 0),
     createdAt: link.createdAt ? new Date(link.createdAt).toISOString() : new Date().toISOString(),
     updatedAt: link.updatedAt ? new Date(link.updatedAt).toISOString() : new Date().toISOString(),
+    expiresAt: link.expiresAt ? new Date(link.expiresAt).toISOString() : undefined,
+    utm: link.utm ? { ...link.utm } : undefined,
     __v: link.__v as number | undefined,
   };
 }

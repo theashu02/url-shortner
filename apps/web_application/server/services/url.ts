@@ -2,13 +2,17 @@ import { redis } from "@/server/redis/redis";
 import { connectToDatabase } from "@/server/db/mongoose";
 import { UrlModel } from "@/server/models/url";
 import { generateShortCode } from "@/server/lib/base62";
+import { appendUtmParams, type UtmParamsInput } from "@/server/lib/utm";
+import { calculateRedisTTL } from "@/server/lib/expiration";
 import { CUSTOM_SLUG_RE, CreateResult, LinkDTO, PaginationMeta, URL_TTL_SECONDS, escapeRegex, toDTO, DeleteResult, UpdateResult } from "@/server/lib/url";
 
 export async function createShortUrl(
   url: string,
   customSlug: string | undefined,
   userId: string | null,
-  ip: string
+  ip: string,
+  expiresAtIso?: string,
+  utmParams?: UtmParamsInput
 ): Promise<CreateResult> {
   // Rate limit
   
@@ -47,13 +51,28 @@ export async function createShortUrl(
     if (!shortCode) return { status: 500, message: "Failed to generate unique short code. Try again." };
   }
 
+  const finalUrl = appendUtmParams(url, utmParams);
+  const redisTtl = calculateRedisTTL(expiresAtIso);
+  const expiresAt = expiresAtIso ? new Date(expiresAtIso) : undefined;
+
+  // Don't create if it's already expired based on TTL calculation
+  if (expiresAtIso && redisTtl <= 0) {
+    return { status: 400, message: "Expiration date must be in the future." };
+  }
+
   await Promise.all([
-    UrlModel.create({ shortCode, url, userId: userId ?? undefined }),
-    redis.setex(`url:${shortCode}`, URL_TTL_SECONDS, url),
+    UrlModel.create({ 
+      shortCode, 
+      url: finalUrl, 
+      userId: userId ?? undefined,
+      expiresAt,
+      utm: utmParams ? { ...utmParams } : undefined,
+    }),
+    redis.setex(`url:${shortCode}`, redisTtl, finalUrl),
     redis.set(`slug:taken:${shortCode}`, "1"),
   ]);
 
-  return { shortCode, originalUrl: url };
+  return { shortCode, originalUrl: finalUrl };
 }
 
 // List (paginated)

@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { ReduxProvider } from "@/store/provider";
+import { Toaster } from "@/components/ui/toast";
 
 const ubuntu = Ubuntu({
   weight: ["300", "400", "500", "700"],
@@ -35,6 +36,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <Toaster />
           <AuthProvider>
             <ReduxProvider>
               {children}

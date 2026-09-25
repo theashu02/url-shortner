@@ -1,20 +1,18 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { NotFoundURL } from "@/lib/socialLogos";
 import Image from "next/image";
+import Link from "next/link";
 
 interface LinkErrorProps {
   type: string;
 }
 
 export function LinkError({ type }: LinkErrorProps) {
-  const isExpired = type === "link_expired";
+  const isExpired = type === "link_expired"
   
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-[#e4fdb0] overflow-hidden px-6 md:px-16 relative font-ubuntu">
       <div className="max-w-350 w-full flex flex-col md:flex-row items-center justify-between gap-12 relative z-10">
         
-        {/* Left Content */}
         <div className="flex flex-col items-start gap-8 z-20 shrink-0 mt-20 md:mt-0">
           <h1 
             className="text-[#012f2c] font-black uppercase leading-[0.8] tracking-tighter m-0 p-0"
@@ -26,11 +24,12 @@ export function LinkError({ type }: LinkErrorProps) {
               <>PAGE<br/>NOT<br/>FOUND</>
             )}
           </h1>
-          <Button
-            className="rounded-full bg-black hover:bg-black/80 text-white font-bold tracking-widest uppercase px-10 py-7 text-sm ml-2 md:ml-4"
+          <Link
+            className="bg-black hover:bg-black/80 text-white font-bold tracking-widest uppercase px-10 py-4 text-sm ml-2 md:ml-4"
+            href="/"
           >
-            <Link href="/">GO HOME</Link>
-          </Button>
+            GO HOME
+          </Link>
         </div>
 
         {/* Right Content / Image */}

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Link2, Zap, Copy, Check, ExternalLink, Loader2 } from "lucide-react";
 import { api } from "@/lib/eden";
+import { toast } from "@/components/ui/toast";
 
 export function Hero() {
   const [url, setUrl] = useState("");
@@ -33,9 +34,14 @@ export function Hero() {
         const errObj = res.error.value as { message?: string };
         setErrorMsg(errObj?.message || "Failed to shorten URL. Try again.");
       } else if (res.data && "shortCode" in res.data) {
-        const origin = typeof window !== "undefined" ? window.location.origin : "";
+        const origin =
+          typeof window !== "undefined" ? window.location.origin : "";
         setShortenedUrl(`${origin}/${res.data.shortCode}`);
         setUrl("");
+        toast.add({
+          type: "success",
+          description: "Link Shortened Successfully!",
+        });
       }
     } catch (err) {
       console.error("Hero shorten error:", err);
@@ -62,23 +68,31 @@ export function Hero() {
       </div>
 
       <div className="container mx-auto max-w-4xl px-4 flex flex-col items-center text-center">
-        <Badge variant="secondary" className="mb-8 border border-primary/20 bg-primary/10 text-primary font-mono text-[10px] uppercase tracking-widest px-3 py-1 rounded-none">
+        <Badge
+          variant="secondary"
+          className="mb-8 border border-primary/20 bg-primary/10 text-primary font-mono text-[10px] uppercase tracking-widest px-3 py-1 rounded-none"
+        >
           <Zap className="mr-1 h-3.5 w-3.5 text-primary animate-pulse" />
           Powered by sub-millisecond edge routing.
         </Badge>
 
         <h1 className="font-heading text-5xl md:text-7xl font-bold tracking-tight text-foreground mb-6 leading-tight">
-          Short Links, <br className="hidden md:block" /> <span className="text-primary">Big Impact.</span>
+          Short Links, <br className="hidden md:block" />{" "}
+          <span className="text-primary">Big Impact.</span>
         </h1>
 
         <p className="max-w-2xl text-base md:text-lg text-muted-foreground mb-10 leading-relaxed">
-          Enterprise-grade URL shortening with sub-millisecond redirection, advanced analytics, and custom domains. Built for speed.
+          Enterprise-grade URL shortening with sub-millisecond redirection,
+          advanced analytics, and custom domains. Built for speed.
         </p>
 
         {/* URL Shortener Form */}
         <div className="w-full max-w-2xl relative z-10 space-y-4">
           <div className="p-2 bg-card/60 backdrop-blur-xl border border-border/45 shadow-lg rounded-none">
-            <form onSubmit={handleShorten} className="flex flex-col sm:flex-row gap-2 relative">
+            <form
+              onSubmit={handleShorten}
+              className="flex flex-col sm:flex-row gap-2 relative"
+            >
               <div className="relative flex-1">
                 <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-muted-foreground">
                   <Link2 className="h-5 w-5" />
@@ -126,7 +140,11 @@ export function Hero() {
                 variant="outline"
                 className="shrink-0 h-10 px-4 gap-2 text-xs font-semibold uppercase tracking-wider border-primary/30 hover:bg-primary/10 rounded-none w-full sm:w-auto"
               >
-                {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
+                {copied ? (
+                  <Check className="h-4 w-4 text-emerald-500" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )}
                 {copied ? "Copied!" : "Copy"}
               </Button>
             </div>

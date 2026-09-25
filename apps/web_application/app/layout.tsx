@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Ubuntu } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { ReduxProvider } from "@/store/provider";
 
-const inter = Inter({
+const ubuntu = Ubuntu({
+  weight: ["300", "400", "500", "700"],
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-ubuntu",
 });
 
 export const metadata: Metadata = {
@@ -24,10 +25,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full antialiased", inter.variable)}
+      className={cn("h-full antialiased", ubuntu.variable)}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-inter" suppressHydrationWarning>
+      <body className="min-h-full flex flex-col font-ubuntu" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

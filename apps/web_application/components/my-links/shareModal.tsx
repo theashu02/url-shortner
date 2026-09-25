@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useRef } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import { QRCodeSVG } from "qrcode.react";
 import { Copy, Download, Share } from "lucide-react";
@@ -177,7 +177,7 @@ export function ShareModal() {
                           {social.logo.dark ? (
                             <Image src={social.logo.dark} alt={social.name} width={24} height={24} className="h-6 w-6 object-contain hidden dark:block" />
                           ) : (
-                            <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary hidden dark:flex">
+                            <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary dark:flex">
                               {social.name[0]}
                             </div>
                           )}
@@ -213,7 +213,7 @@ export function ShareModal() {
               </div>
               
               <div className="w-full pt-2 flex flex-col gap-2">
-                {typeof navigator !== "undefined" && navigator.canShare && (
+                {typeof navigator !== "undefined" && navigator.canShare() && (
                   <Button
                     onClick={handleNativeShareQr}
                     className="w-full h-9 text-xs font-semibold gap-2 rounded-none bg-primary text-primary-foreground hover:bg-primary/90"

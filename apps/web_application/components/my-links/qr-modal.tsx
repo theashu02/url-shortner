@@ -7,13 +7,13 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useQrDownload } from "@/hooks/useQrDownload";
 import { useAppSelector, useAppDispatch } from "@/store";
 import { setQrLink } from "@/store/my-links-slice";
+import { truncateUrl } from "@/lib/constant";
 
 interface QrModalProps {
   onCopy: (id: string, text: string) => void;
@@ -41,9 +41,6 @@ export function QrModal({ onCopy }: QrModalProps) {
           <DialogTitle className="text-base font-bold text-foreground">
             QR Code Preview
           </DialogTitle>
-          <DialogDescription className="text-xs text-muted-foreground font-mono mt-0.5">
-            /{link.shortCode}
-          </DialogDescription>
         </DialogHeader>
 
         <div className="p-6 flex flex-col items-center space-y-4">
@@ -51,8 +48,8 @@ export function QrModal({ onCopy }: QrModalProps) {
             <QRCodeSVG ref={qrRef} value={shortUrl} size={180} level="H" marginSize={1} />
           </div>
 
-          <p className="text-xs text-muted-foreground text-center font-mono truncate max-w-full px-2">
-            {link.url}
+          <p className="text-xs text-muted-foreground text-center truncate max-w-full px-2">
+            {truncateUrl(link.url, 50)}
           </p>
 
           <div className="w-full pt-2 flex flex-col gap-2">

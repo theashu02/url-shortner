@@ -102,10 +102,6 @@ export default function CustomLinksPage() {
             </div>
           </div>
         )}
-
-        <p className="text-center text-sm text-muted-foreground pt-2">
-          Links and QR codes are active immediately after creation.
-        </p>
       </div>
     </div>
   );

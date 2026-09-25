@@ -16,3 +16,11 @@ export const NO_CACHE_HEADERS = {
   Pragma: "no-cache",
   Expires: "0",
 } as const;
+
+export const truncateUrl = (url: string, maxLength = 90) => {
+  if (url.length <= maxLength) return url;
+
+  const charsEachSide = Math.floor((maxLength - 3) / 2);
+
+  return `${url.slice(0, charsEachSide)}...${url.slice(-charsEachSide)}`;
+};

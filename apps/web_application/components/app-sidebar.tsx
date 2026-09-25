@@ -10,9 +10,18 @@ import {
   Wand2,
   Menu,
   LogOut,
+  Moon,
+  Sun,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useTheme } from "next-themes";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const routes = [
   { name: "Dashboard", href: "/appv1/dashboard", icon: LayoutDashboard },
@@ -25,6 +34,7 @@ export function AppSidebar() {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const { setTheme } = useTheme();
 
   // Close mobile sidebar on route change
   useEffect(() => {
@@ -58,7 +68,7 @@ export function AppSidebar() {
       <aside
         className={cn(
           "fixed md:relative inset-y-0 left-0 z-50 flex flex-col bg-background md:bg-transparent transition-all duration-300 ease-in-out shrink-0 border-r",
-          isCollapsed ? "md:w-16" : "md:w-52",
+          isCollapsed ? "md:w-16" : "md:w-48",
           isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
       >
@@ -116,11 +126,39 @@ export function AppSidebar() {
         </nav>
 
         {/* Footer */}
-        <div className="p-3">
+        <div className="p-3 flex flex-col gap-1">
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className={cn(
+                "w-full flex items-center gap-3 px-3 py-2.5 transition-colors text-muted-foreground hover:bg-accent hover:text-foreground group rounded-md outline-none",
+                isCollapsed && "md:justify-center md:px-0"
+              )}
+              title={isCollapsed ? "Toggle Theme" : undefined}
+            >
+              <div className="relative h-5 w-5 shrink-0 flex items-center justify-center">
+                <Sun className="h-5 w-5 transition-all rotate-0 scale-100 dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-5 w-5 transition-all rotate-90 scale-0 dark:rotate-0 dark:scale-100" />
+              </div>
+              <span
+                className={cn(
+                  "truncate font-medium transition-all duration-300 text-left",
+                  isCollapsed ? "md:hidden" : "block"
+                )}
+              >
+                Theme
+              </span>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setTheme("light")}>Light</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("dark")}>Dark</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("system")}>System</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Link
             href="/"
             className={cn(
-              "flex items-center gap-3 px-3 py-2.5 transition-colors text-muted-foreground hover:bg-destructive/10 hover:text-destructive group",
+              "flex items-center gap-3 px-3 py-2.5 transition-colors text-muted-foreground hover:bg-destructive/10 hover:text-destructive group rounded-md",
               isCollapsed && "md:justify-center md:px-0"
             )}
             title={isCollapsed ? "Back to Home" : undefined}

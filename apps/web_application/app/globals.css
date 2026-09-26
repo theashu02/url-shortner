@@ -131,3 +131,29 @@
     @apply font-ubuntu;
   }
 }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e4fdb0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d4ed9a;
+}
+
+/* Firefox fallback */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #e4fdb0 transparent;
+  }
+}

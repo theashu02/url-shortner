@@ -13,7 +13,7 @@ declare global {
 
 const createRedisInstance = () => {
   const client = new Redis(getRedisUrl(), {
-    maxRetriesPerRequest: 3,
+    maxRetriesPerRequest: null,
     lazyConnect: false,
   });
 

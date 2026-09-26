@@ -19,7 +19,7 @@ export function LinksHeader() {
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <p className="text-lg font-semibold text-foreground">
+        <p className="text-2xl font-semibold text-foreground">
           Manage, search, and track all your shortened URLs and QR codes.
         </p>
         <div className="flex items-center gap-2">

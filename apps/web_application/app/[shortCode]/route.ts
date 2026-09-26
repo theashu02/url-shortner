@@ -4,12 +4,7 @@ import { connectToDatabase } from "@/server/db/mongoose";
 import { UrlModel } from "@/server/models/url";
 import { calculateRedisTTL } from "@/server/lib/expiration";
 import { NO_CACHE_HEADERS, resolveSafeUrl, SHORT_CODE_RE } from "@/lib/constant";
-
-function trackClick(shortCode: string): void {
-  connectToDatabase()
-  .then(() => UrlModel.updateOne({ shortCode }, { $inc: { clicks: 1 } }))
-  .catch((err) => console.error("[Redirection] Click tracking error:", err));
-}
+import { trackClickAsync } from "@/server/services/clickQueue";
 
 export async function GET(
   request: NextRequest,
@@ -62,7 +57,7 @@ export async function GET(
       );
     }
 
-    trackClick(shortCode);
+    trackClickAsync(shortCode).catch((err) => console.error("[Redirection] Queue add error:", err));
 
     return NextResponse.redirect(finalUrl, {
       status: 307,

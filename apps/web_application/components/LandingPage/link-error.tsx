@@ -41,7 +41,7 @@ export function LinkError({ type }: LinkErrorProps) {
               style={{ fontSize: "clamp(300px, 50vw, 800px)" }}
               suppressHydrationWarning
             >
-              <span>4</span>
+              <span>4*4</span>
             </div>
           )}
           

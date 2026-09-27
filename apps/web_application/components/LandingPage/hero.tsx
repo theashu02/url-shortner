@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Link2, Zap, Copy, Check, ExternalLink, Loader2 } from "lucide-react";
 import { api } from "@/lib/eden";
 import { toast } from "@/components/ui/toast";
+import { urlRegex } from "@/lib/constant";
 
 export function Hero() {
   const [url, setUrl] = useState("");
@@ -18,6 +19,14 @@ export function Hero() {
   const handleShorten = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!url.trim()) return;
+
+    if (!urlRegex.test(url.trim())) {
+      toast.add({
+        type: "error",
+        description: "Please enter a valid URL!",
+      });
+      return;
+    }
 
     setLoading(true);
     setErrorMsg("");

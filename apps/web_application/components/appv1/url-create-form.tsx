@@ -1,5 +1,7 @@
 "use client";
 
+import { toast } from "@/components/ui/toast";
+
 import { memo, useState, useCallback, useRef } from "react";
 import {
   ArrowRight,
@@ -16,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { urlRegex } from "@/lib/constant";
 
 export type CreateMode = "link" | "qr" | "both";
 
@@ -55,6 +58,14 @@ export const UrlCreateForm = memo(function UrlCreateForm({
       const url = longUrl.trim();
       if (!url || loading) return;
 
+      if (!urlRegex.test(url)) {
+        toast.add({
+          type: "error",
+          description: "Please enter a valid URL!",
+        });
+        return;
+      }
+
       const formatted = /^https?:\/\//i.test(url) ? url : `https://${url}`;
       // In QR-only mode, custom slug is not used
       await onSubmit(formatted, mode === "qr" ? "" : customSlug.trim());
@@ -62,7 +73,6 @@ export const UrlCreateForm = memo(function UrlCreateForm({
       setLongUrl("");
       setCustomSlug("");
     },
-     
     [longUrl, customSlug, loading, mode, onSubmit],
   );
 
@@ -153,8 +163,6 @@ export const UrlCreateForm = memo(function UrlCreateForm({
               </Label>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Input
-                  id="longUrl"
-                  type="url"
                   required
                   autoFocus
                   placeholder={
@@ -164,12 +172,13 @@ export const UrlCreateForm = memo(function UrlCreateForm({
                   }
                   value={longUrl}
                   onChange={(e) => setLongUrl(e.target.value)}
-                  className="h-11 flex-1 bg-background border-input px-3.5 text-sm focus-visible:ring-2 focus-visible:ring-ring rounded-none"
+                  className="flex-1 bg-background border-input px-3.5 py-5 focus-visible:ring-2 focus-visible:ring-ring rounded-none"
                 />
                 <Button
                   type="submit"
+                  size="lg"
                   disabled={loading || !longUrl.trim()}
-                  className="h-11 px-6 font-semibold shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs rounded-none text-sm"
+                  className="px-6 py-5 font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs text-sm"
                 >
                   {loading ? (
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -216,7 +225,8 @@ export const UrlCreateForm = memo(function UrlCreateForm({
             {mode === "both" && (
               <p className="text-sm text-muted-foreground">
                 <Sparkles className="inline h-3.5 w-3.5 text-primary mr-1" />
-                This will simultaneously generate a trackable short URL and a high-resolution QR code.
+                This will simultaneously generate a trackable short URL and a
+                high-resolution QR code.
               </p>
             )}
 

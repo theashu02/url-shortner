@@ -24,3 +24,6 @@ export const truncateUrl = (url: string, maxLength = 90) => {
 
   return `${url.slice(0, charsEachSide)}...${url.slice(-charsEachSide)}`;
 };
+
+export const urlRegex =
+  /^(https?:\/\/)?((([a-zA-Z\d]([a-zA-Z\d-]*[a-zA-Z\d])*)\.)+[a-zA-Z]{2,}|localhost|((\d{1,3}\.){3}\d{1,3}))(:\d+)?(\/[-a-zA-Z\d%_.~+]*)*(\?[;&a-zA-Z\d%_.~+=-]*)?(#[-a-zA-Z\d_]*)?$/i;

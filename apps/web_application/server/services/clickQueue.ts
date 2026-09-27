@@ -38,6 +38,7 @@ if (!globalThis._clickWorker) {
         geo = await geoProvider.lookup(capture.ipRaw);
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { ipRaw: _, geoFromHeaders: __, ...rest } = capture;
       const enriched: EnrichedClickEvent = { ...rest, geo };
 

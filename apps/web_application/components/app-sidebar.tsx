@@ -22,6 +22,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { signOut } from "next-auth/react";
 
 const routes = [
   { name: "Dashboard", href: "/appv1/dashboard", icon: LayoutDashboard },
@@ -130,7 +131,7 @@ export function AppSidebar() {
           <DropdownMenu>
             <DropdownMenuTrigger
               className={cn(
-                "w-full flex items-center gap-3 px-3 py-2.5 transition-colors text-muted-foreground hover:bg-accent hover:text-foreground group rounded-md outline-none",
+                "w-full flex items-center gap-3 px-3 py-2.5 transition-colors text-muted-foreground hover:bg-accent hover:text-foreground group outline-none",
                 isCollapsed && "md:justify-center md:px-0"
               )}
               title={isCollapsed ? "Toggle Theme" : undefined}
@@ -157,8 +158,9 @@ export function AppSidebar() {
 
           <Link
             href="/"
+            onClick={() => signOut({ callbackUrl: "/" })}
             className={cn(
-              "flex items-center gap-3 px-3 py-2.5 transition-colors text-muted-foreground hover:bg-destructive/10 hover:text-destructive group rounded-md",
+              "flex items-center gap-3 px-3 py-2.5 transition-colors text-muted-foreground hover:bg-destructive/10 hover:text-destructive group",
               isCollapsed && "md:justify-center md:px-0"
             )}
             title={isCollapsed ? "Back to Home" : undefined}
@@ -170,7 +172,7 @@ export function AppSidebar() {
                 isCollapsed ? "md:hidden" : "block"
               )}
             >
-              Back to Home
+              Log Out
             </span>
           </Link>
         </div>

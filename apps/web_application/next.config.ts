@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  allowedDevOrigins: ["nonpresidential-lukas-postaxial.ngrok-free.dev"],
 };
 
 export default nextConfig;

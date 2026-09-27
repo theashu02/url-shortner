@@ -3,12 +3,22 @@ import { redis } from "@/server/redis/redis";
 import { connectToDatabase } from "@/server/db/mongoose";
 import { UrlModel } from "@/server/models/url";
 import { calculateRedisTTL } from "@/server/lib/expiration";
-import { NO_CACHE_HEADERS, resolveSafeUrl, SHORT_CODE_RE } from "@/lib/constant";
+import {
+  NO_CACHE_HEADERS,
+  resolveSafeUrl,
+  SHORT_CODE_RE,
+} from "@/lib/constant";
 import { trackClickAsync } from "@/server/services/clickQueue";
+import { captureVisitor } from "@/server/lib/click-capture";
+
+const CAPTURE_CONFIG = {
+  ip: { behindCloudflare: false, trustedProxyCount: 0 },
+  hashSalt: process.env.IP_HASH_SALT ?? "default-dev-salt-change-in-prod",
+};
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ shortCode: string }> }
+  { params }: { params: Promise<{ shortCode: string }> },
 ) {
   const { shortCode } = await params;
 
@@ -21,7 +31,7 @@ export async function GET(
     try {
       destinationUrl = await redis.get(`url:${shortCode}`);
     } catch {
-      console.log('Going to check URL for mongodb')
+      console.log("Going to check URL for mongodb");
     }
 
     if (!destinationUrl) {
@@ -30,19 +40,21 @@ export async function GET(
 
       if (!urlDoc?.url) {
         return NextResponse.redirect(
-          new URL("/link-error?type=link_not_found", request.url)
+          new URL("/link-error?type=link_not_found", request.url),
         );
       }
 
       if (urlDoc.expiresAt && new Date(urlDoc.expiresAt) <= new Date()) {
         return NextResponse.redirect(
-          new URL("/link-error?type=link_expired", request.url)
+          new URL("/link-error?type=link_expired", request.url),
         );
       }
 
       destinationUrl = urlDoc.url;
 
-      const redisTtl = calculateRedisTTL(urlDoc.expiresAt ? new Date(urlDoc.expiresAt).toISOString() : null);
+      const redisTtl = calculateRedisTTL(
+        urlDoc.expiresAt ? new Date(urlDoc.expiresAt).toISOString() : null,
+      );
       if (redisTtl > 0) {
         redis
           .setex(`url:${shortCode}`, redisTtl, destinationUrl)
@@ -53,11 +65,20 @@ export async function GET(
     const finalUrl = resolveSafeUrl(destinationUrl);
     if (!finalUrl) {
       return NextResponse.redirect(
-        new URL("/?error=invalid_link", request.url)
+        new URL("/?error=invalid_link", request.url),
       );
     }
 
-    trackClickAsync(shortCode).catch((err) => console.error("[Redirection] Queue add error:", err));
+    const capture = captureVisitor(
+      request.headers,
+      request.nextUrl,
+      destinationUrl,
+      CAPTURE_CONFIG,
+    );
+
+    void trackClickAsync(shortCode, capture).catch((error) => {
+      console.error("[ClickQueue]", error);
+    });
 
     return NextResponse.redirect(finalUrl, {
       status: 307,

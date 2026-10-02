@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchLinkAnalytics, clearDetailedAnalytics } from "@/store/analytics-slice";
@@ -63,19 +64,26 @@ export default function AnalyticsDetailPage() {
         >
           <ArrowLeft className="h-4 w-4 mr-2" /> Back
         </Button>
-        <div className="space-y-1.5">
-          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
-            /{shortCode}
-          </h1>
-          <a 
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 mt-2">
+          <div className="inline-flex items-center gap-2.5 px-3 py-1.5 bg-primary/10 border border-primary/20 w-fit">
+            <span className="text-xs font-semibold text-primary/80 uppercase tracking-widest">Shortcode</span>
+            <div className="h-4 w-px bg-primary/30" />
+            <h1 className="text-xs font-semibold text-primary uppercase tracking-widest">
+              {shortCode}
+            </h1>
+          </div>
+          
+          <div className="hidden sm:block h-5 w-px bg-border shrink-0" />
+          
+          <Link 
             href={data.originalUrl} 
             target="_blank" 
             rel="noopener noreferrer"
-            className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors group focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-none"
+            className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-none"
           >
             <span className="truncate max-w-70 sm:max-w-md">{data.originalUrl}</span>
-            <ExternalLink className="h-3.5 w-3.5 ml-1.5 shrink-0 group-hover:translate-x-0.5 transition-transform" />
-          </a>
+            <ExternalLink className="h-3.5 w-3.5 ml-1.5 shrink-0 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+          </Link>
         </div>
       </div>
 

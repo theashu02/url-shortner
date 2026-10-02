@@ -2,33 +2,40 @@
 
 import { AreaChart, Area, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { motion } from "framer-motion";
+import { TrendingUp } from "lucide-react";
 
 interface TimeSeriesChartProps {
   data: { date: string; count: number }[];
 }
 
 export function TimeSeriesChart({ data }: TimeSeriesChartProps) {
+  const hasData = data && data.length > 0;
+
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.1 }}>
-      <Card className="rounded-none border-border/40 shadow-sm mb-8 overflow-hidden">
-        <CardHeader>
-          <CardTitle className="text-base font-semibold">Traffic Over Time</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[300px] w-full mt-2">
+    <Card className="rounded-none border-border/40 hover:border-primary/30 transition-colors">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+        <CardTitle className="text-sm font-semibold">Traffic Over Time</CardTitle>
+        <TrendingUp className="h-3.5 w-3.5 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        {!hasData ? (
+          <div className="flex flex-col items-center justify-center h-[240px] sm:h-[280px] text-sm text-muted-foreground/70 border border-dashed border-border/50 rounded-none bg-muted/5">
+            <p>No traffic data available yet</p>
+          </div>
+        ) : (
+          <div className="h-[220px] sm:h-[260px] w-full text-muted-foreground">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={data} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.2}/>
-                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.4}/>
+                    <stop offset="95%" stopColor="var(--primary)" stopOpacity={0.05}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.4} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" opacity={0.3} />
                 <XAxis 
                   dataKey="date" 
-                  tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                  tick={{ fontSize: 11, fill: "currentColor" }}
                   axisLine={false}
                   tickLine={false}
                   dy={10}
@@ -39,39 +46,48 @@ export function TimeSeriesChart({ data }: TimeSeriesChartProps) {
                 />
                 <YAxis 
                   allowDecimals={false}
-                  tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                  tick={{ fontSize: 11, fill: "currentColor" }}
                   axisLine={false}
                   tickLine={false}
                   dx={-10}
                 />
                 <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: "hsl(var(--background))", 
-                    borderColor: "hsl(var(--border))",
-                    borderRadius: "0px",
-                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
-                    fontSize: "12px",
-                    padding: "8px 12px"
+                  content={({ active, payload, label }) => {
+                    if (active && payload && payload.length) {
+                      const displayLabel = label instanceof Date 
+                        ? label.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) 
+                        : (typeof label === 'string' || typeof label === 'number') && !isNaN(new Date(label).getTime())
+                          ? new Date(label).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+                          : String(label);
+                          
+                      return (
+                        <div className="bg-primary text-primary-foreground hover:bg-primary/90 px-3 py-2 text-xs shadow-md border border-border/10 rounded-none">
+                          <div className="opacity-90 mb-1 font-medium">{displayLabel}</div>
+                          <div className="font-bold text-sm">
+                            {payload[0].name}: {payload[0].value}
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
                   }}
-                  itemStyle={{ color: "hsl(var(--primary))", fontWeight: 600, padding: 0 }}
-                  labelStyle={{ color: "hsl(var(--muted-foreground))", marginBottom: "4px" }}
-                  cursor={{ stroke: "hsl(var(--primary))", strokeWidth: 1, strokeDasharray: "4 4", fill: "transparent" }}
+                  cursor={{ stroke: "var(--primary)", strokeWidth: 1, strokeDasharray: "4 4", fill: "transparent" }}
                 />
                 <Area
                   type="monotone"
                   dataKey="count"
                   name="Clicks"
-                  stroke="hsl(var(--primary))"
+                  stroke="var(--primary)"
                   strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#colorCount)"
-                  activeDot={{ r: 4, fill: "hsl(var(--primary))", stroke: "hsl(var(--background))", strokeWidth: 2 }}
+                  activeDot={{ r: 4, fill: "var(--primary)", stroke: "var(--card)", strokeWidth: 2 }}
                 />
               </AreaChart>
             </ResponsiveContainer>
           </div>
-        </CardContent>
-      </Card>
-    </motion.div>
+        )}
+      </CardContent>
+    </Card>
   );
 }

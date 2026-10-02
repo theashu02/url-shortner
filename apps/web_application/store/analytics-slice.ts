@@ -37,36 +37,59 @@ export const fetchAnalyticsSummary = createAsyncThunk<
   AnalyticsSummaryItem[],
   void,
   { state: RootState }
->("analytics/fetchSummary", async () => {
-  const res = await api.analytics.summary.get();
-  
-  if (Array.isArray(res.data)) {
-    return res.data as AnalyticsSummaryItem[];
+>(
+  "analytics/fetchSummary",
+  async () => {
+    const res = await api.analytics.summary.get();
+    
+    if (Array.isArray(res.data)) {
+      return res.data as AnalyticsSummaryItem[];
+    }
+    if (res.error) {
+      throw new Error(extractErrorMessage(res));
+    }
+    throw new Error("Failed to load analytics summary");
+  },
+  {
+    condition: (_, { getState }) => {
+      const { analytics } = getState();
+      // Prevent duplicate fetches if already loading
+      if (analytics.summaryLoading) {
+        return false;
+      }
+    }
   }
-  if (res.error) {
-    throw new Error(extractErrorMessage(res));
-  }
-  throw new Error("Failed to load analytics summary");
-});
+);
 
 export const fetchLinkAnalytics = createAsyncThunk<
   DetailedAnalytics,
   string,
   { state: RootState }
->("analytics/fetchDetailed", async (shortCode) => {
-  const res = await api.analytics({ shortCode }).get();
+>(
+  "analytics/fetchDetailed",
+  async (shortCode) => {
+    const res = await api.analytics({ shortCode }).get();
 
-  if (res.data && "totalClicks" in res.data) {
-    return res.data as unknown as DetailedAnalytics;
+    if (res.data && "totalClicks" in res.data) {
+      return res.data as unknown as DetailedAnalytics;
+    }
+    if (res.data && "message" in res.data) {
+      throw new Error(String((res.data as any).message));
+    }
+    if (res.error) {
+      throw new Error(extractErrorMessage(res));
+    }
+    throw new Error("Failed to load detailed analytics");
+  },
+  {
+    condition: (_, { getState }) => {
+      const { analytics } = getState();
+      if (analytics.detailedLoading) {
+        return false;
+      }
+    }
   }
-  if (res.data && "message" in res.data) {
-    throw new Error(String((res.data as any).message));
-  }
-  if (res.error) {
-    throw new Error(extractErrorMessage(res));
-  }
-  throw new Error("Failed to load detailed analytics");
-});
+);
 
 const analyticsSlice = createSlice({
   name: "analytics",

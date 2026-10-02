@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import { Globe, Smartphone, ArrowRight } from "lucide-react";
 import { AnalyticsSummaryItem } from "@/server/services/analytics";
@@ -16,6 +16,8 @@ interface AnalyticsTableProps {
 }
 
 export function AnalyticsTable({ data }: AnalyticsTableProps) {
+  const router = useRouter();
+
   return (
     <div className="border border-border rounded-none overflow-hidden">
       <Table>
@@ -36,13 +38,13 @@ export function AnalyticsTable({ data }: AnalyticsTableProps) {
             <TableRow 
               key={summary.shortCode}
               className="border-border hover:bg-muted/20 transition-colors cursor-pointer group"
-              onClick={() => window.location.href = `/appv1/analytics/${summary.shortCode}`}
+              onClick={() => router.push(`/appv1/analytics/${summary.shortCode}`)}
             >
               <TableCell className="font-medium text-sm py-3 px-4 group-hover:text-primary transition-colors whitespace-nowrap">
                 /{summary.shortCode}
               </TableCell>
               <TableCell className="text-sm text-muted-foreground py-3 px-4" title={summary.originalUrl}>
-                <div className="truncate max-w-[150px] sm:max-w-[250px] md:max-w-[350px] lg:max-w-[450px]">
+                <div className="truncate max-w-37.5 sm:max-w-62.5 md:max-w-87.5 lg:max-w-112.5">
                   {summary.originalUrl}
                 </div>
               </TableCell>
@@ -55,13 +57,13 @@ export function AnalyticsTable({ data }: AnalyticsTableProps) {
               <TableCell className="text-sm text-muted-foreground hidden sm:table-cell py-3 px-4">
                 <div className="flex items-center gap-2">
                   <Globe className="h-3 w-3 shrink-0 text-muted-foreground/70" />
-                  <span className="truncate max-w-[100px]">{summary.topCountry || "-"}</span>
+                  <span className="truncate max-w-25">{summary.topCountry || "-"}</span>
                 </div>
               </TableCell>
               <TableCell className="text-sm text-muted-foreground hidden sm:table-cell py-3 px-4">
                 <div className="flex items-center gap-2">
                   <Smartphone className="h-3 w-3 shrink-0 text-muted-foreground/70" />
-                  <span className="truncate max-w-[100px]">{summary.topDevice || "-"}</span>
+                  <span className="truncate max-w-25">{summary.topDevice || "-"}</span>
                 </div>
               </TableCell>
               <TableCell className="text-xs text-muted-foreground hidden md:table-cell py-3 px-4 whitespace-nowrap">

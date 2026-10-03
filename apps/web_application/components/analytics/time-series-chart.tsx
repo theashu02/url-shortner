@@ -19,11 +19,11 @@ export function TimeSeriesChart({ data }: TimeSeriesChartProps) {
       </CardHeader>
       <CardContent>
         {!hasData ? (
-          <div className="flex flex-col items-center justify-center h-[240px] sm:h-[280px] text-sm text-muted-foreground/70 border border-dashed border-border/50 rounded-none bg-muted/5">
+          <div className="flex flex-col items-center justify-center h-60 sm:h-70 text-sm text-muted-foreground/70 border border-dashed border-border/50 rounded-none bg-muted/5">
             <p>No traffic data available yet</p>
           </div>
         ) : (
-          <div className="h-[220px] sm:h-[260px] w-full text-muted-foreground">
+          <div className="h-55 sm:h-65 w-full text-muted-foreground">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={data} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                 <defs>
@@ -54,8 +54,8 @@ export function TimeSeriesChart({ data }: TimeSeriesChartProps) {
                 <Tooltip 
                   content={({ active, payload, label }) => {
                     if (active && payload && payload.length) {
-                      const displayLabel = label instanceof Date 
-                        ? label.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) 
+                      const displayLabel = (label as unknown) instanceof Date 
+                        ? (label as unknown as Date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) 
                         : (typeof label === 'string' || typeof label === 'number') && !isNaN(new Date(label).getTime())
                           ? new Date(label).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
                           : String(label);

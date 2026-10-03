@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchAnalyticsSummary } from "@/store/analytics-slice";
-import { AlertCircle, LayoutGrid, Table as TableIcon } from "lucide-react";
+import { AlertCircle, LayoutGrid, Table as TableIcon, Search, SearchX, ChartNoAxesCombined } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnalyticsTable } from "@/components/analytics/analytics-table";
 import { LinkSummaryCard } from "@/components/analytics/link-summary-card";
@@ -15,6 +15,17 @@ export default function AnalyticsPage() {
   const dispatch = useAppDispatch();
   const { summaryList, summaryLoading, summaryError } = useAppSelector((state) => state.analytics);
   const [viewMode, setViewMode] = useState<ViewMode>("table");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredList = useMemo(() => {
+    if (!searchQuery.trim()) return summaryList;
+    const q = searchQuery.toLowerCase();
+    return summaryList.filter(
+      (s) =>
+        s.shortCode.toLowerCase().includes(q) ||
+        s.originalUrl.toLowerCase().includes(q)
+    );
+  }, [summaryList, searchQuery]);
 
   useEffect(() => {
     dispatch(fetchAnalyticsSummary());
@@ -23,34 +34,48 @@ export default function AnalyticsPage() {
   return (
     <div className="flex-1 w-full overflow-y-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="w-full max-w-7xl mx-auto space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div className="space-y-1">
-          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
-            Analytics
-          </h1>
-          <p className="text-muted-foreground text-xs sm:text-sm max-w-xl">
-            Track clicks, visitors, and performance metrics for your short links.
-          </p>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="space-y-1">
+            <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
+              Analytics
+            </h1>
+            <p className="text-muted-foreground text-xs sm:text-sm max-w-xl">
+              Track clicks, visitors, and performance metrics for your short links.
+            </p>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <div className="relative group">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              <input
+                type="text"
+                placeholder="Search links..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="h-9 w-full sm:w-64 bg-muted/30 border border-border/50 pl-9 pr-3 text-sm rounded-none focus:outline-none focus:border-primary/50 focus:bg-background transition-colors placeholder:text-muted-foreground/50"
+              />
+            </div>
+            
+            <div className="flex items-center gap-1 bg-muted/50 border border-border/50 rounded-none p-1 shrink-0">
+              <Button
+                variant={viewMode === "table" ? "secondary" : "ghost"}
+                size="sm"
+                className="rounded-none h-7 px-3"
+                onClick={() => setViewMode("table")}
+              >
+                <TableIcon className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === "grid" ? "secondary" : "ghost"}
+                size="sm"
+                className="rounded-none h-7 px-3"
+                onClick={() => setViewMode("grid")}
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-1 bg-muted/50 border border-border/50 rounded-none p-1">
-          <Button
-            variant={viewMode === "table" ? "secondary" : "ghost"}
-            size="sm"
-            className="rounded-none h-8 px-3"
-            onClick={() => setViewMode("table")}
-          >
-            <TableIcon className="h-4 w-4" />
-          </Button>
-          <Button
-            variant={viewMode === "grid" ? "secondary" : "ghost"}
-            size="sm"
-            className="rounded-none h-8 px-3"
-            onClick={() => setViewMode("grid")}
-          >
-            <LayoutGrid className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
 
       {summaryError && (
         <div className="flex items-start gap-3 p-3 bg-destructive/5 border border-destructive/20 rounded-none">
@@ -111,25 +136,35 @@ export default function AnalyticsPage() {
       ) : (
         <>
           {viewMode === "table" ? (
-            <AnalyticsTable data={summaryList} />
+            <AnalyticsTable data={filteredList} />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {summaryList.map((summary) => (
+              {filteredList.map((summary) => (
                 <LinkSummaryCard key={summary.shortCode} summary={summary} />
               ))}
             </div>
           )}
 
-          {summaryList.length === 0 && !summaryLoading && (
-            <div className="flex flex-col items-center justify-center py-12 md:py-16 px-4 border border-dashed border-border/60 rounded-none bg-muted/5">
-              <div className="text-center space-y-2 max-w-md">
-                <p className="text-sm font-medium text-muted-foreground">
-                  No analytics data available
+          {filteredList.length === 0 && !summaryLoading && (
+            <div className="flex flex-col items-center justify-center py-24 px-4 gap-4">
+              {searchQuery ? (
+                <SearchX className="h-12 w-12 text-muted-foreground/30" strokeWidth={1} />
+              ) : (
+                <ChartNoAxesCombined className="h-12 w-12 text-primary/40" strokeWidth={1} />
+              )}
+              <div className="text-center space-y-1.5 max-w-sm">
+                <p className="text-lg font-medium text-foreground tracking-tight">
+                  {searchQuery ? "No results found" : "No analytics data available"}
                 </p>
-                <p className="text-xs text-muted-foreground/70">
-                  Create a short link to start tracking clicks and visitor insights.
+                <p className="text-md text-muted-foreground">
+                  {searchQuery ? `We couldn't find any links matching "${searchQuery}".` : "Create a short link to start tracking clicks, locations, and visitor insights."}
                 </p>
               </div>
+              {searchQuery && (
+                <Button variant="outline" size="sm" onClick={() => setSearchQuery("")} className="mt-2 text-muted-foreground hover:text-foreground">
+                  Clear search
+                </Button>
+              )}
             </div>
           )}
         </>

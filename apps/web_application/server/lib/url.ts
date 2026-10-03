@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /** Shared constants for URL shortening logic */
 
-export const CUSTOM_SLUG_RE = /^[a-zA-Z0-9-]{3,50}$/;
+export const CUSTOM_SLUG_RE = /^[a-zA-Z0-9_-]{3,32}$/;
 export const URL_TTL_SECONDS = 7 * 24 * 60 * 60; // 7 days
 
 export function escapeRegex(str: string): string {

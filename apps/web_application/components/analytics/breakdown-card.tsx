@@ -60,7 +60,7 @@ export function BreakdownCard({
                       title={item.id}
                     >
                       {index === 0 && sortedData.length > 1 && (
-                        <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary mr-2 translate-y-[-0.5px]" />
+                        <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary mr-2 translate-y-[-0.5px]"/>
                       )}
                       {item.id}
                     </span>

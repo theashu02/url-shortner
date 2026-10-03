@@ -76,9 +76,11 @@ export const UrlCreateForm = memo(function UrlCreateForm({
     [longUrl, customSlug, loading, mode, onSubmit],
   );
 
+  const SLUG_MAX = 32;
+
   const handleSlugChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setCustomSlug(e.target.value.replace(/[^a-zA-Z0-9-]/g, "").slice(0, 50));
+      setCustomSlug(e.target.value.replace(/[^a-zA-Z0-9_-]/g, ""));
     },
     [],
   );
@@ -205,19 +207,43 @@ export const UrlCreateForm = memo(function UrlCreateForm({
                       (optional)
                     </span>
                   </Label>
+                  {customSlug.length > 0 && (
+                    <span
+                      className={`text-[11px] tabular-nums ${
+                        customSlug.length >= SLUG_MAX
+                          ? "text-destructive font-medium"
+                          : customSlug.length >= SLUG_MAX - 5
+                          ? "text-amber-500"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      {customSlug.length}/{SLUG_MAX}
+                    </span>
+                  )}
                 </div>
-                <div className="flex h-11 border border-input bg-muted/20 overflow-hidden focus-within:ring-2 focus-within:ring-ring transition-shadow rounded-none">
+                <div
+                  className={`flex h-11 border bg-muted/20 overflow-hidden focus-within:ring-2 transition-shadow rounded-none ${
+                    customSlug.length >= SLUG_MAX
+                      ? "border-destructive/60 focus-within:ring-destructive/40"
+                      : "border-input focus-within:ring-ring"
+                  }`}
+                >
                   <span className="flex items-center px-3.5 border-r border-border bg-muted/50 text-muted-foreground text-xs font-mono select-none shrink-0">
                     {host}/
                   </span>
                   <Input
+                    id="customSlug"
                     ref={customSlugInputRef}
                     placeholder="my-brand"
                     value={customSlug}
                     onChange={handleSlugChange}
+                    maxLength={SLUG_MAX}
                     className="flex-1 h-full border-0 bg-transparent px-3 text-sm shadow-none focus-visible:ring-0 focus-visible:border-0 dark:bg-transparent placeholder:text-muted-foreground/50 rounded-none"
                   />
                 </div>
+                <p className="text-sm text-muted-foreground/60">
+                  Letters, numbers, hyphens and underscores only · max {SLUG_MAX} chars
+                </p>
               </div>
             )}
 

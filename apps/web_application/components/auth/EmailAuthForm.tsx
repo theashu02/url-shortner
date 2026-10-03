@@ -33,7 +33,7 @@ function EmailAuthFormContent() {
             onChange={handleInputChange("name")}
             required
             autoComplete="name"
-            className="h-13 text-base font-semibold px-4 rounded-none border-2 border-line bg-background"
+            className="h-13 text-lg md:text-xl font-semibold px-4 rounded-none border-2 border-line bg-background"
           />
         </div>
       )}
@@ -47,7 +47,7 @@ function EmailAuthFormContent() {
           onChange={handleInputChange("email")}
           required
           autoComplete="email"
-          className="h-13 text-base font-semibold px-4 rounded-none border-2 border-line bg-background"
+          className="h-13 text-lg md:text-lg font-semibold px-4 rounded-none border-2 border-line bg-background"
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -61,7 +61,7 @@ function EmailAuthFormContent() {
           required
           minLength={8}
           autoComplete={mode === "register" ? "new-password" : "current-password"}
-          className="h-13 text-base font-semibold px-4 rounded-none border-2 border-line bg-background"
+          className="h-13 text-lg md:text-xl font-semibold px-4 rounded-none border-2 border-line bg-background"
         />
       </div>
 

@@ -102,7 +102,7 @@ export function Hero() {
                 required
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                className="flex-1 bg-transparent border-0 focus-visible:ring-0 shadow-none text-chakra-ink font-semibold text-lg h-14 px-4 placeholder:text-chakra-ink/50 placeholder:font-normal rounded-none"
+                className="flex-1 bg-transparent border-0 focus-visible:ring-0 shadow-none text-chakra-ink font-semibold text-lg md:text-xl h-14 px-4 placeholder:text-chakra-ink/50 placeholder:font-normal rounded-none"
               />
               <Button
                 type="submit"

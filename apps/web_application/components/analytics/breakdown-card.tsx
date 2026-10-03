@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BreakdownItem } from "@/server/services/analytics";
+import { GlobeOff, Trophy } from 'lucide-react'
 
 interface BreakdownCardProps {
   title: string;
@@ -28,7 +29,7 @@ export function BreakdownCard({ title, data, emptyMessage = "No data available" 
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-semibold tracking-tight">{title}</CardTitle>
           {total > 0 && (
-            <div className="text-xs text-muted-foreground font-medium tabular-nums">
+            <div className="text-sm text-muted-foreground font-medium tabular-nums">
               {total.toLocaleString()} total
             </div>
           )}
@@ -38,9 +39,7 @@ export function BreakdownCard({ title, data, emptyMessage = "No data available" 
         {data.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full min-h-35 gap-2">
             <div className="w-12 h-12 rounded-full bg-muted/30 flex items-center justify-center">
-              <svg className="w-6 h-6 text-muted-foreground/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
+              <GlobeOff height={50} width={50} strokeWidth={1} className="text-primary"/>
             </div>
             <span className="text-sm text-muted-foreground/70">{emptyMessage}</span>
           </div>
@@ -57,17 +56,17 @@ export function BreakdownCard({ title, data, emptyMessage = "No data available" 
                   <div className="flex items-center justify-between text-sm mb-1.5">
                     <div className="flex items-center gap-2 flex-1 min-w-0">
                       {isTop && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_currentColor]" />
+                        <Trophy height={20} width={20} strokeWidth={2} className="text-amber-600 dark:text-amber-400"/>
                       )}
                       <span className="font-medium text-foreground truncate" title={item.id}>
                         {item.id}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 ml-2">
-                      <span className="text-muted-foreground whitespace-nowrap text-xs tabular-nums font-medium">
+                      <span className="text-foreground whitespace-nowrap text-lg tabular-nums font-medium">
                         {item.count.toLocaleString()}
                       </span>
-                      <span className="text-muted-foreground/40 text-xs tabular-nums">
+                      <span className="text-foreground/90 text-xs tabular-nums">
                         {percentage}%
                       </span>
                     </div>

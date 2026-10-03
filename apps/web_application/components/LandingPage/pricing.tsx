@@ -1,100 +1,99 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import Link from "next/link";
 import { Check } from "lucide-react";
+import { ScrollReveal } from "./scroll-reveal";
 
 export function Pricing() {
   return (
-    <section id="pricing" className="py-24 px-4 md:px-6">
-      <div className="container mx-auto max-w-5xl">
-        <div className="text-center mb-16">
-          <h2 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
-            Simple, transparent pricing
-          </h2>
-          <p className="text-sm md:text-base text-muted-foreground">
-            Start for free, upgrade when you need more power.
-          </p>
-        </div>
+    <section id="pricing" className="py-32 px-4 md:px-8 bg-chakra-ink">
+      <div className="container mx-auto max-w-6xl">
+        <ScrollReveal>
+          <div className="text-center mb-24">
+            <h2 className="font-display font-bold text-5xl md:text-8xl text-on-ink mb-6 uppercase tracking-tighter leading-[0.9]">
+              SIMPLE, TRANSPARENT <br />
+              <span className="text-saffron">PRICING</span>
+            </h2>
+          </div>
+        </ScrollReveal>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          
+        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+
           {/* Free Plan */}
-          <Card className="bg-card/45 backdrop-blur-md border border-border/40 shadow-sm flex flex-col rounded-none">
-            <CardHeader>
-              <CardTitle className="font-heading text-2xl text-foreground">Free</CardTitle>
-              <CardDescription>Perfect for personal projects and testing.</CardDescription>
-              <div className="mt-4 flex items-baseline text-5xl font-extrabold text-primary">
-                $0
-                <span className="ml-1 text-sm font-medium text-muted-foreground">/mo</span>
+          <ScrollReveal delay={100}>
+            <div className="bg-paper border-4 border-line p-8 rounded-none flex flex-col hover:border-saffron transition-all duration-300 shadow-hard h-full">
+              <div>
+                <h3 className="font-display font-bold text-4xl text-chakra-ink uppercase tracking-wider mb-2">Free</h3>
+                <p className="text-chakra-ink/60 font-bold">Perfect for personal projects and testing.</p>
+                <div className="mt-8 mb-8 flex items-baseline text-6xl font-display font-bold text-chakra-ink">
+                  $0
+                  <span className="ml-2 text-xl text-chakra-ink/60 tracking-normal font-bold font-sans">/mo</span>
+                </div>
               </div>
-            </CardHeader>
-            <CardContent className="flex-1">
-              <ul className="space-y-4 text-xs text-muted-foreground">
-                <li className="flex items-center gap-3">
-                  <Check className="h-4 w-4 text-primary shrink-0" />
-                  <span>25 links / month</span>
+
+              <ul className="space-y-6 flex-1 mb-10">
+                <li className="flex items-center gap-4 text-chakra-ink font-bold text-lg">
+                  <div className="bg-india-green p-1 rounded-none"><Check className="h-5 w-5 text-on-green" /></div>
+                  25 links / month
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="h-4 w-4 text-primary shrink-0" />
-                  <span>Standard analytics</span>
+                <li className="flex items-center gap-4 text-chakra-ink font-bold text-lg">
+                  <div className="bg-india-green p-1 rounded-none"><Check className="h-5 w-5 text-on-green" /></div>
+                  Standard analytics
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="h-4 w-4 text-primary shrink-0" />
-                  <span>Generic minilink.co domain</span>
+                <li className="flex items-center gap-4 text-chakra-ink font-bold text-lg">
+                  <div className="bg-india-green p-1 rounded-none"><Check className="h-5 w-5 text-on-green" /></div>
+                  Generic minilink.co domain
                 </li>
               </ul>
-            </CardContent>
-            <CardFooter>
-              <Button variant="outline" className="w-full h-12 rounded-none text-xs uppercase tracking-wider font-semibold border-border bg-transparent hover:bg-muted text-foreground">
+
+              <Link href="/auth" className="inline-flex items-center justify-center w-full h-16 rounded-none text-lg font-bold uppercase tracking-wider border-4 border-chakra-ink bg-paper hover:bg-chakra-ink hover:text-on-ink text-chakra-ink transition-all">
                 Get Started for Free
-              </Button>
-            </CardFooter>
-          </Card>
- 
-          {/* Pro Plan */}
-          <Card className="bg-primary text-primary-foreground border border-primary/20 shadow-xl shadow-primary/10 flex flex-col relative overflow-hidden rounded-none">
-            <div className="absolute top-0 right-0 bg-primary-foreground text-primary text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-none">
-              RECOMMENDED
+              </Link>
             </div>
-            <CardHeader>
-              <CardTitle className="font-heading text-2xl text-primary-foreground">Pro</CardTitle>
-              <CardDescription className="text-primary-foreground/80">For professionals and growing teams.</CardDescription>
-              <div className="mt-4 flex items-baseline text-5xl font-extrabold text-primary-foreground">
-                $12
-                <span className="ml-1 text-sm font-medium text-primary-foreground/70">/mo</span>
+          </ScrollReveal>
+
+          {/* Pro Plan */}
+          <ScrollReveal delay={200}>
+            <div className="bg-saffron border-4 border-line p-8 rounded-none flex flex-col relative transform md:-translate-y-4 shadow-hard h-full">
+              <div className="absolute top-0 right-8 -translate-y-1/2 bg-chakra-ink text-on-ink text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-none border-2 border-line">
+                Recommended
               </div>
-            </CardHeader>
-            <CardContent className="flex-1">
-              <ul className="space-y-4 text-xs text-primary-foreground/90">
-                <li className="flex items-center gap-3">
-                  <Check className="h-4 w-4 text-primary-foreground shrink-0" />
-                  <span className="font-medium">5,000 links / month</span>
+              <div>
+                <h3 className="font-display font-bold text-4xl text-on-saffron uppercase tracking-wider mb-2">Pro</h3>
+                <p className="text-on-saffron/80 font-bold">For professionals and growing teams.</p>
+                <div className="mt-8 mb-8 flex items-baseline text-6xl font-display font-bold text-on-saffron">
+                  $12
+                  <span className="ml-2 text-xl text-on-saffron/60 tracking-normal font-bold font-sans">/mo</span>
+                </div>
+              </div>
+
+              <ul className="space-y-6 flex-1 mb-10">
+                <li className="flex items-center gap-4 text-on-saffron font-bold text-lg">
+                  <div className="bg-chakra-ink/10 p-1 rounded-none"><Check className="h-5 w-5 text-on-saffron" /></div>
+                  5,000 links / month
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="h-4 w-4 text-primary-foreground shrink-0" />
-                  <span className="font-medium">Advanced analytics</span>
+                <li className="flex items-center gap-4 text-on-saffron font-bold text-lg">
+                  <div className="bg-chakra-ink/10 p-1 rounded-none"><Check className="h-5 w-5 text-on-saffron" /></div>
+                  Advanced analytics
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="h-4 w-4 text-primary-foreground shrink-0" />
-                  <span className="font-medium">Custom domains</span>
+                <li className="flex items-center gap-4 text-on-saffron font-bold text-lg">
+                  <div className="bg-chakra-ink/10 p-1 rounded-none"><Check className="h-5 w-5 text-on-saffron" /></div>
+                  Custom domains
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="h-4 w-4 text-primary-foreground shrink-0" />
-                  <span className="font-medium">API access</span>
+                <li className="flex items-center gap-4 text-on-saffron font-bold text-lg">
+                  <div className="bg-chakra-ink/10 p-1 rounded-none"><Check className="h-5 w-5 text-on-saffron" /></div>
+                  API access
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="h-4 w-4 text-primary-foreground shrink-0" />
-                  <span className="font-medium">Priority support</span>
+                <li className="flex items-center gap-4 text-on-saffron font-bold text-lg">
+                  <div className="bg-chakra-ink/10 p-1 rounded-none"><Check className="h-5 w-5 text-on-saffron" /></div>
+                  Priority support
                 </li>
               </ul>
-            </CardContent>
-            <CardFooter>
-              <Button className="w-full h-12 rounded-none text-xs uppercase tracking-wider font-semibold bg-primary-foreground text-primary hover:bg-primary-foreground/90 border-0">
+
+              <Link href="/auth" className="inline-flex items-center justify-center w-full h-16 rounded-none text-lg font-bold uppercase tracking-wider bg-chakra-ink text-on-ink hover:bg-chakra-ink/90 border-4 border-chakra-ink transition-all">
                 Upgrade to Pro
-              </Button>
-            </CardFooter>
-          </Card>
- 
+              </Link>
+            </div>
+          </ScrollReveal>
+
         </div>
       </div>
     </section>

@@ -10,6 +10,20 @@
   --font-ubuntu: var(--font-ubuntu);
   --font-mono: var(--font-mono);
   --font-heading: var(--font-ubuntu);
+  --font-display: var(--font-ubuntu);
+  /* Tiranga (Indian flag) palette — single source of truth, no hardcoded colors in components */
+  --color-saffron: var(--saffron);
+  --color-saffron-deep: var(--saffron-deep);
+  --color-on-saffron: var(--on-saffron);
+  --color-india-green: var(--india-green);
+  --color-on-green: var(--on-green);
+  --color-chakra: var(--chakra);
+  --color-on-chakra: var(--on-chakra);
+  --color-chakra-ink: var(--chakra-ink);
+  --color-on-ink: var(--on-ink);
+  --color-line: var(--line);
+  --color-hard-shadow: var(--hard-shadow);
+  --color-paper: var(--paper);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,6 +63,19 @@
 }
 
 :root {
+  /* Tiranga palette — light mode */
+  --saffron: #FF9933;
+  --saffron-deep: #D96F00;
+  --on-saffron: #231100;
+  --india-green: #138808;
+  --on-green: #FFFFFF;
+  --chakra: #06038D;
+  --on-chakra: #FFFFFF;
+  --chakra-ink: #06063E;
+  --on-ink: #FFFFFF;
+  --line: #14142E;
+  --hard-shadow: #14142E;
+  --paper: #FFFFFF;
   --background: oklch(0.976 0.006 76);
   --foreground: oklch(0.147 0.004 49.25);
   --card: oklch(1 0 0);
@@ -84,6 +111,19 @@
 }
 
 .dark {
+  /* Tiranga palette — dark mode (brightened for contrast on dark surfaces) */
+  --saffron: #FFAA55;
+  --saffron-deep: #FF9933;
+  --on-saffron: #231100;
+  --india-green: #22C55E;
+  --on-green: #06130B;
+  --chakra: #9AA5FF;
+  --on-chakra: #0B0B28;
+  --chakra-ink: #07071A;
+  --on-ink: #F2F2FA;
+  --line: #D9D9E6;
+  --hard-shadow: #000000;
+  --paper: #FFFFFF;
   --background: oklch(0.147 0.004 49.25);
   --foreground: oklch(0.985 0.001 106.423);
   --card: oklch(0.216 0.006 56.043);
@@ -129,6 +169,28 @@
   }
   html {
     @apply font-ubuntu;
+    scroll-behavior: smooth;
+  }
+  ::selection {
+    background: var(--saffron);
+    color: var(--on-saffron);
+  }
+}
+
+/* Hard offset shadows — sharp web3/brutalist depth */
+.shadow-hard {
+  box-shadow: 7px 7px 0 0 var(--hard-shadow);
+}
+.shadow-hard-sm {
+  box-shadow: 4px 4px 0 0 var(--hard-shadow);
+}
+.shadow-hard-saffron {
+  box-shadow: 7px 7px 0 0 var(--saffron);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
@@ -143,17 +205,17 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #e4fdb0;
+  background: var(--saffron);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #d4ed9a;
+  background: var(--saffron-deep);
 }
 
 /* Firefox fallback */
 @supports not selector(::-webkit-scrollbar) {
   * {
     scrollbar-width: thin;
-    scrollbar-color: #e4fdb0 transparent;
+    scrollbar-color: var(--saffron) transparent;
   }
 }

@@ -42,7 +42,7 @@ function Toast({ className, ...props }: ToastPrimitive.Root.Props) {
     <ToastPrimitive.Root
       data-slot="toast"
       className={cn(
-        "group/toast pointer-events-auto absolute end-0 top-0 z-[calc(1000-var(--toast-index))] w-full origin-top rounded-none border bg-popover text-popover-foreground shadow-lg will-change-transform outline-none select-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
+        "group/toast pointer-events-auto absolute end-0 top-0 z-[calc(1000-var(--toast-index))] w-full origin-top rounded-none border-2 border-line bg-card text-foreground shadow-hard-sm will-change-transform outline-none select-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
         "[--gap:0.75rem] [--height:var(--toast-frontmost-height,var(--toast-height))] [--offset-y:calc(var(--toast-offset-y)+calc(var(--toast-index)*var(--gap))+var(--toast-swipe-movement-y))] [--peek:0.75rem] [--scale:calc(max(0,1-(var(--toast-index)*0.1)))] [--shrink:calc(1-var(--scale))]",
         "h-(--height) [transform:translateX(var(--toast-swipe-movement-x))_translateY(calc(var(--toast-swipe-movement-y)+(var(--toast-index)*var(--peek))+(var(--shrink)*var(--height))))_scale(var(--scale))] [transition:transform_500ms_cubic-bezier(0.22,1,0.36,1),opacity_500ms,height_150ms]",
         "after:absolute after:bottom-full after:start-0 after:h-[calc(var(--gap)+1px)] after:w-full after:content-['']",
@@ -81,7 +81,7 @@ function ToastTitle({ className, ...props }: ToastPrimitive.Title.Props) {
   return (
     <ToastPrimitive.Title
       data-slot="toast-title"
-      className={cn("text-sm font-medium", className)}
+      className={cn("font-display text-sm font-bold uppercase tracking-wider", className)}
       {...props}
     />
   );
@@ -94,7 +94,7 @@ function ToastDescription({
   return (
     <ToastPrimitive.Description
       data-slot="toast-description"
-      className={cn("text-sm text-muted-foreground", className)}
+      className={cn("text-sm font-bold text-muted-foreground", className)}
       {...props}
     />
   );
@@ -137,7 +137,7 @@ function ToastClose({
   );
 }
 
-function ToastIcon({ type }: { type: string | undefined }) {
+function ToastIcon({ type, className }: { type: string | undefined; className?: string }) {
   let icon: React.ReactNode = null;
 
   if (type === "success") {
@@ -153,7 +153,7 @@ function ToastIcon({ type }: { type: string | undefined }) {
   }
 
   if (type === "error") {
-    icon = <OctagonXIcon className="text-destructive" aria-hidden="true" />;
+    icon = <OctagonXIcon aria-hidden="true" />;
   }
 
   if (type === "loading") {
@@ -167,39 +167,75 @@ function ToastIcon({ type }: { type: string | undefined }) {
   return (
     <span
       data-slot="toast-icon"
-      className="shrink-0 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4"
+      className={cn(
+        "shrink-0 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-5",
+        className,
+      )}
     >
       {icon}
     </span>
   );
 }
 
+const TOAST_TYPE_STYLES: Record<
+  string,
+  { root: string; description: string; icon: string; close: string }
+> = {
+  success: {
+    root: "bg-india-green border-line text-on-green",
+    description: "text-on-green",
+    icon: "text-on-green",
+    close: "text-on-green/70 hover:text-on-green",
+  },
+  error: {
+    root: "bg-destructive border-line text-paper",
+    description: "text-paper",
+    icon: "text-paper",
+    close: "text-paper/70 hover:text-paper",
+  },
+  info: {
+    root: "bg-chakra border-line text-on-chakra",
+    description: "text-on-chakra",
+    icon: "text-on-chakra",
+    close: "text-on-chakra/70 hover:text-on-chakra",
+  },
+  warning: {
+    root: "bg-saffron border-line text-on-saffron",
+    description: "text-on-saffron",
+    icon: "text-on-saffron",
+    close: "text-on-saffron/70 hover:text-on-saffron",
+  },
+  loading: {
+    root: "bg-saffron border-line text-on-saffron",
+    description: "text-on-saffron",
+    icon: "text-on-saffron",
+    close: "text-on-saffron/70 hover:text-on-saffron",
+  },
+};
+
+const TOAST_FALLBACK_STYLE = {
+  root: "bg-card border-line text-foreground",
+  description: "text-muted-foreground",
+  icon: "text-saffron-deep",
+  close: "text-muted-foreground hover:text-foreground",
+};
+
 function ToastList() {
   const { toasts } = ToastPrimitive.useToastManager();
 
   return toasts.map((toastItem) => {
-    // Custom modern styling for success toasts
-    const isSuccess = toastItem.type === "success";
-    const toastClasses = isSuccess
-      ? "bg-[#e4fdb0] border-[#c6f54c] text-[#012f2c] shadow-xl rounded-2xl"
-      : "rounded-2xl";
+    const style = (toastItem.type && TOAST_TYPE_STYLES[toastItem.type]) || TOAST_FALLBACK_STYLE;
 
     return (
-      <Toast key={toastItem.id} toast={toastItem} className={toastClasses}>
+      <Toast key={toastItem.id} toast={toastItem} className={style.root}>
         <ToastContent>
-          <ToastIcon type={toastItem.type} />
+          <ToastIcon type={toastItem.type} className={style.icon} />
           <div className="flex min-w-0 flex-1 flex-col gap-1">
             <ToastTitle />
-            <ToastDescription
-              className={isSuccess ? "text-[#012f2c]/80" : ""}
-            />
+            <ToastDescription className={style.description} />
           </div>
           <ToastAction />
-          <ToastClose
-            className={
-              isSuccess ? "text-[#012f2c]/60 hover:text-[#012f2c]" : ""
-            }
-          />
+          <ToastClose className={style.close} />
         </ToastContent>
       </Toast>
     );

@@ -4,6 +4,8 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { MoveRight } from "lucide-react";
 import { useEmailAuth } from "@/hooks/useEmailAuth";
 
@@ -19,58 +21,68 @@ function EmailAuthFormContent() {
   } = useEmailAuth();
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5 w-full">
       {mode === "register" && (
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Your Name</label>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="auth-name" className="text-xs font-bold uppercase tracking-widest text-foreground">Your Name</Label>
           <Input
+            id="auth-name"
             type="text"
             placeholder="John Doe"
             value={form.name}
             onChange={handleInputChange("name")}
             required
-            className="h-10 text-sm px-3 rounded-none"
+            autoComplete="name"
+            className="h-13 text-base font-semibold px-4 rounded-none border-2 border-line bg-background"
           />
         </div>
       )}
-      <div className="flex flex-col gap-1.5">
-        <label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Email Address</label>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="auth-email" className="text-xs font-bold uppercase tracking-widest text-foreground">Email Address</Label>
         <Input
+          id="auth-email"
           type="email"
           placeholder="you@example.com"
           value={form.email}
           onChange={handleInputChange("email")}
           required
-          className="h-10 text-sm px-3 rounded-none"
+          autoComplete="email"
+          className="h-13 text-base font-semibold px-4 rounded-none border-2 border-line bg-background"
         />
       </div>
-      <div className="flex flex-col gap-1.5">
-        <label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Password</label>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="auth-password" className="text-xs font-bold uppercase tracking-widest text-foreground">Password</Label>
         <Input
+          id="auth-password"
           type="password"
           placeholder="Min 8 characters"
           value={form.password}
           onChange={handleInputChange("password")}
           required
           minLength={8}
-          className="h-10 text-sm px-3 rounded-none"
+          autoComplete={mode === "register" ? "new-password" : "current-password"}
+          className="h-13 text-base font-semibold px-4 rounded-none border-2 border-line bg-background"
         />
       </div>
 
-      {error && <p className="text-destructive text-xs font-medium">{error}</p>}
+      {error && (
+        <p role="alert" className="border-2 border-destructive bg-destructive/10 px-4 py-3 text-sm font-bold text-destructive">
+          {error}
+        </p>
+      )}
 
-      <Button type="submit" disabled={loading} size="lg" className="w-full h-10 gap-2 text-xs sm:text-[13px] bg-primary text-primary-foreground hover:bg-primary/90 rounded-none border-0 font-semibold tracking-wider uppercase mt-2">
+      <Button type="submit" disabled={loading} className="w-full h-14 gap-2 text-sm bg-india-green text-on-green hover:bg-saffron hover:text-on-saffron rounded-none border-2 border-line font-bold tracking-widest uppercase">
         {loading ? "Please wait..." : mode === "signin" ? "Sign In" : "Create Account"}
-        <MoveRight className="h-4 w-4" />
+        <MoveRight className="h-4 w-4" strokeWidth={2.5} />
       </Button>
 
-      <Link
-        href={mode === "signin" ? "/auth?mode=register" : "/auth?mode=signin"}
-        onClick={clearError}
-        className="text-xs text-primary hover:underline font-semibold tracking-wide text-center block"
+      <Button
+        variant="outline"
+        render={<Link href={mode === "signin" ? "/auth?mode=register" : "/auth?mode=signin"} onClick={clearError} />}
+        className="w-full h-auto border-2 border-line bg-card py-3.5 text-xs font-bold uppercase tracking-widest text-foreground hover:bg-chakra hover:text-on-chakra"
       >
         {mode === "signin" ? "Need an account? Register" : "Already have an account? Sign In"}
-      </Link>
+      </Button>
     </form>
   );
 }
@@ -78,10 +90,10 @@ function EmailAuthFormContent() {
 export function EmailAuthForm() {
   return (
     <Suspense fallback={
-      <div className="flex flex-col gap-4 w-full animate-pulse">
-        <div className="h-14 bg-muted rounded-none" />
-        <div className="h-14 bg-muted rounded-none" />
-        <div className="h-10 bg-muted/80 rounded-none mt-2" />
+      <div className="flex flex-col gap-5 w-full" aria-hidden="true">
+        <Skeleton className="h-13 rounded-none border-2 border-line bg-muted" />
+        <Skeleton className="h-13 rounded-none border-2 border-line bg-muted" />
+        <Skeleton className="h-14 rounded-none border-2 border-line bg-muted" />
       </div>
     }>
       <EmailAuthFormContent />

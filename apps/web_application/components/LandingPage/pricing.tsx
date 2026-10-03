@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { ScrollReveal } from "./scroll-reveal";
 
 export function Pricing() {
@@ -44,9 +45,12 @@ export function Pricing() {
                 </li>
               </ul>
 
-              <Link href="/auth" className="inline-flex items-center justify-center w-full h-16 rounded-none text-lg font-bold uppercase tracking-wider border-4 border-chakra-ink bg-paper hover:bg-chakra-ink hover:text-on-ink text-chakra-ink transition-all">
+              <Button
+                render={<Link href="/auth" />}
+                className="h-16 w-full rounded-none border-4 border-chakra-ink bg-paper text-lg font-bold uppercase tracking-wider text-chakra-ink hover:bg-chakra-ink hover:text-on-ink"
+              >
                 Get Started for Free
-              </Link>
+              </Button>
             </div>
           </ScrollReveal>
 
@@ -88,9 +92,12 @@ export function Pricing() {
                 </li>
               </ul>
 
-              <Link href="/auth" className="inline-flex items-center justify-center w-full h-16 rounded-none text-lg font-bold uppercase tracking-wider bg-chakra-ink text-on-ink hover:bg-chakra-ink/90 border-4 border-chakra-ink transition-all">
+              <Button
+                render={<Link href="/auth" />}
+                className="h-16 w-full rounded-none border-4 border-chakra-ink bg-chakra-ink text-lg font-bold uppercase tracking-wider text-on-ink hover:bg-chakra-ink/90"
+              >
                 Upgrade to Pro
-              </Link>
+              </Button>
             </div>
           </ScrollReveal>
 

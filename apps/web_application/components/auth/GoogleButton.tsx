@@ -12,7 +12,7 @@ export function GoogleButton() {
   return (
     <Button
       variant="outline"
-      className="h-12 w-full px-6 rounded-none font-semibold uppercase tracking-wider text-xs border border-border"
+      className="h-14 w-full px-6 rounded-none font-bold uppercase tracking-widest text-sm border-2 border-line bg-paper text-chakra-ink hover:bg-saffron hover:text-on-saffron hover:border-line"
       disabled={pending}
       onClick={() => start(() => { void signIn("google", { callbackUrl: "/appv1/dashboard" }); })}
     >
@@ -20,7 +20,7 @@ export function GoogleButton() {
         <span className="flex size-6 items-center justify-center justify-self-center">
           <Image src={GOOGLE_LOGO} width={20} height={20} alt="Google logo" />
         </span>
-        <span className="text-left text-sm sm:text-[13px]">
+        <span className="text-left">
           {pending ? "Redirecting..." : "Continue with Google"}
         </span>
       </span>

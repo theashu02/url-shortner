@@ -1,7 +1,6 @@
 import { connectToDatabase } from "@/server/db/mongoose";
 import { ClickEventModel } from "@/server/models/clickEvent";
 import { UrlModel } from "@/server/models/url";
-import mongoose from "mongoose";
 
 export interface AnalyticsSummaryItem {
   shortCode: string;

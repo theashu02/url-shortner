@@ -57,11 +57,11 @@ export function LinkSummaryCard({ summary }: LinkSummaryCardProps) {
             <div className="hidden sm:flex flex-col gap-1 border-l border-border/50 pl-3 sm:pl-4">
               <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground" title="Top Country">
                 <Globe className="h-2.5 w-2.5" />
-                <span className="truncate max-w-[70px]">{topCountry || "-"}</span>
+                <span className="truncate max-w-17.5">{topCountry || "-"}</span>
               </div>
               <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground" title="Top Device">
                 <Smartphone className="h-2.5 w-2.5" />
-                <span className="truncate max-w-[70px]">{topDevice || "-"}</span>
+                <span className="truncate max-w-17.5">{topDevice || "-"}</span>
               </div>
             </div>
           </div>

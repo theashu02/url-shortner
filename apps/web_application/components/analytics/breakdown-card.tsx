@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BreakdownItem } from "@/server/services/analytics";
-import { GlobeOff, Trophy } from 'lucide-react'
+import { GlobeOff } from "lucide-react";
 
 interface BreakdownCardProps {
   title: string;
@@ -9,77 +9,65 @@ interface BreakdownCardProps {
   delay?: number;
 }
 
-const chartColors = [
-  "from-chart-1 to-chart-1/80",
-  "from-chart-2 to-chart-2/80",
-  "from-chart-3 to-chart-3/80",
-  "from-chart-4 to-chart-4/80",
-  "from-chart-5 to-chart-5/80",
-];
-
-export function BreakdownCard({ title, data, emptyMessage = "No data available" }: BreakdownCardProps) {
+export function BreakdownCard({
+  title,
+  data,
+  emptyMessage = "No data available",
+}: BreakdownCardProps) {
   const total = data.reduce((sum, item) => sum + item.count, 0);
   const sortedData = [...data].sort((a, b) => b.count - a.count);
   const maxCount = sortedData[0]?.count || 0;
 
   return (
-    <Card className="border-border/10 bg-linear-to-br from-card/80 to-card/40 backdrop-blur-xl h-full flex flex-col shadow-sm relative overflow-hidden">
-      <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
-      <CardHeader className="pb-4 relative">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-semibold tracking-tight">{title}</CardTitle>
+    <Card className="flex flex-col h-full rounded-none border-border/40">
+      <CardHeader className="px-4">
+        <div className="flex items-baseline justify-between">
+          <CardTitle className="text-xl font-medium text-foreground">
+            {title}
+          </CardTitle>
           {total > 0 && (
-            <div className="text-sm text-muted-foreground font-medium tabular-nums">
-              {total.toLocaleString()} total
-            </div>
+            <span className="text-sm text-muted-foreground tabular-nums">
+              {total.toLocaleString()} clicks
+            </span>
           )}
         </div>
       </CardHeader>
-      <CardContent className="flex-1 pt-0 relative">
+
+      <CardContent className="flex-1 px-4 pb-3 pt-0">
         {data.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full min-h-35 gap-2">
-            <div className="w-12 h-12 rounded-full bg-muted/30 flex items-center justify-center">
-              <GlobeOff height={50} width={50} strokeWidth={1} className="text-primary"/>
-            </div>
-            <span className="text-sm text-muted-foreground/70">{emptyMessage}</span>
+          <div className="flex flex-col items-center justify-center h-full min-h-30 gap-2.5">
+            <GlobeOff className="text-muted-foreground/25" size={24} strokeWidth={1.5} />
+            <span className="text-xs text-muted-foreground/50">{emptyMessage}</span>
           </div>
         ) : (
-          <div className="space-y-3 max-h-55 overflow-y-auto pr-2">
+          <div className="space-y-1.5">
             {sortedData.map((item, index) => {
               const percentage = total > 0 ? Math.round((item.count / total) * 100) : 0;
               const relativeSize = maxCount > 0 ? (item.count / maxCount) * 100 : 0;
-              const colorClass = chartColors[index % chartColors.length];
-              const isTop = index === 0;
 
               return (
-                <div key={item.id} className="group">
-                  <div className="flex items-center justify-between text-sm mb-1.5">
-                    <div className="flex items-center gap-2 flex-1 min-w-0">
-                      {isTop && (
-                        <Trophy height={20} width={20} strokeWidth={2} className="text-amber-600 dark:text-amber-400"/>
-                      )}
-                      <span className="font-medium text-foreground truncate" title={item.id}>
-                        {item.id}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 ml-2">
-                      <span className="text-foreground whitespace-nowrap text-lg tabular-nums font-medium">
-                        {item.count.toLocaleString()}
-                      </span>
-                      <span className="text-foreground/90 text-xs tabular-nums">
-                        {percentage}%
-                      </span>
-                    </div>
-                  </div>
-                  <div className="relative h-2 w-full bg-secondary/30 rounded-full overflow-hidden">
-                    <div 
-                      className={`absolute inset-y-0 left-0 bg-linear-to-r ${colorClass} rounded-full transition-all duration-500 ease-out`}
-                      style={{ width: `${relativeSize}%` }}
+                <div key={item.id} className="group relative h-8 flex items-center">
+                  {/* Bar fill */}
+                  <div
+                    className="absolute inset-y-0 left-0 rounded-sm bg-primary/10 dark:bg-primary/15 transition-all duration-500 ease-out group-hover:bg-primary/15 dark:group-hover:bg-primary/20"
+                    style={{ width: `${relativeSize}%` }}
+                  />
+
+                  {/* Content over bar */}
+                  <div className="relative w-full flex items-center justify-between px-2.5">
+                    <span
+                      className="text-[13px] text-foreground/80 truncate pr-3"
+                      title={item.id}
                     >
-                      {isTop && (
-                        <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent animate-pulse" />
+                      {index === 0 && sortedData.length > 1 && (
+                        <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary mr-2 translate-y-[-0.5px]" />
                       )}
-                    </div>
+                      {item.id}
+                    </span>
+                    <span className="text-[12px] tabular-nums text-muted-foreground shrink-0">
+                      {item.count.toLocaleString()}
+                      <span className="ml-1.5 text-muted-foreground/60">{percentage}%</span>
+                    </span>
                   </div>
                 </div>
               );

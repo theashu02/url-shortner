@@ -46,6 +46,7 @@ export function Pricing() {
               </ul>
 
               <Button
+                nativeButton={false}
                 render={<Link href="/auth" />}
                 className="h-16 w-full rounded-none border-4 border-chakra-ink bg-paper text-lg font-bold uppercase tracking-wider text-chakra-ink hover:bg-chakra-ink hover:text-on-ink"
               >
@@ -93,6 +94,7 @@ export function Pricing() {
               </ul>
 
               <Button
+                nativeButton={false}
                 render={<Link href="/auth" />}
                 className="h-16 w-full rounded-none border-4 border-chakra-ink bg-chakra-ink text-lg font-bold uppercase tracking-wider text-on-ink hover:bg-chakra-ink/90"
               >

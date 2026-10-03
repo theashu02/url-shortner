@@ -78,6 +78,7 @@ function EmailAuthFormContent() {
 
       <Button
         variant="outline"
+        nativeButton={false}
         render={<Link href={mode === "signin" ? "/auth?mode=register" : "/auth?mode=signin"} onClick={clearError} />}
         className="w-full h-auto border-2 border-line bg-card py-3.5 text-xs font-bold uppercase tracking-widest text-foreground hover:bg-chakra hover:text-on-chakra"
       >

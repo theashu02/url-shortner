@@ -28,6 +28,7 @@ export function Navbar() {
             Pricing
           </Link>
           <Button
+            nativeButton={false}
             render={<Link href="/auth" />}
             className="h-auto rounded-none bg-chakra px-8 py-4 text-sm font-bold uppercase tracking-wider text-on-chakra hover:bg-india-green hover:text-on-green"
           >
@@ -41,6 +42,7 @@ export function Navbar() {
       <div className="flex items-center gap-4 md:hidden relative z-50">
         <ThemeToggle />
         <Button
+          nativeButton={false}
           render={<Link href="/auth" />}
           className="h-10 rounded-none border-2 border-line bg-chakra px-5 text-xs font-bold uppercase tracking-wider text-on-chakra hover:bg-chakra/90"
         >
@@ -72,6 +74,7 @@ export function Navbar() {
           </Link>
           <div className="mt-8">
             <Button
+              nativeButton={false}
               render={<Link href="/auth" onClick={() => setMobileMenuOpen(false)} />}
               className="h-14 w-full rounded-none border-2 border-line bg-india-green text-lg font-bold uppercase tracking-wider text-on-green hover:bg-india-green/90"
             >

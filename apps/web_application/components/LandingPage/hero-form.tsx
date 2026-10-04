@@ -1,70 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link2, Loader2, Copy, Check, ExternalLink } from "lucide-react";
-import { api } from "@/lib/eden";
-import { toast } from "@/components/ui/toast";
-import { urlRegex } from "@/lib/constant";
+import { useShortenUrl } from "@/hooks/useShortenUrl";
 
 export function HeroForm() {
-  const [url, setUrl] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [shortenedUrl, setShortenedUrl] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
-  const [copied, setCopied] = useState(false);
-
-  const handleShorten = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!url.trim()) return;
-
-    if (!urlRegex.test(url.trim())) {
-      toast.add({
-        type: "error",
-        description: "Please enter a valid URL!",
-      });
-      return;
-    }
-
-    setLoading(true);
-    setErrorMsg("");
-    setShortenedUrl("");
-
-    let formattedUrl = url.trim();
-    if (!/^https?:\/\//i.test(formattedUrl)) {
-      formattedUrl = `https://${formattedUrl}`;
-    }
-
-    try {
-      const res = await api.url.create.post({ url: formattedUrl });
-      if (res.error) {
-        const errObj = res.error.value as { message?: string };
-        setErrorMsg(errObj?.message || "Failed to shorten URL. Try again.");
-      } else if (res.data && "shortCode" in res.data) {
-        const origin =
-          typeof window !== "undefined" ? window.location.origin : "";
-        setShortenedUrl(`${origin}/${res.data.shortCode}`);
-        setUrl("");
-        toast.add({
-          type: "success",
-          description: "Link Shortened Successfully!",
-        });
-      }
-    } catch (err) {
-      console.error("Hero shorten error:", err);
-      setErrorMsg("An unexpected error occurred.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const copyToClipboard = () => {
-    if (!shortenedUrl) return;
-    navigator.clipboard.writeText(shortenedUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  const {
+    url,
+    setUrl,
+    loading,
+    shortenedUrl,
+    errorMsg,
+    copied,
+    handleShorten,
+    copyToClipboard,
+  } = useShortenUrl();
 
   return (
     <div className="w-full max-w-3xl mx-auto flex flex-col items-center gap-6">

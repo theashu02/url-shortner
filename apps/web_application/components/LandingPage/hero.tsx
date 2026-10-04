@@ -7,8 +7,6 @@ export function Hero() {
       className="relative w-full min-h-screen bg-mist flex flex-col items-center justify-center overflow-hidden pt-24 pb-16"
     >
       <div className="container mx-auto px-4 flex flex-col items-center text-center relative z-10">
-
-        {/* Single H1 — consolidates the previous 3 h1 tags for proper SEO */}
         <div className="flex flex-col items-center justify-center text-foreground mb-12 select-none">
           <h1 className="font-display font-extrabold leading-[0.8] m-0 p-0 drop-shadow-sm text-[15vw] sm:text-[12vw] md:text-[9vw] lg:text-[140px]">
             <span className="block">SHORT</span>

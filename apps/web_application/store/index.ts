@@ -2,11 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import myLinksReducer from "./my-links-slice";
 import analyticsReducer from "./analytics-slice";
+import shortenReducer from "./shorten-slice";
 
 export const store = configureStore({
   reducer: {
     myLinks: myLinksReducer,
     analytics: analyticsReducer,
+    shorten: shortenReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

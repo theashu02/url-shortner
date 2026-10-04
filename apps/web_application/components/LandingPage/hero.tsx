@@ -10,7 +10,7 @@ export function Hero() {
 
         {/* Single H1 — consolidates the previous 3 h1 tags for proper SEO */}
         <div className="flex flex-col items-center justify-center text-foreground mb-12 select-none">
-          <h1 className="font-display font-bold leading-[0.8] m-0 p-0 drop-shadow-sm text-[15vw] sm:text-[12vw] md:text-[9vw] lg:text-[140px]">
+          <h1 className="font-display font-extrabold leading-[0.8] m-0 p-0 drop-shadow-sm text-[15vw] sm:text-[12vw] md:text-[9vw] lg:text-[140px]">
             <span className="block">SHORT</span>
             <span className="block gap-[2vw] justify-center">
               <span>LINKS</span> <span className="text-ember">BIG</span>
@@ -18,8 +18,6 @@ export function Hero() {
             <span className="block text-lake">IMPACT</span>
           </h1>
         </div>
-
-        {/* Interactive form — client component */}
         <HeroForm />
       </div>
 

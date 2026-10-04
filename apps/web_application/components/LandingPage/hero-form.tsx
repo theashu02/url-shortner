@@ -67,7 +67,7 @@ export function HeroForm() {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto flex flex-col items-center gap-6">
+    <div className="w-full max-w-3xl mx-auto flex flex-col items-center gap-6">
       <div className="w-full bg-card p-2 shadow-hard border-4 border-line">
         <form
           onSubmit={handleShorten}

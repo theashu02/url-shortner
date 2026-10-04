@@ -5,7 +5,7 @@ import { ScrollReveal } from "./scroll-reveal";
 
 export function Pricing() {
   return (
-    <section id="pricing" className="py-32 px-4 md:px-8 bg-mist">
+    <section id="pricing" aria-label="Pricing plans" className="py-32 px-4 md:px-8 bg-mist">
       <div className="container mx-auto max-w-6xl">
         <ScrollReveal>
           <div className="text-center mb-24">

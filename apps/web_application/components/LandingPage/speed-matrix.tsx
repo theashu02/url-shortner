@@ -3,7 +3,7 @@ import { ScrollReveal } from "./scroll-reveal";
 
 export function SpeedMatrix() {
   return (
-    <section className="py-32 px-4 md:px-8 bg-mist relative overflow-hidden">
+    <section aria-label="How SimpLx achieves faster redirects" className="py-32 px-4 md:px-8 bg-mist relative overflow-hidden">
       <div className="container mx-auto max-w-6xl relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
 

@@ -31,7 +31,7 @@ export const faqs = [
 
 export function FAQ() {
   return (
-    <section className="py-32 px-4 md:px-8 bg-mist">
+    <section aria-label="Frequently asked questions" className="py-32 px-4 md:px-8 bg-mist">
       <div className="container mx-auto max-w-4xl">
         <ScrollReveal>
           <div className="text-center mb-20">

@@ -43,7 +43,7 @@ export function Features() {
   ];
 
   return (
-    <section id="features" className="py-32 px-4 md:px-8 bg-mist relative overflow-hidden">
+    <section id="features" aria-label="Product features" className="py-32 px-4 md:px-8 bg-mist relative overflow-hidden">
 
       <div className="container mx-auto max-w-6xl relative z-10">
         <ScrollReveal>

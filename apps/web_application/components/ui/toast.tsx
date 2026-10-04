@@ -29,7 +29,7 @@ function ToastViewport({ className, ...props }: ToastPrimitive.Viewport.Props) {
     <ToastPrimitive.Viewport
       data-slot="toast-viewport"
       className={cn(
-        "pointer-events-none fixed inset-x-4 top-4 z-50 mx-auto w-auto max-w-sm outline-none sm:end-4 sm:start-auto sm:mx-0 sm:w-full",
+        "pointer-events-none fixed inset-x-4 top-4 z-50 mx-auto w-auto max-w-sm outline-none sm:inset-e-4 sm:inset-s-auto sm:mx-0 sm:w-full",
         className,
       )}
       {...props}
@@ -42,21 +42,21 @@ function Toast({ className, ...props }: ToastPrimitive.Root.Props) {
     <ToastPrimitive.Root
       data-slot="toast"
       className={cn(
-        "group/toast pointer-events-auto absolute end-0 top-0 z-[calc(1000-var(--toast-index))] w-full origin-top rounded-none border-2 border-line bg-card text-foreground shadow-hard-sm will-change-transform outline-none select-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
+        "group/toast pointer-events-auto absolute inset-e-0 top-0 z-[calc(1000-var(--toast-index))] w-full origin-top rounded-none border-2 border-line bg-card text-foreground shadow-hard-sm will-change-transform outline-none select-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
         "[--gap:0.75rem] [--height:var(--toast-frontmost-height,var(--toast-height))] [--offset-y:calc(var(--toast-offset-y)+calc(var(--toast-index)*var(--gap))+var(--toast-swipe-movement-y))] [--peek:0.75rem] [--scale:calc(max(0,1-(var(--toast-index)*0.1)))] [--shrink:calc(1-var(--scale))]",
-        "h-(--height) [transform:translateX(var(--toast-swipe-movement-x))_translateY(calc(var(--toast-swipe-movement-y)+(var(--toast-index)*var(--peek))+(var(--shrink)*var(--height))))_scale(var(--scale))] [transition:transform_500ms_cubic-bezier(0.22,1,0.36,1),opacity_500ms,height_150ms]",
-        "after:absolute after:bottom-full after:start-0 after:h-[calc(var(--gap)+1px)] after:w-full after:content-['']",
-        "data-expanded:h-(--toast-height) data-expanded:[transform:translateX(var(--toast-swipe-movement-x))_translateY(var(--offset-y))]",
-        "data-limited:opacity-0 data-starting-style:[transform:translateY(-150%)]",
-        "[&[data-ending-style]:not([data-limited]):not([data-swipe-direction])]:[transform:translateY(-150%)]",
-        "data-ending-style:data-[swipe-direction=down]:[transform:translateY(calc(var(--toast-swipe-movement-y)+150%))]",
-        "data-ending-style:data-[swipe-direction=left]:[transform:translateX(calc(var(--toast-swipe-movement-x)-150%))_translateY(var(--offset-y))]",
-        "data-ending-style:data-[swipe-direction=right]:[transform:translateX(calc(var(--toast-swipe-movement-x)+150%))_translateY(var(--offset-y))]",
-        "data-ending-style:data-[swipe-direction=up]:[transform:translateY(calc(var(--toast-swipe-movement-y)-150%))]",
-        "data-expanded:data-ending-style:data-[swipe-direction=down]:[transform:translateY(calc(var(--toast-swipe-movement-y)+150%))]",
-        "data-expanded:data-ending-style:data-[swipe-direction=left]:[transform:translateX(calc(var(--toast-swipe-movement-x)-150%))_translateY(var(--offset-y))]",
-        "data-expanded:data-ending-style:data-[swipe-direction=right]:[transform:translateX(calc(var(--toast-swipe-movement-x)+150%))_translateY(var(--offset-y))]",
-        "data-expanded:data-ending-style:data-[swipe-direction=up]:[transform:translateY(calc(var(--toast-swipe-movement-y)-150%))]",
+        "h-(--height) transform-[translateX(var(--toast-swipe-movement-x))_translateY(calc(var(--toast-swipe-movement-y)+(var(--toast-index)*var(--peek))+(var(--shrink)*var(--height))))_scale(var(--scale))] [transition:transform_500ms_cubic-bezier(0.22,1,0.36,1),opacity_500ms,height_150ms]",
+        "after:absolute after:bottom-full after:inset-s-0 after:h-[calc(var(--gap)+1px)] after:w-full after:content-['']",
+        "data-expanded:h-(--toast-height) data-expanded:transform-[translateX(var(--toast-swipe-movement-x))_translateY(var(--offset-y))]",
+        "data-limited:opacity-0 data-starting-style:transform-[translateY(-150%)]",
+        "[&[data-ending-style]:not([data-limited]):not([data-swipe-direction])]:transform-[translateY(-150%)]",
+        "data-ending-style:data-[swipe-direction=down]:transform-[translateY(calc(var(--toast-swipe-movement-y)+150%))]",
+        "data-ending-style:data-[swipe-direction=left]:transform-[translateX(calc(var(--toast-swipe-movement-x)-150%))_translateY(var(--offset-y))]",
+        "data-ending-style:data-[swipe-direction=right]:transform-[translateX(calc(var(--toast-swipe-movement-x)+150%))_translateY(var(--offset-y))]",
+        "data-ending-style:data-[swipe-direction=up]:transform-[translateY(calc(var(--toast-swipe-movement-y)-150%))]",
+        "data-expanded:data-ending-style:data-[swipe-direction=down]:transform-[translateY(calc(var(--toast-swipe-movement-y)+150%))]",
+        "data-expanded:data-ending-style:data-[swipe-direction=left]:transform-[translateX(calc(var(--toast-swipe-movement-x)-150%))_translateY(var(--offset-y))]",
+        "data-expanded:data-ending-style:data-[swipe-direction=right]:transform-[translateX(calc(var(--toast-swipe-movement-x)+150%))_translateY(var(--offset-y))]",
+        "data-expanded:data-ending-style:data-[swipe-direction=up]:transform-[translateY(calc(var(--toast-swipe-movement-y)-150%))]",
         className,
       )}
       {...props}
@@ -182,41 +182,41 @@ const TOAST_TYPE_STYLES: Record<
   { root: string; description: string; icon: string; close: string }
 > = {
   success: {
-    root: "bg-india-green border-line text-on-green",
-    description: "text-on-green",
-    icon: "text-on-green",
-    close: "text-on-green/70 hover:text-on-green",
+    root: "bg-lime-soft border-line text-on-lime",
+    description: "text-on-lime",
+    icon: "text-on-lime",
+    close: "text-on-lime/70 hover:text-on-lime",
   },
   error: {
-    root: "bg-destructive border-line text-paper",
-    description: "text-paper",
-    icon: "text-paper",
-    close: "text-paper/70 hover:text-paper",
+    root: "bg-card border-destructive text-foreground",
+    description: "text-muted-foreground",
+    icon: "text-destructive",
+    close: "text-muted-foreground hover:text-foreground",
   },
   info: {
-    root: "bg-chakra border-line text-on-chakra",
-    description: "text-on-chakra",
-    icon: "text-on-chakra",
-    close: "text-on-chakra/70 hover:text-on-chakra",
+    root: "bg-lake border-line text-on-lake",
+    description: "text-on-lake",
+    icon: "text-on-lake",
+    close: "text-on-lake/70 hover:text-on-lake",
   },
   warning: {
-    root: "bg-saffron border-line text-on-saffron",
-    description: "text-on-saffron",
-    icon: "text-on-saffron",
-    close: "text-on-saffron/70 hover:text-on-saffron",
+    root: "bg-ember border-line text-on-ember",
+    description: "text-on-ember",
+    icon: "text-on-ember",
+    close: "text-on-ember/70 hover:text-on-ember",
   },
   loading: {
-    root: "bg-saffron border-line text-on-saffron",
-    description: "text-on-saffron",
-    icon: "text-on-saffron",
-    close: "text-on-saffron/70 hover:text-on-saffron",
+    root: "bg-ember border-line text-on-ember",
+    description: "text-on-ember",
+    icon: "text-on-ember",
+    close: "text-on-ember/70 hover:text-on-ember",
   },
 };
 
 const TOAST_FALLBACK_STYLE = {
   root: "bg-card border-line text-foreground",
   description: "text-muted-foreground",
-  icon: "text-saffron-deep",
+  icon: "text-ember-deep",
   close: "text-muted-foreground hover:text-foreground",
 };
 

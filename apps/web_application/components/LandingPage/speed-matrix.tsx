@@ -3,7 +3,7 @@ import { ScrollReveal } from "./scroll-reveal";
 
 export function SpeedMatrix() {
   return (
-    <section className="py-32 px-4 md:px-8 bg-background relative overflow-hidden">
+    <section className="py-32 px-4 md:px-8 bg-mist relative overflow-hidden">
       <div className="container mx-auto max-w-6xl relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
 
@@ -11,7 +11,7 @@ export function SpeedMatrix() {
             <ScrollReveal>
               <h2 className="font-display font-bold text-5xl md:text-7xl text-foreground mb-8 uppercase tracking-tighter leading-[0.9]">
                 WHY ARE WE<br />
-                <span className="text-chakra">FASTER?</span>
+                <span className="text-lake">FASTER?</span>
               </h2>
             </ScrollReveal>
             <ScrollReveal delay={200}>
@@ -28,7 +28,7 @@ export function SpeedMatrix() {
 
               <ScrollReveal delay={100}>
                 <div className="flex items-center gap-6 relative z-10">
-                  <div className="w-19 h-19 rounded-none bg-saffron flex items-center justify-center text-on-saffron shrink-0 shadow-2xl">
+                  <div className="w-19 h-19 rounded-none bg-ember flex items-center justify-center text-on-ember shrink-0 shadow-2xl">
                     <User className="h-8 w-8" />
                   </div>
                   <div className="bg-card border-2 border-line p-5 rounded-none shadow-hard-sm flex-1">
@@ -39,7 +39,7 @@ export function SpeedMatrix() {
 
               <ScrollReveal delay={200}>
                 <div className="flex items-center gap-6 relative z-10">
-                  <div className="w-19 h-19 rounded-none bg-chakra flex items-center justify-center text-on-chakra shrink-0 shadow-2xl">
+                  <div className="w-19 h-19 rounded-none bg-lake flex items-center justify-center text-on-lake shrink-0 shadow-2xl">
                     <Database className="h-8 w-8" />
                   </div>
                   <div className="bg-card border-2 border-line p-5 rounded-none shadow-hard-sm flex-1">
@@ -51,7 +51,7 @@ export function SpeedMatrix() {
 
               <ScrollReveal delay={300}>
                 <div className="flex items-center gap-6 relative z-10">
-                  <div className="w-19 h-19 rounded-none bg-india-green border-2 border-line flex items-center justify-center text-on-green shrink-0 shadow-2xl">
+                  <div className="w-19 h-19 rounded-none bg-lime-soft border-2 border-line flex items-center justify-center text-on-lime shrink-0 shadow-2xl">
                     <ExternalLink className="h-8 w-8" />
                   </div>
                   <div className="bg-card border-2 border-line p-5 rounded-none shadow-hard-sm flex-1 flex justify-between items-center">
@@ -67,7 +67,7 @@ export function SpeedMatrix() {
               <ScrollReveal delay={400}>
                 <div className="flex items-center gap-6 relative z-10 ml-9.5">
                   <div className="absolute -left-12 top-1/2 w-12 h-1 bg-line/15" />
-                  <div className="w-15 h-15 rounded-none bg-saffron-deep flex items-center justify-center text-on-saffron shrink-0 shadow-2xl">
+                  <div className="w-15 h-15 rounded-none bg-ember-deep flex items-center justify-center text-on-ember shrink-0 shadow-2xl">
                     <Activity className="h-6 w-6" />
                   </div>
                   <div className="bg-card border-2 border-line p-4 rounded-none shadow-hard-sm flex-1">

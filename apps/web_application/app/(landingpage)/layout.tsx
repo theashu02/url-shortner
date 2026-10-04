@@ -7,7 +7,7 @@ export default function LandingPage({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground flex flex-col overflow-x-hidden">
+    <div className="relative min-h-screen bg-mist text-foreground selection:bg-ember selection:text-on-ember flex flex-col overflow-x-hidden">
       <Navbar />
       <main className="flex-1">{children}</main>
       <Footer />

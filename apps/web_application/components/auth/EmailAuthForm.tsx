@@ -71,7 +71,7 @@ function EmailAuthFormContent() {
         </p>
       )}
 
-      <Button type="submit" disabled={loading} className="w-full h-14 gap-2 text-sm bg-india-green text-on-green hover:bg-saffron hover:text-on-saffron rounded-none border-2 border-line font-bold tracking-widest uppercase">
+      <Button type="submit" disabled={loading} className="w-full h-auto py-3.5 gap-2 text-sm bg-btn text-on-btn hover:bg-ember hover:text-on-ember rounded-none border-2 border-line font-bold tracking-widest uppercase">
         {loading ? "Please wait..." : mode === "signin" ? "Sign In" : "Create Account"}
         <MoveRight className="h-4 w-4" strokeWidth={2.5} />
       </Button>
@@ -80,7 +80,7 @@ function EmailAuthFormContent() {
         variant="outline"
         nativeButton={false}
         render={<Link href={mode === "signin" ? "/auth?mode=register" : "/auth?mode=signin"} onClick={clearError} />}
-        className="w-full h-auto border-2 border-line bg-card py-3.5 text-xs font-bold uppercase tracking-widest text-foreground hover:bg-chakra hover:text-on-chakra"
+        className="w-full h-auto border-2 border-line bg-card py-3.5 text-xs font-bold uppercase tracking-widest text-foreground hover:bg-lake hover:text-on-lake"
       >
         {mode === "signin" ? "Need an account? Register" : "Already have an account? Sign In"}
       </Button>

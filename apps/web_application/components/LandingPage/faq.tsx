@@ -31,26 +31,26 @@ export const faqs = [
 
 export function FAQ() {
   return (
-    <section className="py-32 px-4 md:px-8 bg-saffron">
+    <section className="py-32 px-4 md:px-8 bg-mist">
       <div className="container mx-auto max-w-4xl">
         <ScrollReveal>
           <div className="text-center mb-20">
-            <h2 className="font-display font-bold text-5xl md:text-8xl text-paper mb-6 uppercase tracking-tighter leading-[0.9]">
+            <h2 className="font-display font-bold text-5xl md:text-8xl text-foreground mb-6 uppercase tracking-tighter leading-[0.9]">
               FREQUENTLY ASKED<br />
-              <span className="text-chakra-ink">QUESTIONS</span>
+              <span className="text-ember">QUESTIONS</span>
             </h2>
           </div>
         </ScrollReveal>
 
         <ScrollReveal delay={100}>
-          <div className="bg-paper rounded-none p-6 md:p-10 shadow-hard border-4 border-line">
+          <div className="bg-card rounded-none p-6 md:p-10 shadow-hard border-4 border-line">
             <Accordion className="w-full space-y-4">
               {faqs.map((faq, index) => (
-                <AccordionItem key={index} value={`item-${index}`} className="border-4 border-chakra-ink rounded-none overflow-hidden bg-paper data-[state=open]:bg-chakra/10 transition-colors">
-                  <AccordionTrigger className="text-left font-display font-bold text-xl md:text-2xl uppercase tracking-wider text-chakra-ink hover:text-saffron-deep transition-colors p-6 hover:no-underline data-[state=open]:border-b-4 data-[state=open]:border-chakra-ink">
+                <AccordionItem key={index} value={`item-${index}`} className="border-4 border-line rounded-none overflow-hidden bg-card data-[state=open]:bg-lake/10 transition-colors">
+                  <AccordionTrigger className="text-left font-display font-bold text-xl md:text-2xl uppercase tracking-wider text-foreground hover:text-ember-deep transition-colors p-6 hover:no-underline data-[state=open]:border-b-4 data-[state=open]:border-line">
                     {faq.question}
                   </AccordionTrigger>
-                  <AccordionContent className="text-chakra-ink/80 font-bold leading-relaxed text-lg p-6 bg-chakra/5">
+                  <AccordionContent className="text-muted-foreground font-bold leading-relaxed text-lg p-6 bg-lake/5">
                     {faq.answer}
                   </AccordionContent>
                 </AccordionItem>

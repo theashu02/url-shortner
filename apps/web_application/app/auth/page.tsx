@@ -41,7 +41,7 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
     <main className="flex h-dvh overflow-hidden">
       <AuthShowcase />
 
-      <div className="flex h-full w-full flex-col bg-background lg:w-[45%] xl:w-[40%]">
+      <div className="flex h-full w-full flex-col bg-mist lg:w-[45%] xl:w-[40%]">
         {/* Mobile brand bar */}
         <div className="flex items-center justify-between px-6 pt-6 lg:hidden">
           <Link
@@ -55,7 +55,7 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
           </Link>
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-saffron-deep"
+            className="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-ember-deep"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             Home
@@ -65,18 +65,18 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
         <div className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto px-6 py-6">
           <Card className="my-auto w-full max-w-md border-4 border-line bg-card p-6 shadow-hard ring-0">
             <CardHeader className="px-0">
-              <Badge className="h-auto bg-chakra px-3 py-1 font-mono uppercase tracking-widest text-on-chakra hover:bg-chakra">
+              <Badge className="h-auto bg-lake px-3 py-1 font-mono uppercase tracking-widest text-on-lake hover:bg-lake">
                 {isRegister ? "Register" : "Sign in"}
               </Badge>
               <CardTitle className="mt-4">
-                <h1 className="font-display text-4xl font-bold uppercase leading-[0.9] tracking-tighter text-foreground">
+                <h1 className="font-display text-2xl font-bold uppercase leading-[0.9] tracking-tighter text-foreground">
                   {isRegister ? (
                     <>
-                      JOIN <span className="text-india-green">SIMPLX</span>
+                      JOIN <span className="text-lake">SIMPLX</span>
                     </>
                   ) : (
                     <>
-                      WELCOME <span className="text-saffron-deep">BACK</span>
+                      WELCOME <span className="text-ember-deep">BACK</span>
                     </>
                   )}
                 </h1>
@@ -88,7 +88,7 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
 
               <div className="my-6 flex items-center gap-4" aria-hidden="true">
                 <Separator className="h-0.5 flex-1 bg-line/20" />
-                <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+                <span className="font-mono text-xs font-bold uppercase tracking-widest text-muted-foreground">
                   Or with email
                 </span>
                 <Separator className="h-0.5 flex-1 bg-line/20" />
@@ -96,29 +96,14 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
 
               <EmailAuthForm />
             </CardContent>
-
-            {/* <CardFooter className="border-t-0 px-0 pb-0 pt-2">
-              <p className="w-full text-center text-xs font-bold text-muted-foreground">
-                Protected by rate limits &amp; encryption. By continuing you agree
-                to our{" "}
-                <Link href="/" className="underline underline-offset-2 hover:text-saffron-deep">
-                  Terms
-                </Link>{" "}
-                and{" "}
-                <Link href="/" className="underline underline-offset-2 hover:text-saffron-deep">
-                  Privacy Policy
-                </Link>
-                .
-              </p>
-            </CardFooter> */}
           </Card>
         </div>
 
-        {/* Tricolor base */}
+        {/* Accent base */}
         <div className="flex h-9 shrink-0 overflow-hidden" aria-hidden="true">
-          <div className="h-full w-1/3 bg-saffron border-t-4 border-r-4 border-line" />
-          <div className="h-full w-1/3 bg-paper border-t-4 border-r-4 border-line" />
-          <div className="h-full w-1/3 bg-india-green border-t-4 border-line" />
+          <div className="h-full w-1/3 bg-ember border-t-4 border-r-4 border-line" />
+          <div className="h-full w-1/3 bg-lime-soft border-t-4 border-r-4 border-line" />
+          <div className="h-full w-1/3 bg-lake border-t-4 border-line" />
         </div>
       </div>
     </main>

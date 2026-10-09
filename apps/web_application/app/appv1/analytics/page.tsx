@@ -3,8 +3,9 @@
 import { useEffect, useState, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchAnalyticsSummary } from "@/store/analytics-slice";
-import { AlertCircle, LayoutGrid, Table as TableIcon, Search, SearchX, ChartNoAxesCombined } from "lucide-react";
+import { AlertCircle, LayoutGrid, Table as TableIcon, Search, SearchX, ChartNoAxesCombined, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { AnalyticsTable } from "@/components/analytics/analytics-table";
 import { LinkSummaryCard } from "@/components/analytics/link-summary-card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -47,13 +48,23 @@ export default function AnalyticsPage() {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <div className="relative group">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-              <input
+              <Input
                 type="text"
                 placeholder="Search links..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="h-9 w-full sm:w-64 bg-muted/30 border border-border/50 pl-9 pr-3 text-sm rounded-none focus:outline-none focus:border-primary/50 focus:bg-background transition-colors placeholder:text-muted-foreground/50"
+                className="h-9 w-full sm:w-64 pl-9 pr-8 rounded-none transition-colors"
               />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="Clear search"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
             </div>
             
             <div className="flex items-center gap-1 bg-muted/50 border border-border/50 rounded-none p-1 shrink-0">

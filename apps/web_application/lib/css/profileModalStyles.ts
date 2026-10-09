@@ -7,11 +7,11 @@ export const profileModalStyles = {
   charCount: "text-[11px] font-bold text-muted-foreground tabular-nums",
   
   form: "space-y-5",
-  formGrid: "grid gap-6 sm:grid-cols-[170px_1fr]",
+  formGrid: "grid gap-6 sm:grid-cols-[174px_1fr]",
   photoAndSub: "flex sm:flex-col gap-5",
   fieldGroup: "space-y-1.5",
-  photoContainer: "h-32 w-32 sm:h-42.5 sm:w-42.5 shrink-0 bg-mist flex items-center justify-center overflow-hidden rounded-none",
-  photoImage: "h-full w-full object-cover",
+  photoContainer: "relative h-32 w-32 sm:h-42.5 sm:w-42.5 shrink-0 bg-mist flex items-center justify-center overflow-hidden rounded-2xl border border-border/50 group transition-all duration-300 hover:border-primary/50 hover:shadow-md",
+  photoImage: "h-full w-full object-cover transition-transform duration-500 group-hover:scale-105",
   photoIcon: "h-12 w-12 text-muted-foreground",
   
   fieldsContainer: "space-y-4",

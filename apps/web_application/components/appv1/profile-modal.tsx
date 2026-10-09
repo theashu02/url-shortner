@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Crown, Loader2, Lock, User as UserIcon } from "lucide-react";
+import { Camera, Crown, Loader2, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -49,6 +49,9 @@ function ProfileForm({ profile }: { profile: UserProfile }) {
     setBio,
     error,
     saving,
+    uploadingImage,
+    handleFileChange,
+    handleRemoveImage,
     handleClose,
     handleSubmit,
   } = useProfileFormLogic(profile);
@@ -58,20 +61,60 @@ function ProfileForm({ profile }: { profile: UserProfile }) {
       <div className={styles.formGrid}>
         <div className={styles.photoAndSub}>
           <div className={styles.fieldGroup}>
-            <Label className={styles.label}>Photo</Label>
-            <div className={styles.photoContainer}>
-              {profile.image ? (
-                <Image
-                  src={profile.image}
-                  alt="Profile photo"
-                  width={170}
-                  height={170}
-                  className={styles.photoImage}
-                />
-              ) : (
-                <UserIcon className={styles.photoIcon} />
+            <div className="flex justify-between items-center mb-2">
+              <Label className={`${styles.label} mb-0`}>Photo</Label>
+              {profile.image && !uploadingImage && (
+                <button 
+                  type="button" 
+                  onClick={handleRemoveImage}
+                  className="text-xs text-red-500 hover:text-red-600 transition-colors"
+                >
+                  Remove
+                </button>
               )}
             </div>
+            <div 
+              className={`${styles.photoContainer} ${uploadingImage ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+              onClick={() => {
+                if (!uploadingImage) {
+                  document.getElementById("profile-image-upload")?.click();
+                }
+              }}
+            >
+              {uploadingImage ? (
+                <div className="flex flex-col items-center justify-center">
+                  <Loader2 className="animate-spin w-8 h-8 text-primary mb-2" />
+                  <span className="text-xs font-medium text-muted-foreground">Uploading...</span>
+                </div>
+              ) : profile.image ? (
+                <>
+                  <Image
+                    src={profile.image}
+                    alt="Profile photo"
+                    width={170}
+                    height={170}
+                    className={styles.photoImage}
+                  />
+                  <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <Camera className="w-8 h-8 text-white mb-2" />
+                    <span className="text-white text-xs font-medium">Change Photo</span>
+                  </div>
+                </>
+              ) : (
+                <div className="flex flex-col items-center justify-center text-muted-foreground group-hover:text-foreground transition-colors duration-300">
+                  <Camera className="w-8 h-8 mb-2" />
+                  <span className="text-xs font-medium">Upload Photo</span>
+                </div>
+              )}
+            </div>
+            <Input 
+              id="profile-image-upload" 
+              type="file" 
+              accept="image/*" 
+              className="hidden" 
+              onChange={handleFileChange} 
+              disabled={uploadingImage}
+            />
           </div>
           <div className={styles.fieldGroup}>
             <Label className={styles.label}>Subscription</Label>

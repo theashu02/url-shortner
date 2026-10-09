@@ -2,6 +2,7 @@ import { Elysia, t } from "elysia";
 import { getAuthUserId } from "@/server/lib/auth";
 import { connectToDatabase } from "@/server/db/mongoose";
 import { UserModel, type AppUser } from "@/server/models/user";
+import { uploadImage, deleteImageByUrl } from "@/server/services/cloudinary";
 
 type LeanUser = AppUser & { _id: { toString(): string } };
 
@@ -109,6 +110,7 @@ export const userRoute = new Elysia()
           }
         }
 
+
         const update: Record<string, unknown> = {};
         if (Object.keys($set).length > 0) update.$set = $set;
         if (Object.keys($unset).length > 0) update.$unset = $unset;
@@ -147,5 +149,94 @@ export const userRoute = new Elysia()
         bio: t.Optional(t.String()),
         image: t.Optional(t.String()),
       }),
+    }
+  )
+  .patch(
+    "/user/image",
+    async ({ body, request, set }) => {
+      try {
+        const userId = await getAuthUserId(request);
+        if (!userId) {
+          set.status = 401;
+          return { message: "Unauthorized. Please log in." };
+        }
+
+        if (!body.imageFile) {
+          set.status = 400;
+          return { message: "No image file provided." };
+        }
+
+        if (body.imageFile.size > 5 * 1024 * 1024) {
+          set.status = 400;
+          return { message: "Image must be less than 5MB." };
+        }
+
+        await connectToDatabase();
+        const existingUser = await UserModel.findById(userId).select("image").lean();
+        const oldImageUrl = existingUser?.image;
+
+        const newImageUrl = await uploadImage(body.imageFile);
+        
+        const user = await UserModel.findByIdAndUpdate(userId, { $set: { image: newImageUrl } }, {
+          new: true,
+          runValidators: true,
+        }).lean();
+
+        if (oldImageUrl) {
+          await deleteImageByUrl(oldImageUrl);
+        }
+
+        if (!user) {
+          set.status = 404;
+          return { message: "User not found." };
+        }
+
+        return toProfile(user as LeanUser);
+      } catch (err) {
+        console.error("[user] image update:", err);
+        set.status = 500;
+        return { message: "Internal server error" };
+      }
+    },
+    {
+      body: t.Object({
+        imageFile: t.File(),
+      }),
+    }
+  )
+  .delete(
+    "/user/image",
+    async ({ request, set }) => {
+      try {
+        const userId = await getAuthUserId(request);
+        if (!userId) {
+          set.status = 401;
+          return { message: "Unauthorized. Please log in." };
+        }
+
+        await connectToDatabase();
+        const existingUser = await UserModel.findById(userId).select("image").lean();
+        const oldImageUrl = existingUser?.image;
+
+        const user = await UserModel.findByIdAndUpdate(userId, { $unset: { image: 1 } }, {
+          new: true,
+          runValidators: true,
+        }).lean();
+
+        if (oldImageUrl) {
+          await deleteImageByUrl(oldImageUrl);
+        }
+
+        if (!user) {
+          set.status = 404;
+          return { message: "User not found." };
+        }
+
+        return toProfile(user as LeanUser);
+      } catch (err) {
+        console.error("[user] image delete:", err);
+        set.status = 500;
+        return { message: "Internal server error" };
+      }
     }
   );

@@ -3,6 +3,8 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import {
   fetchProfile,
   updateProfile,
+  uploadProfileImage,
+  deleteProfileImage,
   setProfileModalOpen,
   type UserProfile,
 } from "@/store/profile-slice";
@@ -11,11 +13,48 @@ import { toast } from "@/components/ui/toast";
 export function useProfileFormLogic(profile: UserProfile) {
   const dispatch = useAppDispatch();
   const saving = useAppSelector((s) => s.profile.saving);
+  const uploadingImage = useAppSelector((s) => s.profile.uploadingImage);
 
   const [name, setName] = useState(profile.name ?? "");
   const [handle, setHandle] = useState(profile.handle ?? "");
   const [bio, setBio] = useState(profile.bio ?? "");
   const [error, setError] = useState<string | null>(null);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setError("Image must be less than 5MB.");
+        return;
+      }
+      setError(null);
+      
+      const result = await dispatch(uploadProfileImage(file));
+      if (uploadProfileImage.fulfilled.match(result)) {
+        toast.add({
+          type: "success",
+          title: "Image updated",
+          description: "Your profile photo has been updated.",
+        });
+      } else {
+        setError(result.error.message ?? "Failed to upload image.");
+      }
+    }
+  };
+
+  const handleRemoveImage = async () => {
+    setError(null);
+    const result = await dispatch(deleteProfileImage());
+    if (deleteProfileImage.fulfilled.match(result)) {
+      toast.add({
+        type: "success",
+        title: "Image removed",
+        description: "Your profile photo has been removed.",
+      });
+    } else {
+      setError(result.error.message ?? "Failed to remove image.");
+    }
+  };
 
   const handleClose = () => {
     if (!saving) dispatch(setProfileModalOpen(false));
@@ -33,7 +72,7 @@ export function useProfileFormLogic(profile: UserProfile) {
         name: name.trim(),
         handle: handle.trim(),
         bio: bio.trim(),
-      }),
+      })
     );
 
     if (updateProfile.fulfilled.match(result)) {
@@ -57,6 +96,9 @@ export function useProfileFormLogic(profile: UserProfile) {
     setBio,
     error,
     saving,
+    uploadingImage,
+    handleFileChange,
+    handleRemoveImage,
     handleClose,
     handleSubmit,
   };

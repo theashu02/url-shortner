@@ -5,6 +5,7 @@ import { Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   Card,
   CardHeader,
@@ -25,6 +26,7 @@ export function EditLinkModal() {
 
   const [url, setUrl] = useState(link.url);
   const [slug, setSlug] = useState(link.shortCode);
+  const [deviceCapture, setDeviceCapture] = useState(link.deviceCapture === true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,7 +41,7 @@ export function EditLinkModal() {
     setLoading(true);
     setError(null);
     try {
-      await dispatch(updateLink({ id: link._id, url: formatted, slug: slug.trim() })).unwrap();
+      await dispatch(updateLink({ id: link._id, url: formatted, slug: slug.trim(), deviceCapture })).unwrap();
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
@@ -101,6 +103,23 @@ export function EditLinkModal() {
                 className="flex-1 h-full border-0 bg-transparent px-3 text-sm shadow-none focus-visible:ring-0 rounded-none font-mono"
               />
             </div>
+          </div>
+
+          {/* Device Capture */}
+          <div className="flex items-center justify-between gap-3 p-3 bg-muted/20 border border-border/60">
+            <div className="space-y-0.5">
+              <Label htmlFor="editDeviceCapture" className="text-xs font-semibold text-foreground">
+                Device information capture
+              </Label>
+              <p className="text-[11px] text-muted-foreground">
+                Show visitors a preview page and record device details for analytics.
+              </p>
+            </div>
+            <Switch
+              id="editDeviceCapture"
+              checked={deviceCapture}
+              onCheckedChange={setDeviceCapture}
+            />
           </div>
 
           {error && (

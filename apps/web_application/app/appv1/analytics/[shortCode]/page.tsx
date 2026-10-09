@@ -87,7 +87,7 @@ export default function AnalyticsDetailPage() {
         </div>
       </div>
 
-      <SummaryCards totalClicks={data.totalClicks} uniqueVisitors={data.uniqueVisitors} />
+      <SummaryCards totalClicks={data.totalClicks} uniqueVisitors={data.uniqueVisitors} continuedClicks={data.continuedClicks} />
       
       <TimeSeriesChart data={data.timeline} />
 
@@ -139,6 +139,8 @@ export default function AnalyticsDetailPage() {
             <BreakdownCard title="Operating Systems" data={data.os} />
             <BreakdownCard title="Browsers" data={data.browsers} />
             <BreakdownCard title="Languages" data={data.languages} />
+            <BreakdownCard title="Screen Sizes" data={data.screens} emptyMessage="No device details captured" />
+            <BreakdownCard title="Connections" data={data.connections} emptyMessage="No connection data" />
           </div>
         </TabsContent>
       </Tabs>

@@ -5,6 +5,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ScrollReveal } from "./scroll-reveal";
+import { Eyebrow } from "./eyebrow";
 
 export const faqs = [
   {
@@ -31,29 +32,34 @@ export const faqs = [
 
 export function FAQ() {
   return (
-    <section aria-label="Frequently asked questions" className="py-32 px-4 md:px-8 bg-mist">
-      <div className="container mx-auto max-w-4xl">
+    <section aria-label="Frequently asked questions" className="py-20 md:py-24 px-4 md:px-8 bg-mist">
+      <div className="container mx-auto max-w-3xl">
         <ScrollReveal>
-          <div className="text-center mb-20">
-            <h2 className="font-display font-bold text-5xl md:text-8xl text-foreground mb-6 uppercase tracking-tighter leading-[0.9]">
-              FREQUENTLY ASKED<br />
-              <span className="text-ember">QUESTIONS</span>
+          <div className="text-center mb-10">
+            <Eyebrow>FAQ</Eyebrow>
+            <h2 className="font-display font-bold text-4xl md:text-5xl text-foreground mt-4 mb-4 tracking-tight leading-tight">
+              Frequently asked <span className="text-ember">questions</span>
             </h2>
+            <p className="text-muted-foreground text-lg">
+              Everything you need to know about SimpLx.
+            </p>
           </div>
         </ScrollReveal>
 
         <ScrollReveal delay={100}>
-          <div className="bg-card rounded-none p-6 md:p-10 border-4 border-line">
-            <Accordion className="w-full space-y-4">
+          <div className="bg-card rounded-none p-4 md:p-6 border border-line shadow-sm">
+            <Accordion className="w-full space-y-3">
               {faqs.map((faq, index) => (
-                <AccordionItem key={index} value={`item-${index}`} className="border-4 border-line rounded-none overflow-hidden bg-card data-[state=open]:bg-lake/10 transition-colors">
-                  <AccordionTrigger className="text-left font-display font-bold text-xl md:text-2xl uppercase tracking-wider text-foreground hover:text-ember-deep transition-colors p-6 hover:no-underline data-[state=open]:border-b-4 data-[state=open]:border-line">
-                    {faq.question}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground font-bold leading-relaxed text-lg p-6 bg-lake/5">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
+                <ScrollReveal key={index} delay={index * 80} y={16}>
+                  <AccordionItem value={`item-${index}`} className="border border-line rounded-none overflow-hidden bg-card data-[state=open]:shadow-sm transition-shadow">
+                    <AccordionTrigger className="text-left font-semibold text-lg tracking-tight text-foreground hover:text-ember-deep transition-colors px-5 py-4 hover:no-underline data-[state=open]:border-b data-[state=open]:border-line">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground leading-relaxed px-5 pb-5">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                </ScrollReveal>
               ))}
             </Accordion>
           </div>

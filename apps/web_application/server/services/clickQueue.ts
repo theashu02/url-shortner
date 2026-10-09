@@ -7,6 +7,7 @@ import {
   CachedGeoProvider,
   IpApiGeoProvider,
   EMPTY_GEO,
+  buildClickEventDoc,
   type RawClickCapture,
   type EnrichedClickEvent,
 } from "@/server/lib/click-capture";
@@ -46,49 +47,7 @@ if (!globalThis._clickWorker) {
 
       await Promise.all([
         UrlModel.updateOne({ shortCode }, { $inc: { clicks: 1 } }),
-        ClickEventModel.create({
-          shortCode,
-          
-          browser: enriched.browser,
-          browserVersion: enriched.browserVersion,
-          os: enriched.os,
-          osVersion: enriched.osVersion,
-          deviceType: enriched.deviceType,
-          deviceVendor: enriched.deviceVendor,
-          deviceModel: enriched.deviceModel,
-          isBot: enriched.isBot,
-          botReason: enriched.botReason,
-          inAppBrowser: enriched.inAppBrowser,
-
-          language: enriched.language,
-          languageList: enriched.languageList,
-         
-          referrer: enriched.referrer,
-          referrerDomain: enriched.referrerDomain,
-          referrerType: enriched.referrerType,
-          
-          utmSource: enriched.utm.utm_source,
-          utmMedium: enriched.utm.utm_medium,
-          utmCampaign: enriched.utm.utm_campaign,
-          utmTerm: enriched.utm.utm_term,
-          utmContent: enriched.utm.utm_content,
-          
-          ipHash: enriched.ipHash,
-          visitorHash: enriched.visitorHash,
-          protocol: enriched.protocol,
-          
-          geoCountry: geo.country,
-          geoRegion: geo.region,
-          geoCity: geo.city,
-          geoLatitude: geo.latitude,
-          geoLongitude: geo.longitude,
-          geoTimezone: geo.timezone,
-          geoIsp: geo.isp,
-          geoOrg: geo.org,
-          geoAsNumber: geo.asNumber,
-          
-          clickedAt: enriched.clickedAt,
-        }),
+        ClickEventModel.create(buildClickEventDoc(shortCode, enriched)),
       ]);
 
       console.log(`[ClickEvent] Fully Enriched Capture for ${shortCode}:`, JSON.stringify(enriched, null, 2));

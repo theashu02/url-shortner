@@ -95,6 +95,7 @@ export interface DetailedAnalytics {
   originalUrl: string;
   totalClicks: number;
   uniqueVisitors: number;
+  continuedClicks: number;
   timeline: { date: string; count: number }[];
   devices: BreakdownItem[];
   browsers: BreakdownItem[];
@@ -108,6 +109,8 @@ export interface DetailedAnalytics {
   bots: BreakdownItem[];
   languages: BreakdownItem[];
   inAppBrowsers: BreakdownItem[];
+  screens: BreakdownItem[];
+  connections: BreakdownItem[];
 }
 
 export async function getLinkAnalytics(
@@ -131,12 +134,14 @@ export async function getLinkAnalytics(
               _id: null,
               totalClicks: { $sum: 1 },
               uniqueVisitors: { $addToSet: "$visitorHash" },
+              continuedClicks: { $sum: { $cond: ["$continued", 1, 0] } },
             },
           },
           {
             $project: {
               totalClicks: 1,
               uniqueVisitors: { $size: "$uniqueVisitors" },
+              continuedClicks: 1,
             },
           },
         ],
@@ -161,6 +166,13 @@ export async function getLinkAnalytics(
         bots: [{ $group: { _id: { $ifNull: ["$botReason", "human"] }, count: { $sum: 1 } } }, { $sort: { count: -1 } }],
         languages: [{ $group: { _id: { $ifNull: ["$language", "unknown"] }, count: { $sum: 1 } } }, { $sort: { count: -1 } }],
         inAppBrowsers: [{ $group: { _id: { $ifNull: ["$inAppBrowser", "browser"] }, count: { $sum: 1 } } }, { $sort: { count: -1 } }],
+        screenSizes: [
+          { $match: { screenWidth: { $type: "number" }, screenHeight: { $type: "number" } } },
+          { $group: { _id: { w: "$screenWidth", h: "$screenHeight" }, count: { $sum: 1 } } },
+          { $sort: { count: -1 } },
+          { $limit: 12 },
+        ],
+        connections: [{ $group: { _id: { $ifNull: ["$connectionType", "unknown"] }, count: { $sum: 1 } } }, { $sort: { count: -1 } }],
       },
     },
   ];
@@ -174,6 +186,7 @@ export async function getLinkAnalytics(
     shortCode: link.shortCode,
     originalUrl: link.url,
     totalClicks: result.summary[0]?.totalClicks || 0,
+    continuedClicks: result.summary[0]?.continuedClicks || 0,
     uniqueVisitors: result.summary[0]?.uniqueVisitors || 0,
     timeline: result.timeline.map((t: any) => ({ date: t._id, count: t.count })),
     devices: formatBreakdown(result.devices),
@@ -188,5 +201,11 @@ export async function getLinkAnalytics(
     bots: formatBreakdown(result.bots),
     languages: formatBreakdown(result.languages),
     inAppBrowsers: formatBreakdown(result.inAppBrowsers),
+    screens: result.screenSizes.map(
+      (s: { _id: { w: number; h: number }; count: number }) => ({
+      id: `${s._id.w}×${s._id.h}`,
+      count: s.count,
+    })),
+    connections: formatBreakdown(result.connections),
   };
 }

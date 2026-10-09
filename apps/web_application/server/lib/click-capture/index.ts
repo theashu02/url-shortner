@@ -11,3 +11,4 @@ export type {
   ReferrerType,
 } from "./types";
 export { EMPTY_GEO } from "./types";
+export { buildClickEventDoc } from "./event-doc";

@@ -1,48 +1,39 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import type { ReactNode } from "react";
+import { EASE } from "./motion-variants";
 
 interface ScrollRevealProps {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
+  /** Delay in milliseconds before the reveal starts. */
   delay?: number;
+  /** Vertical distance (px) the element travels while revealing. */
+  y?: number;
 }
 
+export function ScrollReveal({
+  children,
+  className = "",
+  delay = 0,
+  y = 28,
+}: ScrollRevealProps) {
+  const reduce = useReducedMotion();
 
-export function ScrollReveal({ children, className = "", delay = 0 }: ScrollRevealProps) {
-  const [isVisible, setIsVisible] = useState(true);
-  const [isArmed, setIsArmed] = useState(false);
-  const domRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const node = domRef.current;
-    if (!node) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    // The observer fires immediately on observe with the current
-    // intersection state, so below-fold elements hide via callback.
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const intersecting = entries[0].isIntersecting;
-        setIsArmed(true);
-        setIsVisible(intersecting);
-        if (intersecting) observer.disconnect();
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
+  if (reduce) {
+    return <div className={className}>{children}</div>;
+  }
 
   return (
-    <div
-      ref={domRef}
-      className={`${isArmed ? "transition-all duration-700 ease-out" : ""} ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-      } ${className}`}
-      style={{ transitionDelay: `${delay}ms` }}
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-64px" }}
+      transition={{ duration: 0.7, delay: delay / 1000, ease: EASE }}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }

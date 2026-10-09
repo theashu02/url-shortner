@@ -3,6 +3,7 @@ export type LinkItem = {
   shortCode: string;
   url: string;
   clicks: number;
+  deviceCapture: boolean;
   createdAt: string;
   updatedAt: string;
   expiresAt?: string;

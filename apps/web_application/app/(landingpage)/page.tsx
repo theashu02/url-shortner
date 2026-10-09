@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/LandingPage/hero";
+import { Marquee } from "@/components/LandingPage/marquee";
 import { Features } from "@/components/LandingPage/features";
 import { SpeedMatrix } from "@/components/LandingPage/speed-matrix";
 import { Pricing } from "@/components/LandingPage/pricing";
 import { FAQ, faqs } from "@/components/LandingPage/faq";
+import { CTA } from "@/components/LandingPage/cta";
 
 export const metadata: Metadata = {
   title: "SimpLx — Short Links, Big Impact | Fast URL Shortener with Analytics",
@@ -183,10 +185,12 @@ export default function Page() {
     <>
       <JsonLd />
       <Hero />
+      <Marquee />
       <Features />
       <SpeedMatrix />
       <Pricing />
       <FAQ />
+      <CTA />
     </>
   );
 }

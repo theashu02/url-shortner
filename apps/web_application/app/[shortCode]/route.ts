@@ -7,6 +7,7 @@ import {
   NO_CACHE_HEADERS,
   resolveSafeUrl,
   SHORT_CODE_RE,
+  getRequestBaseUrl,
 } from "@/lib/constant";
 import { trackClickAsync } from "@/server/services/clickQueue";
 import { captureVisitor } from "@/server/lib/click-capture";
@@ -21,15 +22,22 @@ export async function GET(
   { params }: { params: Promise<{ shortCode: string }> },
 ) {
   const { shortCode } = await params;
+  const baseUrl = getRequestBaseUrl(request.headers, request.nextUrl.origin);
 
   if (!shortCode || !SHORT_CODE_RE.test(shortCode)) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/", baseUrl));
   }
 
   try {
     let destinationUrl: string | null = null;
+    let deviceCapture = false;
     try {
-      destinationUrl = await redis.get(`url:${shortCode}`);
+      const [cachedUrl, cachedDc] = await redis.mget(
+        `url:${shortCode}`,
+        `dc:${shortCode}`,
+      );
+      destinationUrl = cachedUrl;
+      deviceCapture = cachedDc === "1";
     } catch {
       console.log("Going to check URL for mongodb");
     }
@@ -40,17 +48,18 @@ export async function GET(
 
       if (!urlDoc?.url) {
         return NextResponse.redirect(
-          new URL("/link-error?type=link_not_found", request.url),
+          new URL("/link-error?type=link_not_found", baseUrl),
         );
       }
 
       if (urlDoc.expiresAt && new Date(urlDoc.expiresAt) <= new Date()) {
         return NextResponse.redirect(
-          new URL("/link-error?type=link_expired", request.url),
+          new URL("/link-error?type=link_expired", baseUrl),
         );
       }
 
       destinationUrl = urlDoc.url;
+      deviceCapture = urlDoc.deviceCapture === true;
 
       const redisTtl = calculateRedisTTL(
         urlDoc.expiresAt ? new Date(urlDoc.expiresAt).toISOString() : null,
@@ -59,14 +68,28 @@ export async function GET(
         redis
           .setex(`url:${shortCode}`, redisTtl, destinationUrl)
           .catch(() => {});
+        redis
+          .setex(`dc:${shortCode}`, redisTtl, deviceCapture ? "1" : "0")
+          .catch(() => {});
       }
     }
 
     const finalUrl = resolveSafeUrl(destinationUrl);
     if (!finalUrl) {
       return NextResponse.redirect(
-        new URL("/?error=invalid_link", request.url),
+        new URL("/?error=invalid_link", baseUrl),
       );
+    }
+
+    if (deviceCapture) {
+      const interstitialUrl = new URL(
+        `/go/${shortCode}${request.nextUrl.search}`,
+        baseUrl,
+      );
+      return NextResponse.redirect(interstitialUrl, {
+        status: 307,
+        headers: NO_CACHE_HEADERS,
+      });
     }
 
     const capture = captureVisitor(
@@ -86,6 +109,6 @@ export async function GET(
     });
   } catch (error) {
     console.error("[Redirection] Unhandled error:", error);
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/", baseUrl));
   }
 }

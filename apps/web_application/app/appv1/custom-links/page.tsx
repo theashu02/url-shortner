@@ -11,6 +11,7 @@ import { UrlResultCard } from "@/components/appv1/url-result-card";
 import { CreateModeTabs } from "@/components/appv1/create-mode-tabs";
 import { UtmParameters, type UtmParams } from "@/components/appv1/utmParameters";
 import { LinkExpiration } from "@/components/appv1/linkExpiration";
+import { DeviceCaptureToggle } from "@/components/appv1/deviceCaptureToggle";
 
 type UrlCreated = { shortCode: string; originalUrl: string };
 type UrlError = { message: string };
@@ -24,6 +25,7 @@ export default function CustomLinksPage() {
   >();
 
   const utmRef = useRef<UtmParams | null>(null);
+  const deviceCaptureRef = useRef(false);
   const expiresAtRef = useRef<string | null>(null);
 
   const [destinationUrl, setDestinationUrl] = useState("");
@@ -45,6 +47,7 @@ export default function CustomLinksPage() {
           ...(slug ? { customSlug: slug } : {}),
           ...(utmRef.current ? { utmParams: utmRef.current } : {}),
           ...(expiresAtRef.current ? { expiresAt: expiresAtRef.current } : {}),
+          ...(deviceCaptureRef.current ? { deviceCapture: true } : {}),
         }),
       );
     },
@@ -91,6 +94,13 @@ export default function CustomLinksPage() {
               <UtmParameters
                 destinationUrl={destinationUrl}
                 onChange={(p) => { utmRef.current = p; }}
+              />
+            </div>
+
+            {/* Device Capture */}
+            <div className="px-5 py-4">
+              <DeviceCaptureToggle
+                onChange={(v) => { deviceCaptureRef.current = v; }}
               />
             </div>
 

@@ -148,13 +148,14 @@ export const fetchLinks = createAsyncThunk<
 
 export const updateLink = createAsyncThunk<
   LinkItem,
-  { id: string; url: string; slug: string },
+  { id: string; url: string; slug: string; deviceCapture: boolean },
   { state: RootState }
->("myLinks/updateLink", async ({ id, url, slug }) => {
+>("myLinks/updateLink", async ({ id, url, slug, deviceCapture }) => {
   const res = await api.url.update.patch({
     id,
     url,
     customSlug: slug || undefined,
+    deviceCapture,
   });
 
   if (res.data && "link" in res.data) {

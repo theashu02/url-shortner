@@ -21,7 +21,8 @@ export const urlRoute = new Elysia({ prefix: "/url" })
           userId,
           ip,
           body.expiresAt,
-          body.utmParams as any
+          body.utmParams as any,
+          body.deviceCapture
         );
 
         if ("status" in result) {
@@ -42,6 +43,7 @@ export const urlRoute = new Elysia({ prefix: "/url" })
         url: t.String({ format: "uri", error: "Invalid URL format" }),
         customSlug: t.Optional(t.String()),
         expiresAt: t.Optional(t.String()),
+        deviceCapture: t.Optional(t.Boolean()),
         utmParams: t.Optional(
           t.Object({
             source: t.Optional(t.String()),
@@ -92,7 +94,7 @@ export const urlRoute = new Elysia({ prefix: "/url" })
           return { message: "Unauthorized. Please log in." };
         }
 
-        const result = await updateLink(body.id, body.url, body.customSlug, userId);
+        const result = await updateLink(body.id, body.url, body.customSlug, userId, body.deviceCapture);
         if ("status" in result) {
           set.status = result.status;
           return { message: result.message };
@@ -107,6 +109,7 @@ export const urlRoute = new Elysia({ prefix: "/url" })
     {
       body: t.Object({
         id: t.String(),
+        deviceCapture: t.Optional(t.Boolean()),
         url: t.String({ format: "uri", error: "Invalid URL format" }),
         customSlug: t.Optional(t.String()),
       }),

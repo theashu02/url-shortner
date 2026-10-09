@@ -13,6 +13,7 @@ export type LinkDTO = {
   shortCode: string;
   url: string;
   clicks: number;
+  deviceCapture: boolean;
   createdAt: string;
   updatedAt: string;
   expiresAt?: string;
@@ -40,6 +41,7 @@ export function toDTO(link: any): LinkDTO {
     shortCode: String(link.shortCode ?? ""),
     url: String(link.url ?? ""),
     clicks: Number(link.clicks ?? 0),
+    deviceCapture: link.deviceCapture === true,
     createdAt: link.createdAt ? new Date(link.createdAt).toISOString() : new Date().toISOString(),
     updatedAt: link.updatedAt ? new Date(link.updatedAt).toISOString() : new Date().toISOString(),
     expiresAt: link.expiresAt ? new Date(link.expiresAt).toISOString() : undefined,

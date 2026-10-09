@@ -5,6 +5,7 @@ export interface IUrl extends Document {
   url: string;
   userId?: string;
   clicks: number;
+  deviceCapture?: boolean;
   expiresAt?: Date;
   utm?: {
     source?: string;
@@ -23,6 +24,7 @@ const UrlSchema = new Schema<IUrl>(
     url: { type: String, required: true },
     userId: { type: String, required: false },
     clicks: { type: Number, default: 0 },
+    deviceCapture: { type: Boolean, default: false },
     expiresAt: { type: Date, required: false },
     utm: {
       source: { type: String, required: false },

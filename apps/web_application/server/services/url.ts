@@ -12,7 +12,8 @@ export async function createShortUrl(
   userId: string | null,
   ip: string,
   expiresAtIso?: string,
-  utmParams?: UtmParamsInput
+  utmParams?: UtmParamsInput,
+  deviceCapture?: boolean
 ): Promise<CreateResult> {
   // Rate limit
   
@@ -67,8 +68,10 @@ export async function createShortUrl(
       userId: userId ?? undefined,
       expiresAt,
       utm: utmParams ? { ...utmParams } : undefined,
+      deviceCapture: deviceCapture === true,
     }),
     redis.setex(`url:${shortCode}`, redisTtl, finalUrl),
+    redis.setex(`dc:${shortCode}`, redisTtl, deviceCapture ? "1" : "0"),
     redis.set(`slug:taken:${shortCode}`, "1"),
   ]);
 
@@ -117,7 +120,8 @@ export async function updateLink(
   id: string,
   url: string,
   customSlug: string | undefined,
-  userId: string
+  userId: string,
+  deviceCapture?: boolean,
 ): Promise<UpdateResult> {
   await connectToDatabase();
 
@@ -136,6 +140,7 @@ export async function updateLink(
     await Promise.all([
       redis.del(`url:${link.shortCode}`).catch(() => {}),
       redis.del(`slug:taken:${link.shortCode}`).catch(() => {}),
+      redis.del(`dc:${link.shortCode}`).catch(() => {}),
       redis.setex(`url:${customSlug}`, URL_TTL_SECONDS, url),
       redis.set(`slug:taken:${customSlug}`, "1").catch(() => {}),
     ]);
@@ -146,8 +151,12 @@ export async function updateLink(
   }
 
   link.url = url;
+  if (deviceCapture !== undefined) link.deviceCapture = deviceCapture;
   link.shortCode = updatedShortCode;
   await link.save();
+  redis
+    .setex(`dc:${updatedShortCode}`, URL_TTL_SECONDS, link.deviceCapture ? "1" : "0")
+    .catch(() => {});
 
   return { message: "Link updated successfully", link: toDTO(link) };
 }
@@ -165,5 +174,6 @@ export async function deleteLink(id: string, userId: string): Promise<DeleteResu
     redis.del(`slug:taken:${link.shortCode}`).catch(() => {}),
   ]);
 
+  redis.del(`dc:${link.shortCode}`).catch(() => {});
   return { message: "Link deleted successfully", id };
 }

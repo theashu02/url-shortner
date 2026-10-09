@@ -41,6 +41,32 @@ export interface IClickEvent extends Document {
   geoOrg?: string | null;
   geoAsNumber?: string | null;
 
+  destinationUrl?: string | null;
+  continued: boolean;
+  continuedAt?: Date | null;
+  capturedAt?: Date | null;
+
+  screenWidth?: number | null;
+  screenHeight?: number | null;
+  viewportWidth?: number | null;
+  viewportHeight?: number | null;
+  touchSupport?: boolean | null;
+  cpuCores?: number | null;
+  deviceMemory?: number | null;
+  platform?: string | null;
+  clientTimezone?: string | null;
+  clientUa?: string | null;
+  connectionType?: string | null;
+  connectionDownlink?: number | null;
+  connectionRtt?: number | null;
+  connectionSaveData?: boolean | null;
+  uaPlatform?: string | null;
+  uaPlatformVersion?: string | null;
+  uaArchitecture?: string | null;
+  uaBitness?: string | null;
+  uaModel?: string | null;
+  uaMobile?: boolean | null;
+
   clickedAt: Date;
 }
 
@@ -86,6 +112,32 @@ const ClickEventSchema = new Schema<IClickEvent>(
     geoOrg: { type: String, default: null },
     geoAsNumber: { type: String, default: null },
 
+    destinationUrl: { type: String, default: null },
+    continued: { type: Boolean, default: false },
+    continuedAt: { type: Date, default: null },
+    capturedAt: { type: Date, default: null },
+
+    screenWidth: { type: Number, default: null },
+    screenHeight: { type: Number, default: null },
+    viewportWidth: { type: Number, default: null },
+    viewportHeight: { type: Number, default: null },
+    touchSupport: { type: Boolean, default: null },
+    cpuCores: { type: Number, default: null },
+    deviceMemory: { type: Number, default: null },
+    platform: { type: String, default: null },
+    clientTimezone: { type: String, default: null },
+    clientUa: { type: String, default: null },
+    connectionType: { type: String, default: null },
+    connectionDownlink: { type: Number, default: null },
+    connectionRtt: { type: Number, default: null },
+    connectionSaveData: { type: Boolean, default: null },
+    uaPlatform: { type: String, default: null },
+    uaPlatformVersion: { type: String, default: null },
+    uaArchitecture: { type: String, default: null },
+    uaBitness: { type: String, default: null },
+    uaModel: { type: String, default: null },
+    uaMobile: { type: Boolean, default: null },
+
     clickedAt: { type: Date, default: Date.now },
   },
   { timestamps: false },
@@ -96,6 +148,7 @@ ClickEventSchema.index({ shortCode: 1, visitorHash: 1 });
 ClickEventSchema.index({ shortCode: 1, geoCountry: 1 });
 ClickEventSchema.index({ shortCode: 1, deviceType: 1 });
 ClickEventSchema.index({ shortCode: 1, isBot: 1 });
+ClickEventSchema.index({ shortCode: 1, continued: 1 });
 
 if (mongoose.models.ClickEvent) {
   delete mongoose.models.ClickEvent;

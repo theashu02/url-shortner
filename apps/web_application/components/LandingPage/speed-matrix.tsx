@@ -31,7 +31,7 @@ export function SpeedMatrix() {
                   <div className="w-19 h-19 rounded-none bg-ember flex items-center justify-center text-on-ember shrink-0 shadow-2xl">
                     <User className="h-8 w-8" />
                   </div>
-                  <div className="bg-card border-2 border-line p-5 rounded-none shadow-hard-sm flex-1">
+                  <div className="bg-card border-2 border-line p-5 rounded-none flex-1">
                     <p className="font-display font-bold text-xl uppercase tracking-wider text-foreground">User Click</p>
                   </div>
                 </div>
@@ -42,7 +42,7 @@ export function SpeedMatrix() {
                   <div className="w-19 h-19 rounded-none bg-lake flex items-center justify-center text-on-lake shrink-0 shadow-2xl">
                     <Database className="h-8 w-8" />
                   </div>
-                  <div className="bg-card border-2 border-line p-5 rounded-none shadow-hard-sm flex-1">
+                  <div className="bg-card border-2 border-line p-5 rounded-none flex-1">
                     <p className="font-display font-bold text-xl uppercase tracking-wider text-foreground">Redis Edge Cache</p>
                     <p className="text-sm text-muted-foreground font-bold font-mono mt-1">Sub-10ms lookup</p>
                   </div>
@@ -54,7 +54,7 @@ export function SpeedMatrix() {
                   <div className="w-19 h-19 rounded-none bg-lime-soft border-2 border-line flex items-center justify-center text-on-lime shrink-0 shadow-2xl">
                     <ExternalLink className="h-8 w-8" />
                   </div>
-                  <div className="bg-card border-2 border-line p-5 rounded-none shadow-hard-sm flex-1 flex justify-between items-center">
+                  <div className="bg-card border-2 border-line p-5 rounded-none flex-1 flex justify-between items-center">
                     <div>
                       <p className="font-display font-bold text-xl uppercase tracking-wider text-foreground">302 Redirect</p>
                       <p className="text-sm text-muted-foreground font-bold font-mono mt-1">Instant delivery</p>
@@ -70,7 +70,7 @@ export function SpeedMatrix() {
                   <div className="w-15 h-15 rounded-none bg-ember-deep flex items-center justify-center text-on-ember shrink-0 shadow-2xl">
                     <Activity className="h-6 w-6" />
                   </div>
-                  <div className="bg-card border-2 border-line p-4 rounded-none shadow-hard-sm flex-1">
+                  <div className="bg-card border-2 border-line p-4 rounded-none flex-1">
                     <p className="font-display font-bold text-lg uppercase tracking-wider text-foreground">Async Analytics</p>
                   </div>
                 </div>

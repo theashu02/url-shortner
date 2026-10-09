@@ -43,7 +43,7 @@ export function FAQ() {
         </ScrollReveal>
 
         <ScrollReveal delay={100}>
-          <div className="bg-card rounded-none p-6 md:p-10 shadow-hard border-4 border-line">
+          <div className="bg-card rounded-none p-6 md:p-10 border-4 border-line">
             <Accordion className="w-full space-y-4">
               {faqs.map((faq, index) => (
                 <AccordionItem key={index} value={`item-${index}`} className="border-4 border-line rounded-none overflow-hidden bg-card data-[state=open]:bg-lake/10 transition-colors">

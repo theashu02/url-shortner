@@ -59,7 +59,7 @@ export function Features() {
           {features.map((feature, idx) => (
             <ScrollReveal key={idx} delay={idx * 100}>
               <Card
-                className="bg-card border-2 border-line hover:border-ember transition-all duration-300 rounded-none overflow-hidden group hover:-translate-y-2 shadow-hard"
+                className="bg-card border-2 border-line hover:border-ember transition-all duration-300 rounded-none overflow-hidden group hover:-translate-y-2"
               >
                 <CardHeader className="pb-4 relative overflow-hidden">
                   <div className={`w-16 h-16 rounded-none flex items-center justify-center mb-6 shadow-none transform group-hover:scale-110 transition-transform duration-300 ${feature.color}`}>

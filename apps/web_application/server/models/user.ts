@@ -14,7 +14,8 @@ const userSchema = new Schema(
     lastLoginAt:      { type: Date, default: Date.now },
     handle:           { type: String, unique: true, sparse: true },
     country:          { type: String },
-    bio:              { type: String }
+    bio:              { type: String },
+    subscription:     { type: String, enum: ["free", "pro"], default: "free" }
   },
   { timestamps: true }
 );

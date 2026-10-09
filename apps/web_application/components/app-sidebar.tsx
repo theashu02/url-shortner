@@ -12,6 +12,7 @@ import {
   LogOut,
   Moon,
   Sun,
+  User,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "next-auth/react";
+import { useAppDispatch } from "@/store";
+import { setProfileModalOpen } from "@/store/profile-slice";
+import { ProfileModal } from "@/components/appv1/profile-modal";
 
 const routes = [
   { name: "Dashboard", href: "/appv1/dashboard", icon: LayoutDashboard },
@@ -36,6 +40,7 @@ export function AppSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { setTheme } = useTheme();
+  const dispatch = useAppDispatch();
 
   // Close mobile sidebar on route change
   useEffect(() => {
@@ -46,12 +51,12 @@ export function AppSidebar() {
   return (
     <>
       {/* Mobile Toggle Button */}
-      <div className="md:hidden fixed top-4 left-4 z-50 border-r">
+      <div className="md:hidden fixed top-4 left-4 z-50">
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setIsMobileOpen(true)}
-          className="bg-background/80 backdrop-blur-md shadow-sm"
+          className="border border-border bg-card rounded-none shadow-2xs"
         >
           <Menu className="h-5 w-5" />
         </Button>
@@ -68,28 +73,28 @@ export function AppSidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed md:relative inset-y-0 left-0 z-50 flex flex-col bg-background md:bg-transparent transition-all duration-300 ease-in-out shrink-0 border-r",
+          "fixed md:relative inset-y-0 left-0 z-50 flex flex-col bg-card transition-all duration-300 ease-in-out shrink-0 border-r border-border",
           isCollapsed ? "md:w-16" : "md:w-48",
           isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
       >
-        <div className="flex items-center h-16 px-4">
+        <div className="flex items-center h-16 px-4 border-b border-border">
           <div
             className={cn(
-              "flex items-center gap-2 font-semibold overflow-hidden transition-all duration-300",
+              "flex items-center gap-2 overflow-hidden transition-all duration-300",
               isCollapsed ? "md:w-0 md:opacity-0" : "w-auto opacity-100"
             )}
           >
-            <span className="tracking-widest pl-2">Shorty</span>
+            <span className="font-display font-bold text-xl uppercase tracking-widest text-foreground pl-2">SimpLx</span>
           </div>
 
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="hidden md:flex ml-auto shrink-0 hover:bg-accent text-muted-foreground"
+            className="hidden md:flex ml-auto shrink-0 text-muted-foreground"
           >
-            <Menu className="h-6 w-6 text-foreground" />
+            <Menu className="h-6 w-6" />
           </Button>
         </div>
 
@@ -102,20 +107,20 @@ export function AppSidebar() {
                 key={route.href}
                 href={route.href}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 transition-colors group relative",
+                  "flex items-center gap-3 px-3 py-2.5 rounded-none transition-colors group relative text-sm font-medium",
                   isActive
-                    ? "bg-primary/10 text-primary font-medium"
-                    : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
                   isCollapsed && "md:justify-center md:px-0"
                 )}
                 title={isCollapsed ? route.name : undefined}
               >
                 <route.icon
-                  className={cn("h-5 w-5 text-foreground shrink-0 transition-colors", isActive && "text-primary")}
+                  className={cn("h-5 w-5 shrink-0 transition-colors", isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground")}
                 />
                 <span
                   className={cn(
-                    "truncate transition-all duration-300 text-sm text-foreground",
+                    "truncate transition-all duration-300",
                     isCollapsed ? "md:hidden" : "block"
                   )}
                 >
@@ -127,11 +132,31 @@ export function AppSidebar() {
         </nav>
 
         {/* Footer */}
-        <div className="p-3 flex flex-col gap-1">
+        <div className="p-3 flex flex-col gap-1 border-t border-border">
+          <button
+            type="button"
+            onClick={() => dispatch(setProfileModalOpen(true))}
+            className={cn(
+              "w-full flex items-center gap-3 px-3 py-2.5 rounded-none transition-colors text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground group outline-none cursor-pointer",
+              isCollapsed && "md:justify-center md:px-0"
+            )}
+            title={isCollapsed ? "Profile" : undefined}
+          >
+            <User className="h-5 w-5 shrink-0 transition-colors group-hover:text-foreground" />
+            <span
+              className={cn(
+                "truncate transition-all duration-300 text-left",
+                isCollapsed ? "md:hidden" : "block"
+              )}
+            >
+              Profile
+            </span>
+          </button>
+
           <DropdownMenu>
             <DropdownMenuTrigger
               className={cn(
-                "w-full flex items-center gap-3 px-3 py-2.5 transition-colors text-muted-foreground hover:bg-accent hover:text-foreground group outline-none",
+                "w-full flex items-center gap-3 px-3 py-2.5 rounded-none transition-colors text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground group outline-none",
                 isCollapsed && "md:justify-center md:px-0"
               )}
               title={isCollapsed ? "Toggle Theme" : undefined}
@@ -142,7 +167,7 @@ export function AppSidebar() {
               </div>
               <span
                 className={cn(
-                  "truncate font-medium transition-all duration-300 text-left",
+                  "truncate transition-all duration-300 text-left",
                   isCollapsed ? "md:hidden" : "block"
                 )}
               >
@@ -160,7 +185,7 @@ export function AppSidebar() {
             href="/"
             onClick={() => signOut({ callbackUrl: "/" })}
             className={cn(
-              "flex items-center gap-3 px-3 py-2.5 transition-colors text-muted-foreground hover:bg-destructive/10 hover:text-destructive group",
+              "flex items-center gap-3 px-3 py-2.5 rounded-none transition-colors text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive group",
               isCollapsed && "md:justify-center md:px-0"
             )}
             title={isCollapsed ? "Back to Home" : undefined}
@@ -168,7 +193,7 @@ export function AppSidebar() {
             <LogOut className="h-5 w-5 shrink-0 group-hover:text-destructive transition-colors" />
             <span
               className={cn(
-                "truncate font-medium transition-all duration-300",
+                "truncate transition-all duration-300",
                 isCollapsed ? "md:hidden" : "block"
               )}
             >
@@ -177,6 +202,8 @@ export function AppSidebar() {
           </Link>
         </div>
       </aside>
+
+      <ProfileModal />
     </>
   );
 }

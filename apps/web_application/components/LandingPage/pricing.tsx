@@ -20,7 +20,7 @@ export function Pricing() {
 
           {/* Free Plan */}
           <ScrollReveal delay={100}>
-            <div className="bg-card border-4 border-line p-8 rounded-none flex flex-col hover:border-ember transition-all duration-300 shadow-hard h-full">
+            <div className="bg-card border-4 border-line p-8 rounded-none flex flex-col hover:border-ember transition-all duration-300 h-full">
               <div>
                 <h3 className="font-display font-bold text-4xl text-foreground uppercase tracking-wider mb-2">Free</h3>
                 <p className="text-muted-foreground font-bold">Perfect for personal projects and testing.</p>
@@ -57,7 +57,7 @@ export function Pricing() {
 
           {/* Pro Plan */}
           <ScrollReveal delay={200}>
-            <div className="bg-lake border-4 border-line p-8 rounded-none flex flex-col relative transform md:-translate-y-4 shadow-hard h-full">
+            <div className="bg-lake border-4 border-line p-8 rounded-none flex flex-col relative transform md:-translate-y-4 h-full">
               <div className="absolute top-0 right-8 -translate-y-1/2 bg-inkband text-on-inkband text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-none border-2 border-line">
                 Recommended
               </div>

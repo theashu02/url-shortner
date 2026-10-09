@@ -6,6 +6,7 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-smokebackground: var(--smokebackground);
   --color-foreground: var(--foreground);
   --font-ubuntu: var(--font-ubuntu);
   --font-mono: var(--font-mono);
@@ -81,6 +82,7 @@
   --line: #14142E;
   --hard-shadow: #14142E;
   --background: oklch(0.976 0.006 76);
+  --smokebackground: #f4f4f4;
   --foreground: oklch(0.147 0.004 49.25);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.147 0.004 49.25);
@@ -131,6 +133,7 @@
   --line: #D9D9E6;
   --hard-shadow: #000000;
   --background: oklch(0.147 0.004 49.25);
+  --smokebackground: #000000;
   --foreground: oklch(0.985 0.001 106.423);
   --card: oklch(0.216 0.006 56.043);
   --card-foreground: oklch(0.985 0.001 106.423);
@@ -183,13 +186,6 @@
   }
 }
 
-/* Hard offset shadows — sharp web3/brutalist depth */
-.shadow-hard {
-  box-shadow: 7px 7px 0 0 var(--hard-shadow);
-}
-.shadow-hard-sm {
-  box-shadow: 4px 4px 0 0 var(--hard-shadow);
-}
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

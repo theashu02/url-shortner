@@ -19,7 +19,7 @@ export function HeroForm() {
 
   return (
     <div className="w-full max-w-3xl mx-auto flex flex-col items-center gap-6">
-      <div className="w-full bg-card p-2 shadow-hard border-4 border-line">
+      <div className="w-full bg-card p-2 border-4 border-line">
         <form
           onSubmit={handleShorten}
           className="flex w-full items-center"
@@ -36,7 +36,7 @@ export function HeroForm() {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             aria-label="URL to shorten"
-            className="flex-1 bg-transparent border-0 focus-visible:ring-0 shadow-none text-foreground font-semibold text-lg md:text-xl h-14 px-4 placeholder:text-muted-foreground placeholder:font-normal rounded-none"
+            className="flex-1 bg-transparent border-0 focus-visible:ring-0 shadow-none text-foreground text-lg md:text-xl h-14 px-4 placeholder:text-muted-foreground placeholder:font-normal rounded-none"
           />
           <Button
             type="submit"
@@ -52,14 +52,14 @@ export function HeroForm() {
       {errorMsg && (
         <div
           role="alert"
-          className="px-6 py-3 bg-destructive/10 text-destructive rounded-none border-2 border-destructive text-sm font-bold shadow-hard-sm"
+          className="px-6 py-3 bg-destructive/10 text-destructive rounded-none border-2 border-destructive text-sm font-bold"
         >
           {errorMsg}
         </div>
       )}
 
       {shortenedUrl && (
-        <div className="flex flex-col sm:flex-row items-center gap-4 bg-card border-4 border-line p-2 pl-6 rounded-none shadow-hard animate-in fade-in slide-in-from-bottom-4 mt-4">
+        <div className="flex flex-col sm:flex-row items-center gap-4 bg-card border-4 border-line p-2 pl-6 rounded-none animate-in fade-in slide-in-from-bottom-4 mt-4">
           <a
             href={shortenedUrl}
             target="_blank"

@@ -43,7 +43,7 @@ export function AuthShowcase() {
 
       {/* Terminal slip — hidden on short viewports so the panel always fits */}
       <div className="px-10 pt-6 relative z-10 [@media(max-height:860px)]:hidden">
-        <div className="max-w-md bg-card border-4 border-line shadow-hard">
+        <div className="max-w-md bg-card border-4 border-line">
           <div className="flex items-center justify-between border-b-2 border-line px-4 py-2.5">
             <div className="flex gap-1.5" aria-hidden="true">
               <span className="h-3 w-3 bg-ember" />

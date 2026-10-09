@@ -63,7 +63,7 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
         </div>
 
         <div className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto px-6 py-6">
-          <Card className="my-auto w-full max-w-md border-4 border-line bg-card p-6 shadow-hard ring-0">
+          <Card className="my-auto w-full max-w-md border-4 border-line bg-card p-6 ring-0">
             <CardHeader className="px-0">
               <Badge className="h-auto bg-lake px-3 py-1 font-mono uppercase tracking-widest text-on-lake hover:bg-lake">
                 {isRegister ? "Register" : "Sign in"}

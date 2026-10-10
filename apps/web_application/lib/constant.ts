@@ -1,5 +1,7 @@
 export const SHORT_CODE_RE = /^[a-zA-Z0-9_-]{3,32}$/;
 
+export const REFRESH_THROTTLE_MS = process.env.REFRESH_THROTTLE as unknown as number || 3000;
+
 export function resolveSafeUrl(raw: string): string | null {
   const candidate = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
   try {

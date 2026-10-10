@@ -43,7 +43,7 @@ export function QrModal({ onCopy }: QrModalProps) {
             QR Code Preview
           </DialogTitle>
           <DialogDescription className="font-mono text-xs">
-            /{link.shortCode}
+            Short Code: {link.shortCode}
           </DialogDescription>
         </DialogHeader>
 
@@ -59,7 +59,7 @@ export function QrModal({ onCopy }: QrModalProps) {
           <div className="w-full pt-2 flex flex-col gap-2">
             <Button
               onClick={() => downloadQr(`qr-${link.shortCode}.png`)}
-              className="w-full h-9 text-xs font-semibold gap-2 rounded-none"
+              className="w-full h-9 text-sm gap-2 rounded-none"
             >
               <Download className="h-3.5 w-3.5" />
               <span>Download High-Res PNG</span>
@@ -67,7 +67,7 @@ export function QrModal({ onCopy }: QrModalProps) {
             <Button
               variant="outline"
               onClick={() => onCopy(link._id, shortUrl)}
-              className="w-full h-9 text-xs font-medium gap-1.5 rounded-none"
+              className="w-full h-9 text-sm gap-1.5 rounded-none"
             >
               <Copy className="h-3.5 w-3.5" />
               <span>Copy Short URL</span>

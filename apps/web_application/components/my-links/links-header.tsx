@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useMemo } from "react";
 import {
   RefreshCw,
   Plus,
@@ -12,6 +13,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { useAppSelector, useAppDispatch } from "@/store";
 import { fetchLinks } from "@/store/my-links-slice";
+import { throttle } from "@/lib/throttle";
+import { REFRESH_THROTTLE_MS } from "@/lib/constant";
 
 function Metric({
   icon: Icon,
@@ -49,6 +52,17 @@ export function LinksHeader() {
   const totalCount = useAppSelector((s) => s.myLinks.totalCount);
   const links = useAppSelector((s) => s.myLinks.links);
 
+  const throttledRefresh = useMemo(
+    () =>
+      throttle(
+        () => dispatch(fetchLinks({ page: 1, append: false, force: true })),
+        REFRESH_THROTTLE_MS,
+      ),
+    [dispatch],
+  );
+
+  useEffect(() => () => throttledRefresh.cancel(), [throttledRefresh]);
+
   const loadedCount = links.length;
   const totalClicks = links.reduce((acc, l) => acc + (l.clicks || 0), 0);
 
@@ -71,7 +85,7 @@ export function LinksHeader() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => dispatch(fetchLinks({ page: 1, append: false, force: true }))}
+            onClick={throttledRefresh}
             disabled={loading}
             className="gap-1.5 text-xs h-9 rounded-none"
           >

@@ -1,17 +1,19 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Loader2, X } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useAppSelector, useAppDispatch } from "@/store";
 import { setEditingLink, updateLink } from "@/store/my-links-slice";
 
@@ -50,26 +52,18 @@ export function EditLinkModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
-      <Card className="w-full max-w-lg rounded-none border-border bg-card shadow-lg p-0">
-        <CardHeader className="p-5 border-b border-border/60">
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-lg font-bold text-foreground">Edit Link</CardTitle>
-              <CardDescription className="text-xs text-muted-foreground mt-0.5">
-                Update destination URL and custom slug.
-              </CardDescription>
-            </div>
-            <Button variant="ghost" size="icon" onClick={handleClose} className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-none">
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-        </CardHeader>
+    <Dialog open onOpenChange={(open) => !open && handleClose()}>
+      <DialogContent className="sm:max-w-lg rounded-none p-0 gap-0">
+        <DialogHeader className="p-5 border-b border-border/60">
+          <DialogTitle className="text-lg font-bold">Edit Link</DialogTitle>
+          <DialogDescription>
+            Update destination URL, custom slug, and capture settings.
+          </DialogDescription>
+        </DialogHeader>
 
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
-          {/* Destination URL */}
           <div className="space-y-1.5">
-            <Label htmlFor="editUrl" className="text-xs font-semibold text-foreground">
+            <Label htmlFor="editUrl" className="text-xs font-semibold">
               Destination URL <span className="text-destructive">*</span>
             </Label>
             <Input
@@ -79,13 +73,12 @@ export function EditLinkModal() {
               placeholder="https://example.com"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              className="h-10 text-sm bg-background border-input rounded-none focus-visible:ring-1 focus-visible:ring-ring"
+              className="h-10 text-sm rounded-none"
             />
           </div>
 
-          {/* Custom Slug */}
           <div className="space-y-1.5">
-            <Label htmlFor="editSlug" className="text-xs font-semibold text-foreground">
+            <Label htmlFor="editSlug" className="text-xs font-semibold">
               Custom Alias (Slug)
             </Label>
             <div className="flex h-10 border border-input bg-muted/20 focus-within:ring-1 focus-within:ring-ring">
@@ -105,10 +98,9 @@ export function EditLinkModal() {
             </div>
           </div>
 
-          {/* Device Capture */}
           <div className="flex items-center justify-between gap-3 p-3 bg-muted/20 border border-border/60">
             <div className="space-y-0.5">
-              <Label htmlFor="editDeviceCapture" className="text-xs font-semibold text-foreground">
+              <Label htmlFor="editDeviceCapture" className="text-xs font-semibold">
                 Device information capture
               </Label>
               <p className="text-[11px] text-muted-foreground">
@@ -128,14 +120,14 @@ export function EditLinkModal() {
             </p>
           )}
 
-          <div className="flex items-center justify-end gap-2 pt-3 border-t border-border/60">
+          <DialogFooter className="gap-2 pt-1">
             <Button type="button" variant="outline" onClick={handleClose} disabled={loading} className="h-9 px-4 text-xs rounded-none">
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={loading || !url.trim()}
-              className="h-9 px-5 text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-none gap-1.5"
+              className="h-9 px-5 text-xs font-semibold rounded-none gap-1.5"
             >
               {loading ? (
                 <><Loader2 className="h-3.5 w-3.5 animate-spin" /><span>Saving...</span></>
@@ -143,9 +135,9 @@ export function EditLinkModal() {
                 <span>Save Changes</span>
               )}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
-      </Card>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

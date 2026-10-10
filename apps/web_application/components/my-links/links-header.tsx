@@ -1,11 +1,47 @@
 "use client";
 
 import Link from "next/link";
-import { RefreshCw, Plus, Link2, MousePointerClick, Calendar } from "lucide-react";
+import {
+  RefreshCw,
+  Plus,
+  Link2,
+  MousePointerClick,
+  Layers,
+  type LucideIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { useAppSelector, useAppDispatch } from "@/store";
 import { fetchLinks } from "@/store/my-links-slice";
+
+function Metric({
+  icon: Icon,
+  label,
+  value,
+  swatch,
+}: {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  swatch: string;
+}) {
+  return (
+    <div className="flex items-center gap-3 border bg-card p-4">
+      <span
+        className={`flex h-10 w-10 shrink-0 items-center justify-center ${swatch}`}
+      >
+        <Icon className="h-5 w-5" />
+      </span>
+      <span className="min-w-0">
+        <span className="block truncate text-2xl font-extrabold tracking-tight text-foreground tabular-nums">
+          {value}
+        </span>
+        <span className="block text-[11px] font-bold tracking-widest text-muted-foreground uppercase">
+          {label}
+        </span>
+      </span>
+    </div>
+  );
+}
 
 export function LinksHeader() {
   const dispatch = useAppDispatch();
@@ -17,12 +53,21 @@ export function LinksHeader() {
   const totalClicks = links.reduce((acc, l) => acc + (l.clicks || 0), 0);
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <p className="text-2xl font-semibold text-foreground">
-          Manage, search, and track all your shortened URLs and QR codes.
-        </p>
-        <div className="flex items-center gap-2">
+    <div className="space-y-5">
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div className="space-y-2">
+          <p className="flex items-center gap-2 text-[11px] font-bold tracking-[0.2em] text-muted-foreground uppercase">
+            <span className="inline-block h-2.5 w-2.5 bg-ember" aria-hidden="true" />
+            Link library
+          </p>
+          <h1 className="font-display text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-foreground">
+            My Links
+          </h1>
+          <p className="text-muted-foreground text-xs sm:text-sm max-w-xl">
+            Manage, search, and track all your shortened URLs and QR codes.
+          </p>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <Button
             variant="outline"
             size="sm"
@@ -34,10 +79,7 @@ export function LinksHeader() {
             <span>Refresh</span>
           </Button>
           <Link href="/appv1/custom-links">
-            <Button
-              size="sm"
-              className="gap-1.5 text-xs h-9 font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs rounded-none"
-            >
+            <Button size="sm" className="gap-1.5 text-xs h-9 font-semibold rounded-none">
               <Plus className="h-3.5 w-3.5" />
               <span>Create Link</span>
             </Button>
@@ -45,28 +87,10 @@ export function LinksHeader() {
         </div>
       </div>
 
-      {/* Metric Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-        {[
-          { icon: Link2, label: "Total Links", value: totalCount },
-          { icon: MousePointerClick, label: "Total Clicks", value: totalClicks },
-          { icon: Calendar, label: "Active Links", value: `${loadedCount} loaded`, span: true },
-        ].map(({ icon: Icon, label, value, span }) => (
-          <Card
-            key={label}
-            className={`rounded-none border-border bg-card p-4 shadow-2xs ${span ? "col-span-2 sm:col-span-1" : ""}`}
-          >
-            <div className="flex items-center gap-3">
-              <div className="h-9 w-9 bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                <Icon className="h-4 w-4" />
-              </div>
-              <div className="flex items-center justify-center gap-2">
-                <p className="text-muted-foreground font-medium" style={{ fontSize: '0.9rem'}}>{label}</p>
-                <p className="text-xl font-bold text-foreground">{value}</p>
-              </div>
-            </div>
-          </Card>
-        ))}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <Metric icon={Link2} label="Total links" value={totalCount.toLocaleString()} swatch="bg-ember text-on-ember" />
+        <Metric icon={MousePointerClick} label="Total clicks" value={totalClicks.toLocaleString()} swatch="bg-lake text-on-lake" />
+        <Metric icon={Layers} label="Loaded" value={loadedCount.toLocaleString()} swatch="bg-lime-soft text-on-lime" />
       </div>
     </div>
   );

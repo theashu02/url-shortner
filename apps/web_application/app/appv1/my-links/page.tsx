@@ -10,8 +10,8 @@ import {
   setCopiedId,
 } from "@/store/my-links-slice";
 import { LinksHeader } from "@/components/my-links/links-header";
-import { LinksSearchBar } from "@/components/my-links/links-search-bar";
-import { LinksTable } from "@/components/my-links/links-table";
+import { LinksSearchBar } from "@/components/my-links/linksSearchBar";
+import { LinksTable } from "@/components/my-links/linksTable";
 import { EditLinkModal } from "@/components/my-links/edit-link-modal";
 import { QrModal } from "@/components/my-links/qr-modal";
 import { ShareModal } from "@/components/my-links/shareModal";

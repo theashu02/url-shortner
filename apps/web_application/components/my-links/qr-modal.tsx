@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -41,10 +42,13 @@ export function QrModal({ onCopy }: QrModalProps) {
           <DialogTitle className="text-base font-bold text-foreground">
             QR Code Preview
           </DialogTitle>
+          <DialogDescription className="font-mono text-xs">
+            /{link.shortCode}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="p-6 flex flex-col items-center space-y-4">
-          <div className="bg-white p-4 shadow-2xs ring-1 ring-border">
+          <div className="bg-white p-4 shadow-xs ring-1 ring-border">
             <QRCodeSVG ref={qrRef} value={shortUrl} size={180} level="H" marginSize={1} />
           </div>
 
@@ -55,7 +59,7 @@ export function QrModal({ onCopy }: QrModalProps) {
           <div className="w-full pt-2 flex flex-col gap-2">
             <Button
               onClick={() => downloadQr(`qr-${link.shortCode}.png`)}
-              className="w-full h-9 text-xs font-semibold gap-2 rounded-none bg-primary text-primary-foreground hover:bg-primary/90"
+              className="w-full h-9 text-xs font-semibold gap-2 rounded-none"
             >
               <Download className="h-3.5 w-3.5" />
               <span>Download High-Res PNG</span>

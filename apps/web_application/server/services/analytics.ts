@@ -11,6 +11,9 @@ export interface AnalyticsSummaryItem {
   topCountry: string | null;
   topDevice: string | null;
   topReferrer: string | null;
+  continuedClicks: number;
+  capturedCount: number;
+  topScreen: string | null;
 }
 
 export async function getAnalyticsSummary(userId: string): Promise<AnalyticsSummaryItem[]> {
@@ -31,6 +34,8 @@ export async function getAnalyticsSummary(userId: string): Promise<AnalyticsSumm
               _id: "$shortCode",
               totalClicks: { $sum: 1 },
               uniqueVisitors: { $addToSet: "$visitorHash" },
+              continuedClicks: { $sum: { $cond: ["$continued", 1, 0] } },
+              capturedCount: { $sum: { $cond: [{ $ne: ["$capturedAt", null] }, 1, 0] } },
               lastClickedAt: { $max: "$clickedAt" },
             },
           },
@@ -38,6 +43,8 @@ export async function getAnalyticsSummary(userId: string): Promise<AnalyticsSumm
             $project: {
               totalClicks: 1,
               uniqueVisitors: { $size: "$uniqueVisitors" },
+              continuedClicks: 1,
+              capturedCount: 1,
               lastClickedAt: 1,
             },
           },
@@ -57,6 +64,12 @@ export async function getAnalyticsSummary(userId: string): Promise<AnalyticsSumm
           { $sort: { count: -1 } },
           { $group: { _id: "$_id.shortCode", topReferrer: { $first: "$_id.referrer" } } },
         ],
+        topScreens: [
+          { $match: { screenWidth: { $type: "number" }, screenHeight: { $type: "number" } } },
+          { $group: { _id: { shortCode: "$shortCode", w: "$screenWidth", h: "$screenHeight" }, count: { $sum: 1 } } },
+          { $sort: { count: -1 } },
+          { $group: { _id: "$_id.shortCode", top: { $first: "$_id" } } },
+        ],
       },
     },
   ];
@@ -67,11 +80,17 @@ export async function getAnalyticsSummary(userId: string): Promise<AnalyticsSumm
   const countriesMap = new Map(aggResult?.topCountries?.map((c: any) => [c._id, c.topCountry]) || []);
   const devicesMap = new Map(aggResult?.topDevices?.map((d: any) => [d._id, d.topDevice]) || []);
   const referrersMap = new Map(aggResult?.topReferrers?.map((r: any) => [r._id, r.topReferrer]) || []);
+  const screensMap = new Map(
+    aggResult?.topScreens?.map(
+      (s: { _id: string; top: { w: number; h: number } }) => [s._id, s.top],
+    ) || [],
+  );
 
   return links.map((link) => {
-    const stats = statsMap.get(link.shortCode) as { totalClicks: number; uniqueVisitors: number; lastClickedAt: Date | null } | undefined;
-    const defaultStats = { totalClicks: 0, uniqueVisitors: 0, lastClickedAt: null };
+    const stats = statsMap.get(link.shortCode) as { totalClicks: number; uniqueVisitors: number; continuedClicks: number; capturedCount: number; lastClickedAt: Date | null } | undefined;
+    const defaultStats = { totalClicks: 0, uniqueVisitors: 0, continuedClicks: 0, capturedCount: 0, lastClickedAt: null };
     const finalStats = stats || defaultStats;
+    const topScreenRaw = screensMap.get(link.shortCode) as { w: number; h: number } | undefined;
     return {
       shortCode: link.shortCode,
       originalUrl: link.url,
@@ -81,6 +100,9 @@ export async function getAnalyticsSummary(userId: string): Promise<AnalyticsSumm
       topCountry: (countriesMap.get(link.shortCode) as string) || null,
       topDevice: (devicesMap.get(link.shortCode) as string) || null,
       topReferrer: (referrersMap.get(link.shortCode) as string) || null,
+      continuedClicks: finalStats.continuedClicks || 0,
+      capturedCount: finalStats.capturedCount || 0,
+      topScreen: topScreenRaw ? `${topScreenRaw.w}×${topScreenRaw.h}` : null,
     };
   });
 }

@@ -1,11 +1,20 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchLinkAnalytics, clearDetailedAnalytics } from "@/store/analytics-slice";
-import { ArrowLeft, ExternalLink, BarChart3, Globe2, Laptop2, AlertCircle } from "lucide-react";
+import {
+  ArrowLeft,
+  ExternalLink,
+  BarChart3,
+  Globe2,
+  Laptop2,
+  AlertCircle,
+  Copy,
+  Check,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SummaryCards } from "@/components/analytics/summary-cards";
@@ -13,11 +22,15 @@ import { TimeSeriesChart } from "@/components/analytics/time-series-chart";
 import { BreakdownCard } from "@/components/analytics/breakdown-card";
 import { AnalyticsDetailSkeleton } from "@/components/analytics/analytics-skeleton";
 
+const TAB_TRIGGER_CLASS =
+  "flex-1 inline-flex items-center justify-center gap-1.5 sm:gap-2 h-9 px-2 sm:px-4 text-xs sm:text-sm font-medium rounded-none text-muted-foreground hover:text-foreground data-[state=active]:bg-btn data-[state=active]:text-on-btn transition-colors";
+
 export default function AnalyticsDetailPage() {
   const { shortCode } = useParams<{ shortCode: string }>();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { detailedData: data, detailedLoading: loading, detailedError: error } = useAppSelector((state) => state.analytics);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (shortCode) {
@@ -27,6 +40,19 @@ export default function AnalyticsDetailPage() {
       dispatch(clearDetailedAnalytics());
     };
   }, [dispatch, shortCode]);
+
+  const handleCopyShortLink = async () => {
+    if (!shortCode) return;
+    try {
+      await navigator.clipboard.writeText(
+        `${window.location.origin}/${shortCode}`
+      );
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard unavailable — no visual change.
+    }
+  };
 
   if (loading || !data) {
     if (error) {
@@ -52,98 +78,118 @@ export default function AnalyticsDetailPage() {
     return <AnalyticsDetailSkeleton />;
   }
 
+  const continueRate =
+    data.totalClicks > 0
+      ? Math.round((data.continuedClicks / data.totalClicks) * 100)
+      : 0;
+
   return (
     <div className="flex-1 w-full overflow-y-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="w-full max-w-7xl mx-auto space-y-6">
         <div className="space-y-4">
-        <Button 
-          variant="link" 
-          size="sm" 
-          className="-ml-3 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-none transition-colors"
-          onClick={() => router.back()}
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" /> Back
-        </Button>
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 mt-2">
-          <div className="inline-flex items-center gap-2.5 px-3 py-1.5 bg-primary/10 border border-primary/20 w-fit">
-            <span className="text-xs font-semibold text-primary/80 uppercase tracking-widest">Shortcode</span>
-            <div className="h-4 w-px bg-primary/30" />
-            <h1 className="text-xs font-semibold text-primary uppercase tracking-widest">
-              {shortCode}
-            </h1>
-          </div>
-          
-          <div className="hidden sm:block h-5 w-px bg-border shrink-0" />
-          
-          <Link 
-            href={data.originalUrl} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-none"
+          <Button
+            variant="link"
+            size="sm"
+            className="-ml-3 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-none transition-colors"
+            onClick={() => router.back()}
           >
-            <span className="truncate max-w-70 sm:max-w-md">{data.originalUrl}</span>
-            <ExternalLink className="h-3.5 w-3.5 ml-1.5 shrink-0 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
-          </Link>
+            <ArrowLeft className="h-4 w-4 mr-2" /> Back
+          </Button>
+
+          <div className="space-y-2">
+            <p className="flex items-center gap-2 text-[11px] font-bold tracking-[0.2em] text-muted-foreground uppercase">
+              <span className="inline-block h-2.5 w-2.5 bg-ember" aria-hidden="true" />
+              Link analytics
+            </p>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <h1 className="min-w-0 truncate font-mono text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+                /{shortCode}
+              </h1>
+              {data.totalClicks > 0 && (
+                <span className="inline-flex shrink-0 items-center gap-1.5 border border-border bg-card px-2.5 py-1 text-xs font-semibold text-muted-foreground">
+                  <span className="relative flex h-2 w-2" aria-hidden="true">
+                    <span className="absolute inline-flex h-full w-full animate-ping bg-ember opacity-60" />
+                    <span className="relative inline-flex h-2 w-2 bg-ember" />
+                  </span>
+                  <span className="tabular-nums">{continueRate}% continue-through</span>
+                </span>
+              )}
+            </div>
+            <div className="flex min-w-0 items-center gap-2">
+              <Link
+                href={data.originalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-w-0 items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-none"
+              >
+                <span className="truncate max-w-70 sm:max-w-md">{data.originalUrl}</span>
+                <ExternalLink className="h-3.5 w-3.5 ml-1.5 shrink-0 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+              </Link>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleCopyShortLink}
+                aria-label={copied ? "Short link copied" : "Copy short link"}
+                className="h-7 w-7 shrink-0 rounded-none text-muted-foreground hover:text-foreground"
+              >
+                {copied ? (
+                  <Check className="h-3.5 w-3.5 text-ember" />
+                ) : (
+                  <Copy className="h-3.5 w-3.5" />
+                )}
+              </Button>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <SummaryCards totalClicks={data.totalClicks} uniqueVisitors={data.uniqueVisitors} continuedClicks={data.continuedClicks} />
-      
-      <TimeSeriesChart data={data.timeline} />
+        <SummaryCards totalClicks={data.totalClicks} uniqueVisitors={data.uniqueVisitors} continuedClicks={data.continuedClicks} />
 
-      <Tabs defaultValue="overview" className="w-full flex flex-col">
-        <div className="w-full flex justify-center sm:justify-start">
-          <TabsList className="w-full max-w-xl grid grid-cols-3 sm:w-auto sm:inline-flex h-auto sm:h-12 p-1 gap-1 sm:gap-2 bg-muted/60 dark:bg-muted/30 border border-border rounded-none">
-            <TabsTrigger
-              value="overview"
-              className="flex-1 inline-flex items-center justify-center gap-1.5 sm:gap-2 h-9 sm:h-10 px-2 sm:px-4 text-xs sm:text-sm font-medium rounded-none text-muted-foreground hover:text-foreground data-[state=active]:bg-primary data-active:bg-primary dark:data-active:bg-primary data-[state=active]:text-primary-foreground data-active:text-primary-foreground dark:data-active:text-primary-foreground data-[state=active]:shadow-sm data-active:shadow-sm transition-all hover:data-active:text-amber-200"
-            >
-              <BarChart3 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-              <span className="truncate">Overview</span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="location"
-              className="flex-1 inline-flex items-center justify-center gap-1.5 sm:gap-2 h-9 sm:h-10 px-2 sm:px-4 text-xs sm:text-sm font-medium rounded-none text-muted-foreground hover:text-foreground data-[state=active]:bg-primary data-active:bg-primary dark:data-active:bg-primary data-[state=active]:text-primary-foreground data-active:text-primary-foreground dark:data-active:text-primary-foreground data-[state=active]:shadow-sm data-active:shadow-sm transition-all hover:data-active:text-amber-200"
-            >
-              <Globe2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-              <span className="truncate">Location</span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="tech"
-              className="flex-1 inline-flex items-center justify-center gap-1.5 sm:gap-2 h-9 sm:h-10 px-2 sm:px-4 text-xs sm:text-sm font-medium rounded-none text-muted-foreground hover:text-foreground data-[state=active]:bg-primary data-active:bg-primary dark:data-active:bg-primary data-[state=active]:text-primary-foreground data-active:text-primary-foreground dark:data-active:text-primary-foreground data-[state=active]:shadow-sm data-active:shadow-sm transition-all hover:data-active:text-amber-200"
-            >
-              <Laptop2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-              <span className="truncate">Tech</span>
-            </TabsTrigger>
-          </TabsList>
-        </div>
+        <TimeSeriesChart data={data.timeline} />
 
-        <TabsContent value="overview" className="mt-4 outline-none focus:outline-none">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-            <BreakdownCard title="Referrers" data={data.referrers} />
-            <BreakdownCard title="UTM Sources" data={data.utmSources} emptyMessage="No UTM sources" />
-            <BreakdownCard title="UTM Campaigns" data={data.utmCampaigns} emptyMessage="No UTM campaigns" />
+        <Tabs defaultValue="overview" className="w-full flex flex-col">
+          <div className="w-full flex justify-center sm:justify-start">
+            <TabsList className="w-full max-w-xl grid grid-cols-3 sm:w-auto sm:inline-flex h-auto p-1 gap-1 bg-card border rounded-none">
+              <TabsTrigger value="overview" className={TAB_TRIGGER_CLASS}>
+                <BarChart3 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                <span className="truncate">Overview</span>
+              </TabsTrigger>
+              <TabsTrigger value="location" className={TAB_TRIGGER_CLASS}>
+                <Globe2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                <span className="truncate">Location</span>
+              </TabsTrigger>
+              <TabsTrigger value="tech" className={TAB_TRIGGER_CLASS}>
+                <Laptop2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                <span className="truncate">Tech</span>
+              </TabsTrigger>
+            </TabsList>
           </div>
-        </TabsContent>
 
-        <TabsContent value="location" className="mt-4 outline-none focus:outline-none">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-            <BreakdownCard title="Countries" data={data.countries} />
-            <BreakdownCard title="Cities" data={data.cities} />
-          </div>
-        </TabsContent>
+          <TabsContent value="overview" className="mt-4 outline-none focus:outline-none">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+              <BreakdownCard title="Referrers" data={data.referrers} />
+              <BreakdownCard title="UTM Sources" data={data.utmSources} emptyMessage="No UTM sources" />
+              <BreakdownCard title="UTM Campaigns" data={data.utmCampaigns} emptyMessage="No UTM campaigns" />
+            </div>
+          </TabsContent>
 
-        <TabsContent value="tech" className="mt-4 outline-none focus:outline-none">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-            <BreakdownCard title="Devices" data={data.devices} />
-            <BreakdownCard title="Operating Systems" data={data.os} />
-            <BreakdownCard title="Browsers" data={data.browsers} />
-            <BreakdownCard title="Languages" data={data.languages} />
-            <BreakdownCard title="Screen Sizes" data={data.screens} emptyMessage="No device details captured" />
-            <BreakdownCard title="Connections" data={data.connections} emptyMessage="No connection data" />
-          </div>
-        </TabsContent>
-      </Tabs>
+          <TabsContent value="location" className="mt-4 outline-none focus:outline-none">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+              <BreakdownCard title="Countries" data={data.countries} />
+              <BreakdownCard title="Cities" data={data.cities} />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="tech" className="mt-4 outline-none focus:outline-none">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+              <BreakdownCard title="Devices" data={data.devices} />
+              <BreakdownCard title="Operating Systems" data={data.os} />
+              <BreakdownCard title="Browsers" data={data.browsers} />
+              <BreakdownCard title="Languages" data={data.languages} />
+              <BreakdownCard title="Screen Sizes" data={data.screens} emptyMessage="No device details captured" />
+              <BreakdownCard title="Connections" data={data.connections} emptyMessage="No connection data" />
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

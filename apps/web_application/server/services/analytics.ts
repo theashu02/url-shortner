@@ -133,6 +133,7 @@ export interface DetailedAnalytics {
   inAppBrowsers: BreakdownItem[];
   screens: BreakdownItem[];
   connections: BreakdownItem[];
+  capturedCount: number;
 }
 
 export async function getLinkAnalytics(
@@ -157,6 +158,7 @@ export async function getLinkAnalytics(
               totalClicks: { $sum: 1 },
               uniqueVisitors: { $addToSet: "$visitorHash" },
               continuedClicks: { $sum: { $cond: ["$continued", 1, 0] } },
+              capturedCount: { $sum: { $cond: [{ $ne: ["$capturedAt", null] }, 1, 0] } },
             },
           },
           {
@@ -164,6 +166,7 @@ export async function getLinkAnalytics(
               totalClicks: 1,
               uniqueVisitors: { $size: "$uniqueVisitors" },
               continuedClicks: 1,
+              capturedCount: 1,
             },
           },
         ],
@@ -209,6 +212,7 @@ export async function getLinkAnalytics(
     originalUrl: link.url,
     totalClicks: result.summary[0]?.totalClicks || 0,
     continuedClicks: result.summary[0]?.continuedClicks || 0,
+    capturedCount: result.summary[0]?.capturedCount || 0,
     uniqueVisitors: result.summary[0]?.uniqueVisitors || 0,
     timeline: result.timeline.map((t: any) => ({ date: t._id, count: t.count })),
     devices: formatBreakdown(result.devices),

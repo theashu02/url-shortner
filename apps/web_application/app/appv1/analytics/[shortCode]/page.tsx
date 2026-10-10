@@ -8,22 +8,71 @@ import { fetchLinkAnalytics, clearDetailedAnalytics } from "@/store/analytics-sl
 import {
   ArrowLeft,
   ExternalLink,
-  BarChart3,
-  Globe2,
-  Laptop2,
   AlertCircle,
   Copy,
   Check,
+  Globe,
+  Smartphone,
+  ArrowUpRight,
+  Link2,
+  type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SummaryCards } from "@/components/analytics/summary-cards";
 import { TimeSeriesChart } from "@/components/analytics/time-series-chart";
 import { BreakdownCard } from "@/components/analytics/breakdown-card";
 import { AnalyticsDetailSkeleton } from "@/components/analytics/analytics-skeleton";
+import type { BreakdownItem } from "@/server/services/analytics";
 
-const TAB_TRIGGER_CLASS =
-  "flex-1 inline-flex items-center justify-center gap-1.5 sm:gap-2 h-9 px-2 sm:px-4 text-xs sm:text-sm font-medium rounded-none text-muted-foreground hover:text-foreground data-[state=active]:bg-btn data-[state=active]:text-on-btn transition-colors";
+function Section({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="space-y-4">
+      <div className="flex items-center gap-3">
+        <h2 className="shrink-0 text-sm font-bold uppercase tracking-widest text-foreground">
+          {title}
+        </h2>
+        <div className="h-px flex-1 bg-border" aria-hidden="true" />
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function Insight({
+  icon: Icon,
+  value,
+  caption,
+  swatch,
+}: {
+  icon: LucideIcon;
+  value: string;
+  caption: string;
+  swatch: string;
+}) {
+  return (
+    <div className="flex items-center gap-3 border bg-card p-4">
+      <span
+        className={`flex h-10 w-10 shrink-0 items-center justify-center ${swatch}`}
+      >
+        <Icon className="h-5 w-5" />
+      </span>
+      <span className="min-w-0">
+        <span className="block truncate text-lg font-extrabold tracking-tight text-foreground">
+          {value}
+        </span>
+        <span className="block truncate text-xs text-muted-foreground">
+          {caption}
+        </span>
+      </span>
+    </div>
+  );
+}
 
 export default function AnalyticsDetailPage() {
   const { shortCode } = useParams<{ shortCode: string }>();
@@ -78,14 +127,45 @@ export default function AnalyticsDetailPage() {
     return <AnalyticsDetailSkeleton />;
   }
 
-  const continueRate =
-    data.totalClicks > 0
-      ? Math.round((data.continuedClicks / data.totalClicks) * 100)
-      : 0;
+  const topOf = (items: BreakdownItem[]) => items[0] ?? null;
+  const shareOf = (count: number) =>
+    data.totalClicks > 0 ? Math.round((count / data.totalClicks) * 100) : 0;
+
+  const continueRate = shareOf(data.continuedClicks);
+  const topCountry = topOf(data.countries);
+  const topDevice = topOf(data.devices);
+  const topReferrer = topOf(data.referrers);
+
+  const insights = [
+    topCountry && {
+      icon: Globe,
+      swatch: "bg-lake text-on-lake",
+      value: topCountry.id,
+      caption: `${topCountry.count.toLocaleString()} clicks · ${shareOf(topCountry.count)}% of traffic`,
+    },
+    topDevice && {
+      icon: Smartphone,
+      swatch: "bg-ember text-on-ember",
+      value: topDevice.id,
+      caption: `${topDevice.count.toLocaleString()} clicks · ${shareOf(topDevice.count)}% of traffic`,
+    },
+    topReferrer && {
+      icon: Link2,
+      swatch: "bg-inkband text-on-inkband",
+      value: topReferrer.id,
+      caption: `${topReferrer.count.toLocaleString()} clicks · ${shareOf(topReferrer.count)}% of traffic`,
+    },
+    data.totalClicks > 0 && {
+      icon: ArrowUpRight,
+      swatch: "bg-lime-soft text-on-lime",
+      value: `${continueRate}% continue-through`,
+      caption: `${data.continuedClicks.toLocaleString()} of ${data.totalClicks.toLocaleString()} continued`,
+    },
+  ].filter((i): i is { icon: LucideIcon; swatch: string; value: string; caption: string } => Boolean(i));
 
   return (
     <div className="flex-1 w-full overflow-y-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div className="w-full max-w-7xl mx-auto space-y-6">
+      <div className="w-full max-w-7xl mx-auto space-y-8">
         <div className="space-y-4">
           <Button
             variant="link"
@@ -102,8 +182,8 @@ export default function AnalyticsDetailPage() {
               Link analytics
             </p>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-              <h1 className="min-w-0 truncate font-mono text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
-                /{shortCode}
+              <h1 className="min-w-0 truncate font-mono text-3xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+                {shortCode}
               </h1>
               {data.totalClicks > 0 && (
                 <span className="inline-flex shrink-0 items-center gap-1.5 border border-border bg-card px-2.5 py-1 text-xs font-semibold text-muted-foreground">
@@ -142,54 +222,55 @@ export default function AnalyticsDetailPage() {
           </div>
         </div>
 
-        <SummaryCards totalClicks={data.totalClicks} uniqueVisitors={data.uniqueVisitors} continuedClicks={data.continuedClicks} />
+        <SummaryCards
+          totalClicks={data.totalClicks}
+          uniqueVisitors={data.uniqueVisitors}
+          continuedClicks={data.continuedClicks}
+          capturedCount={data.capturedCount}
+        />
 
         <TimeSeriesChart data={data.timeline} />
 
-        <Tabs defaultValue="overview" className="w-full flex flex-col">
-          <div className="w-full flex justify-center sm:justify-start">
-            <TabsList className="w-full max-w-xl grid grid-cols-3 sm:w-auto sm:inline-flex h-auto p-1 gap-1 bg-card border rounded-none">
-              <TabsTrigger value="overview" className={TAB_TRIGGER_CLASS}>
-                <BarChart3 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-                <span className="truncate">Overview</span>
-              </TabsTrigger>
-              <TabsTrigger value="location" className={TAB_TRIGGER_CLASS}>
-                <Globe2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-                <span className="truncate">Location</span>
-              </TabsTrigger>
-              <TabsTrigger value="tech" className={TAB_TRIGGER_CLASS}>
-                <Laptop2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-                <span className="truncate">Tech</span>
-              </TabsTrigger>
-            </TabsList>
+        {insights.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {insights.map((insight) => (
+              <Insight
+                key={insight.caption}
+                icon={insight.icon}
+                swatch={insight.swatch}
+                value={insight.value}
+                caption={insight.caption}
+              />
+            ))}
           </div>
+        )}
 
-          <TabsContent value="overview" className="mt-4 outline-none focus:outline-none">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-              <BreakdownCard title="Referrers" data={data.referrers} />
-              <BreakdownCard title="UTM Sources" data={data.utmSources} emptyMessage="No UTM sources" />
-              <BreakdownCard title="UTM Campaigns" data={data.utmCampaigns} emptyMessage="No UTM campaigns" />
-            </div>
-          </TabsContent>
+        <Section title="Traffic sources">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+            <BreakdownCard title="Referrers" data={data.referrers} />
+            <BreakdownCard title="UTM Sources" data={data.utmSources} emptyMessage="No UTM sources" />
+            <BreakdownCard title="UTM Mediums" data={data.utmMediums} emptyMessage="No UTM mediums" />
+            <BreakdownCard title="UTM Campaigns" data={data.utmCampaigns} emptyMessage="No UTM campaigns" />
+          </div>
+        </Section>
 
-          <TabsContent value="location" className="mt-4 outline-none focus:outline-none">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-              <BreakdownCard title="Countries" data={data.countries} />
-              <BreakdownCard title="Cities" data={data.cities} />
-            </div>
-          </TabsContent>
+        <Section title="Audience">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            <BreakdownCard title="Countries" data={data.countries} />
+            <BreakdownCard title="Cities" data={data.cities} />
+            <BreakdownCard title="Languages" data={data.languages} />
+          </div>
+        </Section>
 
-          <TabsContent value="tech" className="mt-4 outline-none focus:outline-none">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-              <BreakdownCard title="Devices" data={data.devices} />
-              <BreakdownCard title="Operating Systems" data={data.os} />
-              <BreakdownCard title="Browsers" data={data.browsers} />
-              <BreakdownCard title="Languages" data={data.languages} />
-              <BreakdownCard title="Screen Sizes" data={data.screens} emptyMessage="No device details captured" />
-              <BreakdownCard title="Connections" data={data.connections} emptyMessage="No connection data" />
-            </div>
-          </TabsContent>
-        </Tabs>
+        <Section title="Technology">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            <BreakdownCard title="Devices" data={data.devices} />
+            <BreakdownCard title="Operating Systems" data={data.os} />
+            <BreakdownCard title="Browsers" data={data.browsers} />
+            <BreakdownCard title="Screen Sizes" data={data.screens} emptyMessage="No device details captured" />
+            <BreakdownCard title="Connections" data={data.connections} emptyMessage="No connection data" />
+          </div>
+        </Section>
       </div>
     </div>
   );

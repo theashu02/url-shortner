@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import myLinksReducer from "./my-links-slice";
 import analyticsReducer from "./analytics-slice";
 import shortenReducer from "./shorten-slice";
+import customLinksReducer from "./customLinksSlice";
 import profileReducer from "./profile-slice";
 
 export const store = configureStore({
@@ -10,6 +11,7 @@ export const store = configureStore({
     myLinks: myLinksReducer,
     analytics: analyticsReducer,
     shorten: shortenReducer,
+    customLinks: customLinksReducer,
     profile: profileReducer,
   },
   middleware: (getDefaultMiddleware) =>

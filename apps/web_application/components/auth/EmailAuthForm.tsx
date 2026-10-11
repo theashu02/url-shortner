@@ -33,7 +33,7 @@ function EmailAuthFormContent() {
             onChange={handleInputChange("name")}
             required
             autoComplete="name"
-            className="h-13 text-lg md:text-xl font-semibold px-4 rounded-none border-2 border-line bg-background"
+            className="h-13 text-lg md:text-xl px-4 rounded-none border-2 border-border bg-background"
           />
         </div>
       )}
@@ -47,7 +47,7 @@ function EmailAuthFormContent() {
           onChange={handleInputChange("email")}
           required
           autoComplete="email"
-          className="h-13 text-lg md:text-lg font-semibold px-4 rounded-none border-2 border-line bg-background"
+          className="h-13 text-lg md:text-lg px-4 rounded-none border-2 border-border bg-background"
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -61,7 +61,7 @@ function EmailAuthFormContent() {
           required
           minLength={8}
           autoComplete={mode === "register" ? "new-password" : "current-password"}
-          className="h-13 text-lg md:text-xl font-semibold px-4 rounded-none border-2 border-line bg-background"
+          className="h-13 text-lg md:text-xl px-4 rounded-none border-2 border-border bg-background"
         />
       </div>
 
@@ -71,7 +71,7 @@ function EmailAuthFormContent() {
         </p>
       )}
 
-      <Button type="submit" disabled={loading} className="w-full h-auto py-3.5 gap-2 text-sm bg-btn text-on-btn hover:bg-ember hover:text-on-ember rounded-none border-2 border-line font-bold tracking-widest uppercase">
+      <Button type="submit" disabled={loading} className="w-full h-auto py-3.5 gap-2 text-sm bg-btn text-on-btn hover:bg-ember hover:text-on-ember rounded-none border-2 border-border font-bold tracking-widest uppercase">
         {loading ? "Please wait..." : mode === "signin" ? "Sign In" : "Create Account"}
         <MoveRight className="h-4 w-4" strokeWidth={2.5} />
       </Button>
@@ -80,7 +80,7 @@ function EmailAuthFormContent() {
         variant="outline"
         nativeButton={false}
         render={<Link href={mode === "signin" ? "/auth?mode=register" : "/auth?mode=signin"} onClick={clearError} />}
-        className="w-full h-auto border-2 border-line bg-card py-3.5 text-xs font-bold uppercase tracking-widest text-foreground hover:bg-lake hover:text-on-lake"
+        className="w-full h-auto border-2 border-border bg-card py-3.5 text-xs font-bold uppercase tracking-widest text-foreground hover:bg-lake hover:text-on-lake"
       >
         {mode === "signin" ? "Need an account? Register" : "Already have an account? Sign In"}
       </Button>
@@ -92,9 +92,9 @@ export function EmailAuthForm() {
   return (
     <Suspense fallback={
       <div className="flex flex-col gap-5 w-full" aria-hidden="true">
-        <Skeleton className="h-13 rounded-none border-2 border-line bg-muted" />
-        <Skeleton className="h-13 rounded-none border-2 border-line bg-muted" />
-        <Skeleton className="h-14 rounded-none border-2 border-line bg-muted" />
+        <Skeleton className="h-13 rounded-none border-2 border-border bg-muted" />
+        <Skeleton className="h-13 rounded-none border-2 border-border bg-muted" />
+        <Skeleton className="h-14 rounded-none border-2 border-border bg-muted" />
       </div>
     }>
       <EmailAuthFormContent />

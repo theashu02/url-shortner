@@ -6,7 +6,7 @@ export function Footer() {
   return (
     <footer
       aria-label="Site footer"
-      className="mt-auto bg-mist text-foreground px-4 py-14 md:px-8 border-t border-line"
+      className="mt-auto bg-mist text-foreground px-4 py-14 md:px-8 border-t border-border"
     >
       <div className="container mx-auto max-w-6xl">
         <ScrollReveal>

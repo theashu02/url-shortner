@@ -46,7 +46,7 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
         <div className="flex items-center justify-between px-6 pt-6 lg:hidden">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 bg-foreground text-background px-4 py-2 border-2 border-line"
+            className="inline-flex items-center gap-2 bg-foreground text-background px-4 py-2 border-2 border-border"
             aria-label="Back to SimpLx home"
           >
             <span className="font-display font-bold text-xl uppercase tracking-widest">
@@ -63,7 +63,7 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
         </div>
 
         <div className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto px-6 py-6">
-          <Card className="my-auto w-full max-w-md border-4 border-line bg-card p-6 ring-0">
+          <Card className="my-auto w-full max-w-md border-4 border-border bg-card p-6 ring-0">
             <CardHeader className="px-0">
               <Badge className="h-auto bg-lake px-3 py-1 font-mono uppercase tracking-widest text-on-lake hover:bg-lake">
                 {isRegister ? "Register" : "Sign in"}
@@ -101,9 +101,9 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
 
         {/* Accent base */}
         <div className="flex h-9 shrink-0 overflow-hidden" aria-hidden="true">
-          <div className="h-full w-1/3 bg-ember border-t-4 border-r-4 border-line" />
-          <div className="h-full w-1/3 bg-lime-soft border-t-4 border-r-4 border-line" />
-          <div className="h-full w-1/3 bg-lake border-t-4 border-line" />
+          <div className="h-full w-1/3 bg-ember border-t-4 border-r-4 border-border" />
+          <div className="h-full w-1/3 bg-lime-soft border-t-4 border-r-4 border-border" />
+          <div className="h-full w-1/3 bg-lake border-t-4 border-border" />
         </div>
       </div>
     </main>

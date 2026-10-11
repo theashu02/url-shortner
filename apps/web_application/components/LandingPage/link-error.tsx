@@ -25,7 +25,7 @@ export function LinkError({ type }: LinkErrorProps) {
             )}
           </h1>
           <Link
-            className="bg-btn hover:bg-ember text-on-btn hover:text-on-ember font-bold tracking-widest uppercase px-10 py-4 text-sm ml-2 md:ml-4 border-2 border-line"
+            className="bg-btn hover:bg-ember text-on-btn hover:text-on-ember font-bold tracking-widest uppercase px-10 py-4 text-sm ml-2 md:ml-4 border-2 border-border"
             href="/"
           >
             GO HOME

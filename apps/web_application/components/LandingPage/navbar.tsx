@@ -20,7 +20,7 @@ export function Navbar() {
       transition={{ duration: 0.6, ease: EASE }}
       className={`fixed top-0 left-0 right-0 z-50 px-4 md:px-8 flex items-center justify-between transition-[background-color,border-color,padding] duration-300 ${
         scrolled
-          ? "border-b border-line bg-mist/90 backdrop-blur-md py-4"
+          ? "border-b border-border bg-mist/90 backdrop-blur-md py-4"
           : "border-b border-transparent bg-transparent py-6"
       }`}
     >
@@ -32,7 +32,7 @@ export function Navbar() {
 
       {/* Desktop Actions — server-rendered for SEO crawlability */}
       <div className="hidden items-center gap-3 md:flex relative z-50">
-        <nav aria-label="Primary navigation" className="bg-card border border-line divide-x divide-line flex rounded-none shadow-sm">
+        <nav aria-label="Primary navigation" className="bg-card border border-border divide-x divide-line flex rounded-none shadow-sm">
           <Link href="#features" className="text-sm font-medium text-foreground hover:bg-ember hover:text-on-ember transition-colors px-5 py-2.5">
             Features
           </Link>

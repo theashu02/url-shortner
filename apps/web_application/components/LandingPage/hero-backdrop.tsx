@@ -19,15 +19,11 @@ const HERO_SQUARES: FloatingSquare[] = [
   { left: "12%", top: "64%", size: 10, className: "border border-lake", duration: 11, delay: 1.2, drift: 22, spin: -90 },
   { left: "20%", top: "30%", size: 8, className: "bg-lake", duration: 8, delay: 0.6, drift: 18, spin: 45 },
   { left: "80%", top: "26%", size: 12, className: "border border-ember", duration: 10, delay: 0.3, drift: 26, spin: 90 },
-  { left: "88%", top: "58%", size: 16, className: "bg-lime-soft border border-line", duration: 12, delay: 1.6, drift: 20, spin: -45 },
+  { left: "88%", top: "58%", size: 16, className: "bg-lime-soft border border-border", duration: 12, delay: 1.6, drift: 20, spin: -45 },
   { left: "74%", top: "72%", size: 9, className: "bg-lake", duration: 9, delay: 2, drift: 24, spin: 180 },
-  { left: "45%", top: "16%", size: 8, className: "border border-line", duration: 13, delay: 0.9, drift: 16, spin: 90 },
+  { left: "45%", top: "16%", size: 8, className: "border border-border", duration: 13, delay: 0.9, drift: 16, spin: 90 },
 ];
 
-/**
- * Brand squares that drift upward and rotate on an infinite loop.
- * Renders statically when the visitor prefers reduced motion.
- */
 export function FloatingSquares({ items }: { items: FloatingSquare[] }) {
   const reduce = useReducedMotion();
 
@@ -51,7 +47,6 @@ export function FloatingSquares({ items }: { items: FloatingSquare[] }) {
   );
 }
 
-/** Faded blueprint grid plus drifting squares behind the hero content. */
 export function HeroBackdrop() {
   return (
     <>

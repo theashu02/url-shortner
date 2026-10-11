@@ -35,7 +35,7 @@ function BillingToggle({ billing, onChange }: { billing: Billing; onChange: (bil
   ];
 
   return (
-    <div role="group" aria-label="Billing period" className="inline-flex border border-line bg-card p-1 shadow-sm">
+    <div role="group" aria-label="Billing period" className="inline-flex border border-border bg-card p-1 shadow-sm">
       {options.map((option) => {
         const active = billing === option.value;
         return (
@@ -100,7 +100,7 @@ export function Pricing() {
 
           {/* Free Plan */}
           <motion.div variants={fadeUpItem} className="h-full">
-            <div className="bg-card border border-line p-6 md:p-8 rounded-none shadow-sm flex flex-col hover:border-ember transition-colors duration-300 h-full">
+            <div className="bg-card border border-border p-6 md:p-8 rounded-none shadow-sm flex flex-col hover:border-ember transition-colors duration-300 h-full">
               <div>
                 <h3 className="font-display font-bold text-2xl text-foreground tracking-tight mb-1">Free</h3>
                 <p className="text-muted-foreground">Perfect for personal projects and testing.</p>
@@ -122,7 +122,7 @@ export function Pricing() {
               <Button
                 nativeButton={false}
                 render={<Link href="/auth" />}
-                className="h-12 w-full rounded-none border border-line bg-btn font-semibold text-on-btn hover:bg-ember hover:text-on-ember"
+                className="h-12 w-full rounded-none border border-border bg-btn font-semibold text-on-btn hover:bg-ember hover:text-on-ember"
               >
                 Get started for free
               </Button>
@@ -131,8 +131,8 @@ export function Pricing() {
 
           {/* Pro Plan */}
           <motion.div variants={fadeUpItem} className="h-full">
-            <div className="bg-lake border border-line p-6 md:p-8 rounded-none shadow-md flex flex-col relative h-full">
-              <div className="absolute top-0 right-6 -translate-y-1/2 bg-inkband text-on-inkband text-xs font-semibold px-4 py-1.5 rounded-none border border-line">
+            <div className="bg-lake border border-border p-6 md:p-8 rounded-none shadow-md flex flex-col relative h-full">
+              <div className="absolute top-0 right-6 -translate-y-1/2 bg-inkband text-on-inkband text-xs font-semibold px-4 py-1.5 rounded-none border border-border">
                 Recommended
               </div>
               <div>
@@ -169,7 +169,7 @@ export function Pricing() {
               <Button
                 nativeButton={false}
                 render={<Link href="/auth" />}
-                className="h-12 w-full rounded-none border border-line bg-btn font-semibold text-on-btn hover:opacity-90"
+                className="h-12 w-full rounded-none border border-border bg-btn font-semibold text-on-btn hover:opacity-90"
               >
                 Upgrade to Pro
               </Button>

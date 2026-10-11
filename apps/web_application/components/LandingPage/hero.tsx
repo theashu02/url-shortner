@@ -10,7 +10,7 @@ import { EASE } from "./motion-variants";
 
 function HeadlineLine({ children, delay }: { children: ReactNode; delay: number }) {
   return (
-    <span className="block overflow-hidden pb-[0.09em] -mb-[0.09em]">
+    <span className="block overflow-hidden pb-[0.09em] mb-[-0.09em]">
       <motion.span
         className="block"
         initial={{ y: "110%" }}
@@ -37,7 +37,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: EASE }}
-          className="mb-6 inline-flex items-center gap-2 border border-line bg-card px-4 py-2 text-xs font-semibold uppercase tracking-wider text-foreground shadow-sm transition-colors hover:border-ember"
+          className="mb-6 inline-flex items-center gap-2 border border-border bg-card px-4 py-2 text-xs font-semibold uppercase tracking-wider text-foreground shadow-sm transition-colors hover:border-ember"
         >
           <motion.span
             aria-hidden="true"
@@ -86,11 +86,11 @@ export function Hero() {
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ duration: 0.9, delay: 0.9, ease: EASE }}
-        className="absolute bottom-0 left-0 w-full h-1.5 flex border-t border-line origin-left"
+        className="absolute bottom-0 left-0 w-full h-1.5 flex border-t border-border origin-left"
         aria-hidden="true"
       >
         <div className="w-1/3 h-full bg-ember" />
-        <div className="w-1/3 h-full bg-lime-soft border-x border-line" />
+        <div className="w-1/3 h-full bg-lime-soft border-x border-border" />
         <div className="w-1/3 h-full bg-lake" />
       </motion.div>
     </section>

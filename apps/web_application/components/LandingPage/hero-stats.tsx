@@ -53,7 +53,7 @@ export function HeroStats() {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, margin: "-40px" }}
-      className="mt-12 grid w-full max-w-2xl grid-cols-3 divide-x divide-line border border-line bg-card shadow-sm"
+      className="mt-12 grid w-full max-w-2xl grid-cols-3 divide-x divide-line border border-border bg-card shadow-sm"
     >
       {STATS.map((stat) => (
         <motion.div key={stat.label} variants={fadeUpItem} className="px-4 py-5 text-center">

@@ -72,7 +72,7 @@ export function DeviceInterstitial({
           </h1>
 
           <div className="w-full max-w-xl ml-2 md:ml-4 space-y-5">
-            <div className="bg-card border-2 border-line p-5 space-y-2">
+            <div className="bg-card border-2 border-border p-5 space-y-2">
               <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                 You&apos;re heading to
               </p>
@@ -91,7 +91,7 @@ export function DeviceInterstitial({
               <a
                 href={destinationUrl}
                 onClick={handleContinue}
-                className="inline-block text-center bg-btn hover:bg-ember text-on-btn hover:text-on-ember font-bold tracking-widest uppercase px-10 py-4 text-sm border-2 border-line"
+                className="inline-block text-center bg-btn hover:bg-ember text-on-btn hover:text-on-ember font-bold tracking-widest uppercase px-10 py-4 text-sm border-2 border-border"
               >
                 Continue
               </a>

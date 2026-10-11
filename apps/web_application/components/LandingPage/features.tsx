@@ -84,7 +84,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
       className="h-full"
     >
       <div ref={cardRef} className="relative h-full">
-        <Card className="bg-card border border-line hover:border-ember hover:shadow-md transition-colors duration-300 rounded-none overflow-hidden group h-full relative">
+        <Card className="bg-card border border-border hover:border-ember hover:shadow-md transition-colors duration-300 rounded-none overflow-hidden group h-full relative">
           {!reduce && (
             <motion.div
               aria-hidden="true"

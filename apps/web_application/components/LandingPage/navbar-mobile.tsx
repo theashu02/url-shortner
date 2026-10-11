@@ -25,7 +25,7 @@ export function NavbarMobile() {
         <Button
           nativeButton={false}
           render={<Link href="/auth" />}
-          className="h-9 rounded-none border border-line bg-btn px-4 text-xs font-semibold text-on-btn hover:bg-ember hover:text-on-ember"
+          className="h-9 rounded-none border border-border bg-btn px-4 text-xs font-semibold text-on-btn hover:bg-ember hover:text-on-ember"
         >
           Start
         </Button>
@@ -36,7 +36,7 @@ export function NavbarMobile() {
           aria-expanded={mobileMenuOpen}
           aria-controls="mobile-navigation"
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-          className="h-9 w-9 rounded-none border border-line bg-card text-foreground hover:bg-foreground hover:text-background"
+          className="h-9 w-9 rounded-none border border-border bg-card text-foreground hover:bg-foreground hover:text-background"
         >
           {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </Button>
@@ -64,7 +64,7 @@ export function NavbarMobile() {
                 <Link
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block text-2xl font-semibold text-foreground tracking-tight border-b border-line pb-4"
+                  className="block text-2xl font-semibold text-foreground tracking-tight border-b border-border pb-4"
                 >
                   {link.label}
                 </Link>
@@ -79,7 +79,7 @@ export function NavbarMobile() {
               <Button
                 nativeButton={false}
                 render={<Link href="/auth" onClick={() => setMobileMenuOpen(false)} />}
-                className="h-12 w-full rounded-none border border-line bg-btn font-semibold text-on-btn hover:bg-ember hover:text-on-ember"
+                className="h-12 w-full rounded-none border border-border bg-btn font-semibold text-on-btn hover:bg-ember hover:text-on-ember"
               >
                 Login
               </Button>

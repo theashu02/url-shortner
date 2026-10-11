@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { ScrollReveal } from "./scroll-reveal";
@@ -18,7 +17,7 @@ export function CTA() {
     <section aria-label="Get started with SimpLx" className="bg-mist px-4 md:px-8 pb-20 md:pb-24">
       <div className="container mx-auto max-w-6xl">
         <ScrollReveal>
-          <div className="relative overflow-hidden border border-line bg-inkband px-6 py-14 md:p-16 text-center text-on-inkband shadow-md">
+          <div className="relative overflow-hidden border border-border bg-inkband px-6 py-14 md:p-16 text-center text-on-inkband shadow-md">
             <FloatingSquares items={CTA_SQUARES} />
 
             <div className="relative z-10 mx-auto max-w-2xl">

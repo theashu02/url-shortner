@@ -21,7 +21,7 @@ export function HeroForm() {
 
   return (
     <div className="w-full max-w-3xl mx-auto flex flex-col items-center gap-4">
-      <div className="w-full bg-card p-2 border border-line rounded-none shadow-sm">
+      <div className="w-full bg-card p-2 border border-border rounded-none shadow-sm">
         <form
           onSubmit={handleShorten}
           className="flex w-full flex-col gap-2 sm:flex-row sm:items-center"
@@ -75,7 +75,7 @@ export function HeroForm() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ duration: 0.4, ease: EASE }}
-            className="flex flex-col sm:flex-row items-center gap-3 bg-card border border-line p-2 pl-5 rounded-none shadow-sm mt-2"
+            className="flex flex-col sm:flex-row items-center gap-3 bg-card border border-border p-2 pl-5 rounded-none shadow-sm mt-2"
           >
             <a
               href={shortenedUrl}

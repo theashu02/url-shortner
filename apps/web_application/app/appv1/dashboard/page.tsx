@@ -1,32 +1,20 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useFetchApi } from "@/hooks/useFetchApi";
-import { api } from "@/lib/eden";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { fetchProfile } from "@/store/profile-slice";
 import { signOut } from "next-auth/react";
 import { User, Mail, Globe, LogOut, RefreshCw } from "lucide-react";
 import Image from "next/image";
 
-type UserInfo = {
-  id: string;
-  name: string | null;
-  email: string | null;
-  image: string | null;
-  provider: string;
-  emailVerified: boolean;
-  handle: string | null;
-  country: string | null;
-  bio: string | null;
-  loginCount: number;
-  lastLoginAt: string | null;
-  createdAt: string | null;
-};
-
 export default function DashboardPage() {
-  const { data: user, error, loading, execute } = useFetchApi<UserInfo>();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.profile.profile);
+  const loading = useAppSelector((state) => state.profile.loading);
+  const error = useAppSelector((state) => state.profile.error);
 
   const handleFetchUser = () => {
-    execute(() => api.user.me.get());
+    dispatch(fetchProfile());
   };
 
   return (

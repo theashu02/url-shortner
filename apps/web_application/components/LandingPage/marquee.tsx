@@ -29,7 +29,7 @@ export function Marquee() {
 
   if (reduce) {
     return (
-      <section aria-label="Platform capabilities" className="overflow-hidden border-y border-line bg-card py-4">
+      <section aria-label="Platform capabilities" className="overflow-hidden border-y border-border bg-card py-4">
         <div className="flex flex-wrap items-center justify-center">
           {ITEMS.map((item) => (
             <RowItem key={item} item={item} />
@@ -50,7 +50,7 @@ export function Marquee() {
   );
 
   return (
-    <section aria-label="Platform capabilities" className="overflow-hidden border-y border-line bg-card py-4">
+    <section aria-label="Platform capabilities" className="overflow-hidden border-y border-border bg-card py-4">
       <motion.div
         className="flex w-max"
         animate={{ x: ["0%", "-50%"] }}

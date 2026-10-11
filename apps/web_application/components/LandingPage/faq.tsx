@@ -47,12 +47,12 @@ export function FAQ() {
         </ScrollReveal>
 
         <ScrollReveal delay={100}>
-          <div className="bg-card rounded-none p-4 md:p-6 border border-line shadow-sm">
+          <div className="bg-card rounded-none p-4 md:p-6 border border-border shadow-sm">
             <Accordion className="w-full space-y-3">
               {faqs.map((faq, index) => (
                 <ScrollReveal key={index} delay={index * 80} y={16}>
-                  <AccordionItem value={`item-${index}`} className="border border-line rounded-none overflow-hidden bg-card data-[state=open]:shadow-sm transition-shadow">
-                    <AccordionTrigger className="text-left font-semibold text-lg tracking-tight text-foreground hover:text-ember-deep transition-colors px-5 py-4 hover:no-underline data-[state=open]:border-b data-[state=open]:border-line">
+                  <AccordionItem value={`item-${index}`} className="border border-border rounded-none overflow-hidden bg-card data-[state=open]:shadow-sm transition-shadow">
+                    <AccordionTrigger className="text-left font-semibold text-lg tracking-tight text-foreground hover:text-ember-deep transition-colors px-5 py-4 hover:no-underline data-[state=open]:border-b data-[state=open]:border-border">
                       {faq.question}
                     </AccordionTrigger>
                     <AccordionContent className="text-muted-foreground leading-relaxed px-5 pb-5">

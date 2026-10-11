@@ -182,7 +182,7 @@ const TOAST_TYPE_STYLES: Record<
   { root: string; description: string; icon: string; close: string }
 > = {
   success: {
-    root: "bg-lime-soft border-line text-on-lime",
+    root: "bg-lime-soft border-border text-on-lime",
     description: "text-on-lime",
     icon: "text-on-lime",
     close: "text-on-lime/70 hover:text-on-lime",
@@ -194,19 +194,19 @@ const TOAST_TYPE_STYLES: Record<
     close: "text-muted-foreground hover:text-foreground",
   },
   info: {
-    root: "bg-lake border-line text-on-lake",
+    root: "bg-lake border-border text-on-lake",
     description: "text-on-lake",
     icon: "text-on-lake",
     close: "text-on-lake/70 hover:text-on-lake",
   },
   warning: {
-    root: "bg-ember border-line text-on-ember",
+    root: "bg-ember border-border text-on-ember",
     description: "text-on-ember",
     icon: "text-on-ember",
     close: "text-on-ember/70 hover:text-on-ember",
   },
   loading: {
-    root: "bg-ember border-line text-on-ember",
+    root: "bg-ember border-border text-on-ember",
     description: "text-on-ember",
     icon: "text-on-ember",
     close: "text-on-ember/70 hover:text-on-ember",
@@ -214,7 +214,7 @@ const TOAST_TYPE_STYLES: Record<
 };
 
 const TOAST_FALLBACK_STYLE = {
-  root: "bg-card border-line text-foreground",
+  root: "bg-card border-border text-foreground",
   description: "text-muted-foreground",
   icon: "text-ember-deep",
   close: "text-muted-foreground hover:text-foreground",

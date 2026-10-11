@@ -19,7 +19,7 @@ interface Step {
 const STEPS: Step[] = [
   { icon: User, tile: "bg-ember text-on-ember", title: "User click", sub: null },
   { icon: Database, tile: "bg-lake text-on-lake", title: "Redis edge cache", sub: "Sub-10ms lookup", live: true },
-  { icon: ExternalLink, tile: "bg-lime-soft text-on-lime border border-line", title: "302 redirect", sub: "Instant delivery", arrow: true },
+  { icon: ExternalLink, tile: "bg-lime-soft text-on-lime border border-border", title: "302 redirect", sub: "Instant delivery", arrow: true },
   { icon: Activity, tile: "bg-ember-deep text-on-ember", title: "Async analytics", sub: "Tracked in the background" },
 ];
 
@@ -75,12 +75,12 @@ export function SpeedMatrix() {
                     >
                       <Icon className="h-5 w-5" />
                     </motion.div>
-                    <div className="bg-card border border-line p-4 rounded-none flex-1 shadow-sm">
+                    <div className="bg-card border border-border p-4 rounded-none flex-1 shadow-sm">
                       <div className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-2 flex-wrap">
                           <p className="font-semibold text-lg tracking-tight text-foreground">{step.title}</p>
                           {step.live && (
-                            <span className="inline-flex items-center gap-1.5 border border-line bg-lime-soft px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-on-lime">
+                            <span className="inline-flex items-center gap-1.5 border border-border bg-lime-soft px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-on-lime">
                               <motion.span
                                 aria-hidden="true"
                                 className="h-1.5 w-1.5 bg-ember-deep"

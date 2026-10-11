@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FirstBannerLogo } from "@/lib/socialLogos";
@@ -18,9 +19,9 @@ export function PagesHero() {
           to engage. Gain valuable insights and track your performance.
         </p>
         <Button
+          nativeButton={false}
+          render={<Link href="/create/templates" />}
           className="gap-2 bg-ember px-5 py-4 text-md text-on-ember hover:bg-ember/90"
-          disabled
-          title="Page builder is coming soon"
         >
           Create your first page
           <ArrowRight className="h-4 w-4" aria-hidden="true" />

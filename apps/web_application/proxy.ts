@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { getRequestBaseUrl } from "@/lib/constant";
 
-const PROTECTED_ROUTES = ["/appv1/dashboard"];
+const PROTECTED_ROUTES = ["/appv1", "/create/templates"];
 const AUTH_ROUTES = ["/auth"];
 
 export async function proxy(req: NextRequest) {
@@ -19,11 +19,11 @@ export async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL("/auth", baseUrl));
   }
 
-  // Authenticated user trying to access auth page → redirect to /appv1/dashboard
+  // Authenticated user trying to access auth page → redirect to /appv1
   if (isAuthRoute && token) {
     return NextResponse.redirect(
       new URL(
-        "/appv1/dashboard",
+        "/appv1",
         getRequestBaseUrl(req.headers, req.nextUrl.origin),
       ),
     );
@@ -33,5 +33,5 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/appv1/dashboard/:path*", "/auth/:path*"],
+  matcher: ["/appv1/:path*", "/create/templates/:path*", "/auth/:path*"],
 };

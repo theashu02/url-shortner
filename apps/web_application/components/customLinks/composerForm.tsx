@@ -60,9 +60,7 @@ export function ComposerForm() {
     <section aria-label="Link composer" className="overflow-hidden border border-border bg-card shadow-sm">
       <form onSubmit={handleSubmit} className="space-y-6 p-5 sm:p-7">
         <div className="flex items-center gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center bg-inkband text-on-inkband">
-            <Icon className="h-5 w-5" aria-hidden="true" />
-          </span>
+          <Icon className="h-10 w-10" aria-hidden="true" />
           <div>
             <h2 className="text-lg font-bold tracking-tight text-foreground">
               {copy.title}
@@ -87,7 +85,7 @@ export function ComposerForm() {
               placeholder="paste your long link here…"
               value={destinationUrl}
               onChange={(event) => dispatch(setDestinationUrl(event.target.value))}
-              className="h-11 flex-1 border-0 bg-transparent px-0 text-sm shadow-none focus-visible:ring-0"
+              className="h-11 flex-1 border-0 bg-transparent px-0 shadow-none focus-visible:ring-0 text-base md:text-md"
             />
           </div>
         </div>
@@ -107,7 +105,7 @@ export function ComposerForm() {
               )}
             </div>
             <div className="flex items-center border border-border bg-background transition-colors focus-within:border-ember">
-              <span className="shrink-0 border-r border-border/60 bg-muted/30 px-3 py-0 font-mono text-xs text-muted-foreground">
+              <span className="shrink-0 border-r border-border/60 bg-muted/30 px-3 py-0 font-mono text-md text-muted-foreground">
                 {host ? `${host}/` : "/"}
               </span>
               <Input
@@ -118,7 +116,7 @@ export function ComposerForm() {
                 value={slug}
                 maxLength={SLUG_MAX}
                 onChange={(event) => dispatch(setSlug(event.target.value))}
-                className="h-11 flex-1 border-0 bg-transparent px-3 font-mono text-sm shadow-none focus-visible:ring-0 placeholder:text-muted-foreground/50"
+                className="h-11 flex-1 border-0 bg-transparent px-3 font-mono shadow-none focus-visible:ring-0 placeholder:text-muted-foreground/50 text-base md:text-md"
               />
             </div>
             <p className="text-[11px] text-muted-foreground/70">

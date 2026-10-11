@@ -11,3 +11,9 @@ export const SOCIAL_LOGOS = {
 };
 
 export const NotFoundURL = "https://res.cloudinary.com/dntxrtlsj/image/upload/v1790373595/404_faxvhq.avif"
+
+export const FirstBannerLogo = "https://res.cloudinary.com/dntxrtlsj/image/upload/v1791728854/pages-hero_yfrjfl.svg"
+
+export const SecondBannerLogo = "https://res.cloudinary.com/dntxrtlsj/image/upload/v1791728853/inspire-contact_ygohfw.svg"
+
+export const ThirdBannerLogo = "https://res.cloudinary.com/dntxrtlsj/image/upload/v1791728854/inspire-content_xbjtjj.svg"

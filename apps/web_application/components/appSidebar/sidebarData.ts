@@ -1,5 +1,6 @@
 import {
   LayoutDashboard,
+  LayoutTemplate,
   LineChart,
   Link as LinkIcon,
   Monitor,
@@ -20,6 +21,7 @@ export const SIDEBAR_ROUTES: SidebarRoute[] = [
   { name: "My Links", href: "/appv1/my-links", icon: LinkIcon },
   { name: "Custom Links", href: "/appv1/custom-links", icon: Wand2 },
   { name: "Analytics", href: "/appv1/analytics", icon: LineChart },
+  { name: "Pages", href: "/appv1/pages", icon: LayoutTemplate },
 ];
 
 export const SIDEBAR_THEMES = [

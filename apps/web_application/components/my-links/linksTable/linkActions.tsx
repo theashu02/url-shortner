@@ -1,9 +1,9 @@
 "use client";
 
-import { Check, Copy, Loader2, Pencil, QrCode, Share2, Trash2 } from "lucide-react";
+import { Check, Copy, LayoutGrid, Loader2, Pencil, QrCode, Share2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch } from "@/store";
-import { setEditingLink, setQrLink, setShareLink } from "@/store/my-links-slice";
+import { setEditingLink, setPageLink, setQrLink, setShareLink } from "@/store/my-links-slice";
 import type { LinkItem } from "@/components/my-links/types";
 import { isExpired } from "./linkUtils";
 
@@ -26,6 +26,15 @@ export function DesktopActions({ link, isDeleting, onDelete }: DesktopActionsPro
         className="h-8 w-8 rounded-none text-muted-foreground hover:text-foreground"
       >
         <QrCode className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        title="Add to a page"
+        onClick={() => dispatch(setPageLink(link))}
+        className="h-8 w-8 rounded-none text-muted-foreground hover:text-foreground"
+      >
+        <LayoutGrid className="h-4 w-4" />
       </Button>
       <Button
         variant="ghost"
@@ -106,6 +115,15 @@ export function MobileActions({ link, shortUrl, isCopied, isDeleting, onCopy, on
         className="h-7 w-7 rounded-none"
       >
         <QrCode className="h-3 w-3" />
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        aria-label="Add to a page"
+        onClick={() => dispatch(setPageLink(link))}
+        className="h-7 w-7 rounded-none"
+      >
+        <LayoutGrid className="h-3 w-3" />
       </Button>
       <Button
         variant="outline"

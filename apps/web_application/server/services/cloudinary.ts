@@ -1,4 +1,4 @@
-import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary, type UploadApiOptions } from "cloudinary";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -6,18 +6,29 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function uploadImage(file: File): Promise<string> {
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
-
+function uploadBuffer(buffer: Buffer, options: UploadApiOptions): Promise<string> {
   return new Promise((resolve, reject) => {
     cloudinary.uploader
-      .upload_stream({ folder: "url-shortener-profiles" }, (error, result) => {
+      .upload_stream(options, (error, result) => {
         if (error) return reject(error);
-        if (result) return resolve(result.secure_url);
+        if (result?.secure_url) return resolve(result.secure_url);
         reject(new Error("No result from Cloudinary"));
       })
       .end(buffer);
+  });
+}
+
+export async function uploadImage(file: File): Promise<string> {
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  return uploadBuffer(buffer, { folder: "url-shortener-profiles" });
+}
+
+export async function uploadPageAvatar(buffer: Buffer): Promise<string> {
+  return uploadBuffer(buffer, {
+    folder: "pages/avatars",
+    resource_type: "image",
+    transformation: [{ width: 512, height: 512, crop: "limit" }],
   });
 }
 
@@ -28,7 +39,7 @@ export async function deleteImageByUrl(url: string): Promise<void> {
     const parts = url.split("/");
     const filename = parts.pop();
     const folder = parts.pop();
-    
+
     if (!filename || !folder) return;
 
     const publicId = filename.split(".")[0];

@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useClipboard } from "@/hooks/useClipboard";
+import { sendBeacon } from "@/lib/beacon";
 import { ArrowRight, Check, Copy, ExternalLink, Eye, ShieldCheck } from "lucide-react";
 import { collectDeviceInfo, shouldSkipCapture } from "@/lib/device-info";
 import { truncateUrl } from "@/lib/constant";
+import { AppBackdrop } from "@/components/AppBackdrop";
 
 interface DeviceInterstitialProps {
   shortCode: string;
@@ -45,7 +48,7 @@ export function DeviceInterstitial({
   destinationUrl,
 }: DeviceInterstitialProps) {
   const postedRef = useRef(false);
-  const [copied, setCopied] = useState(false);
+  const { copied, copy } = useClipboard();
 
   useEffect(() => {
     if (postedRef.current || shouldSkipCapture()) return;
@@ -54,12 +57,7 @@ export function DeviceInterstitial({
     (async () => {
       try {
         const device = await collectDeviceInfo();
-        await fetch("/api/device/capture", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ eventId, shortCode, device }),
-          signal: AbortSignal.timeout(5000),
-        });
+        await sendBeacon("/api/device/capture", { eventId, shortCode, device }, { timeoutMs: 5000 });
       } catch {
         // Analytics must never break the visitor flow.
       }
@@ -67,26 +65,12 @@ export function DeviceInterstitial({
   }, [eventId, shortCode]);
 
   const handleContinue = () => {
-    try {
-      void fetch("/api/device/continued", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ eventId, shortCode }),
-        keepalive: true,
-      });
-    } catch {
-      // Navigation proceeds regardless.
-    }
+    // Navigation proceeds regardless of the outcome.
+    void sendBeacon("/api/device/continued", { eventId, shortCode }, { keepalive: true });
   };
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(destinationUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Clipboard unavailable; selection still works.
-    }
+  const handleCopy = () => {
+    void copy(destinationUrl);
   };
 
   let host = destinationUrl;
@@ -97,16 +81,7 @@ export function DeviceInterstitial({
   }
 
   return (
-    <div className="bg-mist font-ubuntu relative flex min-h-screen w-full items-center justify-center overflow-hidden px-4 py-14 sm:px-8">
-      <div
-        className="border-border bg-lime-soft pointer-events-none absolute -top-10 -right-10 h-40 w-40 border-2"
-        aria-hidden="true"
-      />
-      <div
-        className="border-border bg-lake/20 pointer-events-none absolute -bottom-12 -left-12 h-48 w-48 border-2"
-        aria-hidden="true"
-      />
-
+    <AppBackdrop className="items-center justify-center px-4 py-14 sm:px-8">
       <div className="relative z-10 grid w-full max-w-6xl items-center gap-8 lg:grid-cols-2 lg:gap-12">
         <div className="flex min-w-0 flex-col items-start gap-6">
           <p className="border-border bg-card text-foreground inline-flex items-center gap-2 border px-3 py-1.5 text-[11px] font-bold tracking-[0.18em] uppercase shadow-sm">
@@ -183,6 +158,6 @@ export function DeviceInterstitial({
 
         <CodeTiles shortCode={shortCode} />
       </div>
-    </div>
+    </AppBackdrop>
   );
 }

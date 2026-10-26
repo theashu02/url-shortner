@@ -23,7 +23,7 @@ export async function proxy(req: NextRequest) {
   if (isAuthRoute && token) {
     return NextResponse.redirect(
       new URL(
-        "/appv1",
+        "/appv1/dashboard",
         getRequestBaseUrl(req.headers, req.nextUrl.origin),
       ),
     );

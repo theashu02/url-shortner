@@ -5,6 +5,7 @@ import analyticsReducer from "./analytics-slice";
 import shortenReducer from "./shorten-slice";
 import customLinksReducer from "./customLinksSlice";
 import profileReducer from "./profile-slice";
+import pagesReducer from "./pages-slice";
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     shorten: shortenReducer,
     customLinks: customLinksReducer,
     profile: profileReducer,
+    pages: pagesReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

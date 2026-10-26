@@ -15,10 +15,12 @@ export function TemplatesHeader() {
       <Link
         href="/appv1/pages"
         aria-label="Back to Pages"
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ember transition-colors hover:bg-mist"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none text-ember transition-colors hover:bg-muted"
       >
         <X className="h-5 w-5" aria-hidden="true" />
       </Link>
     </div>
   );
 }
+
+

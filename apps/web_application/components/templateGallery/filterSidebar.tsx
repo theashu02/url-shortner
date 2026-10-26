@@ -28,7 +28,7 @@ export function FilterSidebar({ active, onSelect }: FilterSidebarProps) {
     <aside className="w-full shrink-0 lg:w-56" aria-label="Template filters">
       <Button
         variant="outline"
-        className="w-full gap-1.5 border-ember text-ember hover:bg-mist hover:text-ember lg:w-auto"
+        className="w-full gap-1.5 border-ember text-ember hover:bg-muted hover:text-ember lg:w-auto"
         title="Blank canvas editor is coming soon"
         disabled
       >
@@ -39,13 +39,13 @@ export function FilterSidebar({ active, onSelect }: FilterSidebarProps) {
       <div className="mt-4 lg:hidden">
         <DropdownMenu>
           <DropdownMenuTrigger
-            className="flex w-full items-center justify-between rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-semibold text-foreground outline-none hover:bg-mist focus-visible:ring-1 focus-visible:ring-ember"
+            className="flex w-full items-center justify-between rounded-none border border-border bg-card px-3 py-2.5 text-sm font-semibold text-foreground outline-none hover:bg-muted focus-visible:ring-1 focus-visible:ring-ember"
             aria-label="Filter templates by use case"
           >
             {selected.label}
             <ChevronDown className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-64 rounded-lg">
+          <DropdownMenuContent align="start" className="w-64 rounded-none">
             <DropdownMenuGroup>
               <DropdownMenuItem
                 onClick={() => onSelect(all.value)}
@@ -123,7 +123,7 @@ function FilterDesktopButton({
         "relative justify-start rounded-none px-3 py-5 text-md font-normal",
         active
           ? "bg-inkband font-bold text-on-inkband hover:bg-inkband hover:text-on-inkband"
-          : "text-muted-foreground hover:bg-mist hover:text-foreground",
+          : "text-muted-foreground hover:bg-muted hover:text-foreground",
       )}
     >
       <span
@@ -137,3 +137,4 @@ function FilterDesktopButton({
     </Button>
   );
 }
+

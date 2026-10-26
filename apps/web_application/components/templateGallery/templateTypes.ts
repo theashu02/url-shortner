@@ -1,3 +1,5 @@
+import type { PageTemplateSeedBlock } from "@/server/lib/pageTemplates";
+
 export interface PageTemplate {
   id: string;
   name: string;
@@ -8,6 +10,11 @@ export interface PageTemplate {
     accent: string;
     dark: boolean;
   };
+}
+
+export interface GalleryTemplate extends PageTemplate {
+  blockCount: number;
+  blocks: PageTemplateSeedBlock[];
 }
 
 export interface TemplateCategory {

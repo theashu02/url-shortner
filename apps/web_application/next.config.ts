@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "res.cloudinary.com",
       },
+      {
+        protocol: "https",
+        hostname: "*",
+      },
     ],
   },
   allowedDevOrigins: ["nonpresidential-lukas-postaxial.ngrok-free.dev"],

@@ -10,6 +10,14 @@ export const SOCIAL_LOGOS = {
   mail: "https://res.cloudinary.com/dntxrtlsj/image/upload/v1766692665/gmail_gjz8kt.png",    
 };
 
+export const InstaGramLOGO = "https://res.cloudinary.com/dntxrtlsj/image/upload/v1792254594/instagram_yn13db.png"
+
+export const GithubLightModeLogo = "https://res.cloudinary.com/dntxrtlsj/image/upload/v1792254791/GitHub_Invertocat_Black_Clearspace_npx5i1.png"
+
+export const GithubDarkModeLogo = "https://res.cloudinary.com/dntxrtlsj/image/upload/v1792254791/GitHub_Invertocat_White_Clearspace_nn9zgz.png"
+
+export const RedditLogo = "https://res.cloudinary.com/dntxrtlsj/image/upload/v1792255729/reddit_ldhyqf.png"
+
 export const NotFoundURL = "https://res.cloudinary.com/dntxrtlsj/image/upload/v1790373595/404_faxvhq.avif"
 
 export const FirstBannerLogo = "https://res.cloudinary.com/dntxrtlsj/image/upload/v1791728854/pages-hero_yfrjfl.svg"

@@ -14,7 +14,19 @@ import {
   Loader2Icon,
 } from "lucide-react";
 
-const toast = ToastPrimitive.createToastManager();
+const TOAST_DEFAULT_TIMEOUT_MS = 1500;
+const TOAST_DEFAULT_LIMIT = 3;
+
+const baseToastManager = ToastPrimitive.createToastManager();
+
+type ToastAddOptions = Parameters<typeof baseToastManager.add>[0];
+
+const toast: Omit<typeof baseToastManager, "add"> & {
+  add: (options: ToastAddOptions) => string;
+} = {
+  ...baseToastManager,
+  add: (options) => baseToastManager.add({ timeout: TOAST_DEFAULT_TIMEOUT_MS, ...options }),
+};
 
 function ToastProvider({ ...props }: ToastPrimitive.Provider.Props) {
   return <ToastPrimitive.Provider {...props} />;
@@ -245,10 +257,17 @@ function ToastList() {
 function Toaster({
   children,
   toastManager = toast,
+  timeout = TOAST_DEFAULT_TIMEOUT_MS,
+  limit = TOAST_DEFAULT_LIMIT,
   ...props
 }: ToastPrimitive.Provider.Props) {
   return (
-    <ToastProvider toastManager={toastManager} {...props}>
+    <ToastProvider
+      toastManager={toastManager}
+      timeout={timeout}
+      limit={limit}
+      {...props}
+    >
       {children}
       <ToastPortal>
         <ToastViewport>

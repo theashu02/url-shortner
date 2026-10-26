@@ -18,9 +18,9 @@ export function InspireCard({ title, text, image, imageAlt }: InspireCardProps) 
         </h3>
         <p className="text-sm text-foreground/75">{text}</p>
         <Link
-          href="#"
-          className="mt-1 inline-flex cursor-not-allowed items-center gap-1.5 text-md text-ember"
-          title="Page builder is coming soon"
+          href="/create/templates"
+          className="mt-1 inline-flex items-center gap-1.5 text-md font-semibold text-ember hover:underline"
+          title="Choose a template to get started"
         >
           Get started
           <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -38,3 +38,4 @@ export function InspireCard({ title, text, image, imageAlt }: InspireCardProps) 
     </article>
   );
 }
+

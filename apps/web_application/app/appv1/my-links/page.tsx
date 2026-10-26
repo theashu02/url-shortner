@@ -15,6 +15,8 @@ import { LinksTable } from "@/components/my-links/linksTable";
 import { EditLinkModal } from "@/components/my-links/edit-link-modal";
 import { QrModal } from "@/components/my-links/qr-modal";
 import { ShareModal } from "@/components/my-links/shareModal";
+import { AddToPageDialog } from "@/components/my-links/add-to-page-dialog";
+import { setPageLink } from "@/store/my-links-slice";
 
 export default function MyLinksPage() {
   const dispatch = useAppDispatch();
@@ -29,6 +31,7 @@ export default function MyLinksPage() {
   const editingLink = useAppSelector((s) => s.myLinks.editingLink);
   const qrLink = useAppSelector((s) => s.myLinks.qrLink);
   const shareLink = useAppSelector((s) => s.myLinks.shareLink);
+  const pageLink = useAppSelector((s) => s.myLinks.pageLink);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -103,6 +106,10 @@ export default function MyLinksPage() {
       {qrLink && <QrModal onCopy={handleCopy} />}
 
       {shareLink && <ShareModal />}
+
+      {pageLink && (
+        <AddToPageDialog link={pageLink} onClose={() => dispatch(setPageLink(null))} />
+      )}
     </div>
   );
 }

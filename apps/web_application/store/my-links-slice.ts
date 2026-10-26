@@ -20,10 +20,9 @@ export interface MyLinksState {
   editingLink: LinkItem | null;
   qrLink: LinkItem | null;
   shareLink: LinkItem | null;
+  pageLink: LinkItem | null;
   deletingId: string | null;
   copiedId: string | null;
-
-  /** Cache key built from (debouncedSearch, sortBy, sortOrder, page). */
   lastFetchKey: string | null;
 }
 
@@ -44,6 +43,7 @@ const initialState: MyLinksState = {
   editingLink: null,
   qrLink: null,
   shareLink: null,
+  pageLink: null,
   deletingId: null,
   copiedId: null,
 
@@ -211,6 +211,9 @@ const myLinksSlice = createSlice({
     setShareLink(state, action: PayloadAction<LinkItem | null>) {
       state.shareLink = action.payload;
     },
+    setPageLink(state, action: PayloadAction<LinkItem | null>) {
+      state.pageLink = action.payload;
+    },
     setCopiedId(state, action: PayloadAction<string | null>) {
       state.copiedId = action.payload;
     },
@@ -283,6 +286,7 @@ export const {
   setEditingLink,
   setQrLink,
   setShareLink,
+  setPageLink,
   setCopiedId,
 } = myLinksSlice.actions;
 

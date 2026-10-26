@@ -6,10 +6,25 @@ import { TrendingUp } from "lucide-react";
 
 interface TimeSeriesChartProps {
   data: { date: string; count: number }[];
+  secondary?: { date: string; count: number }[];
+  secondaryName?: string;
 }
 
-export function TimeSeriesChart({ data }: TimeSeriesChartProps) {
-  const hasData = data && data.length > 0;
+export function TimeSeriesChart({ data, secondary, secondaryName = "Block clicks" }: TimeSeriesChartProps) {
+  const merged = (() => {
+    const byDate = new Map<string, { date: string; count: number; secondary?: number }>();
+    for (const row of data ?? []) {
+      byDate.set(row.date, { date: row.date, count: row.count });
+    }
+    for (const row of secondary ?? []) {
+      const existing = byDate.get(row.date);
+      if (existing) existing.secondary = row.count;
+      else byDate.set(row.date, { date: row.date, count: 0, secondary: row.count });
+    }
+    return [...byDate.values()].sort((a, b) => (a.date < b.date ? -1 : 1));
+  })();
+  const hasData = merged.length > 0;
+  const showSecondary = Array.isArray(secondary);
 
   return (
     <Card className="rounded-none border-border/40 hover:border-primary/30 transition-colors">
@@ -25,7 +40,7 @@ export function TimeSeriesChart({ data }: TimeSeriesChartProps) {
         ) : (
           <div className="h-55 sm:h-65 w-full text-muted-foreground">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+              <AreaChart data={merged} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.4}/>
@@ -63,8 +78,12 @@ export function TimeSeriesChart({ data }: TimeSeriesChartProps) {
                       return (
                         <div className="bg-primary text-primary-foreground hover:bg-primary/90 px-3 py-2 text-xs shadow-md border border-border/10 rounded-none">
                           <div className="opacity-90 mb-1 font-medium">{displayLabel}</div>
-                          <div className="font-bold text-sm">
-                            {payload[0].name}: {payload[0].value}
+                          <div className="flex flex-col gap-0.5 font-bold text-sm">
+                            {payload.map((entry) => (
+                              <span key={entry.name}>
+                                {entry.name}: {entry.value}
+                              </span>
+                            ))}
                           </div>
                         </div>
                       );
@@ -76,13 +95,26 @@ export function TimeSeriesChart({ data }: TimeSeriesChartProps) {
                 <Area
                   type="monotone"
                   dataKey="count"
-                  name="Clicks"
+                  name="Views"
                   stroke="var(--primary)"
                   strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#colorCount)"
                   activeDot={{ r: 4, fill: "var(--primary)", stroke: "var(--card)", strokeWidth: 2 }}
                 />
+                {showSecondary && (
+                  <Area
+                    type="monotone"
+                    dataKey="secondary"
+                    name={secondaryName}
+                    stroke="var(--ember)"
+                    strokeWidth={2}
+                    fillOpacity={0}
+                    fill="transparent"
+                    connectNulls
+                    activeDot={{ r: 3, fill: "var(--ember)", stroke: "var(--card)", strokeWidth: 2 }}
+                  />
+                )}
               </AreaChart>
             </ResponsiveContainer>
           </div>

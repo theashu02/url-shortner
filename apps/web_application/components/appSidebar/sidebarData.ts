@@ -3,6 +3,7 @@ import {
   LayoutTemplate,
   LineChart,
   Link as LinkIcon,
+  Mail,
   Monitor,
   Moon,
   Sun,
@@ -22,6 +23,7 @@ export const SIDEBAR_ROUTES: SidebarRoute[] = [
   { name: "Custom Links", href: "/appv1/custom-links", icon: Wand2 },
   { name: "Analytics", href: "/appv1/analytics", icon: LineChart },
   { name: "Pages", href: "/appv1/pages", icon: LayoutTemplate },
+  { name: "Mailer", href: "/appv1/Mailer", icon: Mail },
 ];
 
 export const SIDEBAR_THEMES = [

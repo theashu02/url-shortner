@@ -6,6 +6,7 @@ import shortenReducer from "./shorten-slice";
 import customLinksReducer from "./customLinksSlice";
 import profileReducer from "./profile-slice";
 import pagesReducer from "./pages-slice";
+import mailerConnectionReducer from "./mailer-connection-slice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     customLinks: customLinksReducer,
     profile: profileReducer,
     pages: pagesReducer,
+    mailerConnection: mailerConnectionReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

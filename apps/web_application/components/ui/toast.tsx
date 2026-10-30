@@ -23,9 +23,27 @@ type ToastAddOptions = Parameters<typeof baseToastManager.add>[0];
 
 const toast: Omit<typeof baseToastManager, "add"> & {
   add: (options: ToastAddOptions) => string;
+  success: (description: React.ReactNode, options?: Partial<ToastAddOptions>) => string;
+  error: (description: React.ReactNode, options?: Partial<ToastAddOptions>) => string;
 } = {
   ...baseToastManager,
   add: (options) => baseToastManager.add({ timeout: TOAST_DEFAULT_TIMEOUT_MS, ...options }),
+  success: (description, options) =>
+    baseToastManager.add({
+      type: "success",
+      title: "Success",
+      description,
+      timeout: TOAST_DEFAULT_TIMEOUT_MS,
+      ...options,
+    }),
+  error: (description, options) =>
+    baseToastManager.add({
+      type: "error",
+      title: "Error",
+      description,
+      timeout: TOAST_DEFAULT_TIMEOUT_MS,
+      ...options,
+    }),
 };
 
 function ToastProvider({ ...props }: ToastPrimitive.Provider.Props) {

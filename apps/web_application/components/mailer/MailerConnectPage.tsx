@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import {
   AlertCircle,
   Layers,
@@ -11,22 +9,10 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useAppSelector } from "@/store";
-import { useAppDispatch } from "@/store";
-import {
-  loadConnections,
-  selectConnectedProviders,
-  setNotice,
-} from "@/store/mailer-connection-slice";
 import { GmailConnectCard } from "./GmailConnectCard";
 import { OutlookConnectCard } from "./OutlookConnectCard";
 import { SmtpConnectCard } from "./SmtpConnectCard";
-
-const PROVIDER_LABEL: Record<string, string> = {
-  gmail: "Gmail",
-  outlook: "Outlook",
-  smtp: "SMTP",
-};
+import { useMailerConnect, PROVIDER_LABEL } from "./useMailerConnect";
 
 const TOTAL_PROVIDERS = 3;
 
@@ -61,43 +47,7 @@ function Metric({
 }
 
 export function MailerConnectPage() {
-  const dispatch = useAppDispatch();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const connected = useAppSelector(selectConnectedProviders);
-  const listLoading = useAppSelector((s) => s.mailerConnection.listLoading);
-  const notice = useAppSelector((s) => s.mailerConnection.notice);
-  const errorCount = useAppSelector(
-    (s) =>
-      Object.values(s.mailerConnection.connections).filter((c) => c.status === "error").length
-  );
-
-  useEffect(() => {
-    dispatch(loadConnections());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    const ok = searchParams.get("mail_connected");
-    const email = searchParams.get("mail_email");
-    const error = searchParams.get("mail_error");
-    if (ok || error) {
-      if (ok) {
-        const label = PROVIDER_LABEL[ok] ?? ok;
-        dispatch(
-          setNotice({
-            kind: "success",
-            text: label + " connected" + (email ? " as " + email : "") + ".",
-          })
-        );
-        dispatch(loadConnections());
-      } else if (error) {
-        dispatch(setNotice({ kind: "error", text: error }));
-      }
-      router.replace("/appv1/Mailer");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { connected, listLoading, errorCount, refresh } = useMailerConnect();
 
   return (
     <div className="flex-1 w-full overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-6">
@@ -120,7 +70,7 @@ export function MailerConnectPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => dispatch(loadConnections())}
+                onClick={refresh}
                 disabled={listLoading}
                 className="gap-1.5 text-xs h-9 rounded-none"
               >
@@ -159,36 +109,6 @@ export function MailerConnectPage() {
             />
           </div>
         </div>
-
-        {notice && (
-          <div
-            role={notice.kind === "error" ? "alert" : "status"}
-            className={
-              notice.kind === "error"
-                ? "p-4 bg-destructive/10 border border-destructive/20 flex items-center gap-3 text-destructive text-sm"
-                : "p-4 bg-primary/10 border border-primary/20 flex items-center gap-3 text-primary text-sm"
-            }
-          >
-            {notice.kind === "error" ? (
-              <AlertCircle className="h-5 w-5 shrink-0" />
-            ) : (
-              <MailCheck className="h-5 w-5 shrink-0" />
-            )}
-            <span className="flex-1">{notice.text}</span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => dispatch(setNotice(null))}
-              className={
-                notice.kind === "error"
-                  ? "text-xs h-8 border-destructive/30 hover:bg-destructive/10"
-                  : "text-xs h-8 border-primary/30 hover:bg-primary/10"
-              }
-            >
-              Dismiss
-            </Button>
-          </div>
-        )}
 
         {connected.length > 0 ? (
           <section

@@ -20,7 +20,7 @@ export function SmtpConnectCard() {
 
   const statusLabel =
     conn.status === "connected" && saved.host
-      ? "Connected - " + saved.host + ":" + String(saved.port)
+      ? "Connected"
       : conn.status === "connected"
         ? "Connected"
         : conn.status === "connecting"

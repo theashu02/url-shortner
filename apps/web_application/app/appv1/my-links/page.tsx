@@ -78,7 +78,7 @@ export default function MyLinksPage() {
 
   return (
     <div className="flex-1 w-full overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-6">
-      <div className="w-full max-w-7xl mx-auto space-y-6">
+      <div className="w-full mx-auto space-y-6">
         <LinksHeader />
 
         <LinksSearchBar />

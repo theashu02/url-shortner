@@ -1,11 +1,11 @@
-﻿"use client";
+"use client";
 
 import { memo, useEffect, useState } from "react";
 import { Check, Link2, Loader2, Type, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/components/ui/toast";
+import { toast } from "@/components/ui/toast-manager";
 import { cn } from "@/lib/utils";
 import { useSlugAvailability } from "@/hooks/useSlugAvailability";
 import type { UsePageDraft } from "../usePageDraft";

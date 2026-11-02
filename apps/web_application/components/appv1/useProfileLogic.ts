@@ -8,7 +8,7 @@ import {
   setProfileModalOpen,
   type UserProfile,
 } from "@/store/profile-slice";
-import { toast } from "@/components/ui/toast";
+import { toast } from "@/components/ui/toast-manager";
 
 export function useProfileFormLogic(profile: UserProfile) {
   const dispatch = useAppDispatch();

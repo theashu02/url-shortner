@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSelector, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import {
   DEFAULT_SMTP_CONFIG,
   type MailConnectionStatus,
@@ -274,11 +274,14 @@ export const {
   setNotice,
 } = mailerConnectionSlice.actions;
 
-export const selectMailerConnection = (state: RootState) => state.mailerConnection;
-export const selectConnectedProviders = (state: RootState) =>
-  (
-    Object.values(state.mailerConnection.connections) as MailProviderConnection[]
-  ).filter((c: MailProviderConnection) => c.status === "connected");
+const selectConnections = (state: RootState) => state.mailerConnection.connections;
+export const selectConnectedProviders = createSelector(
+  [selectConnections],
+  (connections) =>
+    (Object.values(connections) as MailProviderConnection[]).filter(
+      (c: MailProviderConnection) => c.status === "connected",
+    ),
+);
 
 export const selectConnectionStatus = (
   state: RootState,

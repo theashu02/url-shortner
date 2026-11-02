@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { toast } from "@/components/ui/toast";
+import { toast } from "@/components/ui/toast-manager";
 import {
   InspireSection,
   PagesHeader,
@@ -90,7 +90,7 @@ export default function PagesPage() {
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden px-4 py-6 sm:px-6 lg:px-8">
-      <div className="mx-auto w-full max-w-7xl space-y-6">
+      <div className="mx-auto w-full space-y-6">
         <PagesHeader total={total} />
         {!showEmptyState && (
           <PagesSearchBar value={search} onChange={(value) => dispatch(setSearch(value))} />

@@ -51,14 +51,14 @@ export function MailerConnectPage() {
 
   return (
     <div className="flex-1 w-full overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-6">
-      <div className="w-full max-w-7xl mx-auto space-y-6">
+      <div className="w-full mx-auto space-y-6">
         <div className="space-y-5">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div className="space-y-2">
-              <p className="flex items-center gap-2 text-[11px] font-bold tracking-[0.2em] text-muted-foreground uppercase">
+              {/* <p className="flex items-center gap-2 text-[11px] font-bold tracking-[0.2em] text-muted-foreground uppercase">
                 <span className="inline-block h-2.5 w-2.5 bg-ember" aria-hidden="true" />
                 Email delivery
-              </p>
+              </p> */}
               <h1 className="font-display text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-foreground">
                 Mailer
               </h1>

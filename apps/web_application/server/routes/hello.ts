@@ -1,4 +1,2 @@
-import { Elysia } from 'elysia';
-
-export const helloRoute = new Elysia()
-  .get('/hello', () => 'Hello from Elysia!');
+import { container } from "@/server/core/container";
+export const helloRoute = container.helloController.register();

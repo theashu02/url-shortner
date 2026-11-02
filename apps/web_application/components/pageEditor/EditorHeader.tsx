@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/toast";
+import { toast } from "@/components/ui/toast-manager";
 import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { clearLiveSnapshot, fetchLiveSnapshot } from "@/store/pages-slice";
@@ -132,7 +132,7 @@ export const EditorHeader = memo(function EditorHeader({ draft }: { draft: UsePa
         {draft.phase === "saving" ? (
           <>
             <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" />
-            Saving…
+            Savingâ€¦
           </>
         ) : draft.phase === "error" && draft.statusMessage ? (
           <span className="max-w-56 truncate" title={draft.statusMessage}>

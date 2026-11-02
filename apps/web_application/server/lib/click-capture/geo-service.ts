@@ -37,6 +37,14 @@ export class IpApiGeoProvider implements GeoProvider {
 }
 
 export class CachedGeoProvider implements GeoProvider {
+  /**
+   * In-flight deduplication (singleflight): concurrent lookups for the same
+   * IP share one upstream request instead of stampeding ip-api, whose free
+   * tier caps at 45 req/min. Entries are transient and removed on settle,
+   * so the map cannot grow without bound.
+   */
+  private readonly inflight = new Map<string, Promise<GeoInfo>>();
+
   constructor(
     private readonly inner: GeoProvider,
     private readonly redis: Redis,
@@ -44,6 +52,19 @@ export class CachedGeoProvider implements GeoProvider {
   ) {}
 
   async lookup(ip: string): Promise<GeoInfo> {
+    const pending = this.inflight.get(ip);
+    if (pending) return pending;
+
+    const task = this.resolve(ip);
+    this.inflight.set(ip, task);
+    try {
+      return await task;
+    } finally {
+      if (this.inflight.get(ip) === task) this.inflight.delete(ip);
+    }
+  }
+
+  private async resolve(ip: string): Promise<GeoInfo> {
     const cacheKey = `geo:${ip}`;
 
     const cached = await this.redis.get(cacheKey).catch(() => null);
@@ -51,7 +72,7 @@ export class CachedGeoProvider implements GeoProvider {
       try {
         return JSON.parse(cached) as GeoInfo;
       } catch {
-        // corrupt cache entry — fall through
+        // corrupt cache entry - fall through to refresh
       }
     }
 

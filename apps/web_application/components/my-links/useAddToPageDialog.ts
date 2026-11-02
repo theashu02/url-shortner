@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { toast } from "@/components/ui/toast";
+import { toast } from "@/components/ui/toast-manager";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { appendLinkToPage, fetchPickerPages, resetPagePicker } from "@/store/pages-slice";
 import type { LinkItem } from "./types";

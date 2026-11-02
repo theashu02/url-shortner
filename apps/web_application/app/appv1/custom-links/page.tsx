@@ -18,7 +18,7 @@ export default function CustomLinksPage() {
 
   return (
     <div className="flex-1 w-full overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-6">
-      <div className="mx-auto w-full max-w-7xl space-y-6">
+      <div className="mx-auto w-full space-y-6">
         <ComposerHeader />
         <ModeSelector />
 

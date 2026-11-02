@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { createShortLink, clearError } from "@/store/shorten-slice";
-import { toast } from "@/components/ui/toast";
+import { toast } from "@/components/ui/toast-manager";
 import { urlRegex } from "@/lib/constant";
 
 export function useShortenUrl() {

@@ -1,6 +1,6 @@
 "use client";
 
-import { toast } from "@/components/ui/toast";
+import { toast } from "@/components/ui/toast-manager";
 
 import { memo, useState, useCallback, useRef } from "react";
 import {
@@ -105,7 +105,7 @@ export const UrlCreateForm = memo(function UrlCreateForm({
   };
 
   const getSubmitText = () => {
-    if (loading) return "Creating…";
+    if (loading) return "Creatingâ€¦";
     switch (mode) {
       case "qr":
         return "Create QR Code";
@@ -242,7 +242,7 @@ export const UrlCreateForm = memo(function UrlCreateForm({
                   />
                 </div>
                 <p className="text-sm text-muted-foreground/60">
-                  Letters, numbers, hyphens and underscores only · max {SLUG_MAX} chars
+                  Letters, numbers, hyphens and underscores only Â· max {SLUG_MAX} chars
                 </p>
               </div>
             )}

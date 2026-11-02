@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/components/ui/toast";
+import { toast } from "@/components/ui/toast-manager";
 import { useClipboard } from "@/hooks/useClipboard";
 import { useQrDownload } from "@/hooks/useQrDownload";
 import { api } from "@/lib/eden";

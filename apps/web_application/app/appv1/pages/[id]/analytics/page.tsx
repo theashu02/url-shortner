@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BreakdownCard } from "@/components/analytics/breakdown-card";
 import { TimeSeriesChart } from "@/components/analytics/time-series-chart";
-import { toast } from "@/components/ui/toast";
+import { toast } from "@/components/ui/toast-manager";
 import { api } from "@/lib/eden";
 import { extractApiMessage } from "@/lib/apiError";
 import type { PageAnalytics } from "@/server/services/pages";

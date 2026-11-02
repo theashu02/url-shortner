@@ -6,10 +6,27 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-smokebackground: var(--smokebackground);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-ubuntu: var(--font-ubuntu);
   --font-mono: var(--font-mono);
-  --font-heading: var(--font-heading);
+  --font-heading: var(--font-ubuntu);
+  --font-display: var(--font-ubuntu);
+  /* Minimal landing palette — single source of truth, no hardcoded colors in components */
+  --color-mist: var(--mist);
+  --color-ember: var(--ember);
+  --color-ember-deep: var(--ember-deep);
+  --color-on-ember: var(--on-ember);
+  --color-lime-soft: var(--lime-soft);
+  --color-on-lime: var(--on-lime);
+  --color-lake: var(--lake);
+  --color-on-lake: var(--on-lake);
+  --color-inkband: var(--inkband);
+  --color-on-inkband: var(--on-inkband);
+  --color-btn: var(--btn);
+  --color-on-btn: var(--on-btn);
+  --color-line: var(--line);
+  --color-hard-shadow: var(--hard-shadow);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,14 +66,30 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
+  /* Minimal palette — light mode */
+  --mist: #F4F4F4;
+  --ember: #EA580C;
+  --ember-deep: #C2410C;
+  --on-ember: #FFFFFF;
+  --lime-soft: #E4FDB0;
+  --on-lime: #1A2405;
+  --lake: #1D4ED8;
+  --on-lake: #FFFFFF;
+  --inkband: #17171C;
+  --on-inkband: #F4F4F4;
+  --btn: #000000;
+  --on-btn: #FFFFFF;
+  --line: #14142E;
+  --hard-shadow: #14142E;
+  --background: oklch(0.976 0.006 76);
+  --smokebackground: #f4f4f4;
   --foreground: oklch(0.147 0.004 49.25);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.147 0.004 49.25);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.147 0.004 49.25);
-  --primary: oklch(0.52 0.105 223.128);
-  --primary-foreground: oklch(0.984 0.019 200.873);
+  --primary: oklch(0.24 0.1 328);
+  --primary-foreground: oklch(0.985 0.001 106.423);
   --secondary: oklch(0.967 0.001 286.375);
   --secondary-foreground: oklch(0.21 0.006 285.885);
   --muted: oklch(0.97 0.001 106.424);
@@ -84,14 +117,30 @@
 }
 
 .dark {
+  /* Minimal palette — dark mode (brightened for contrast on dark surfaces) */
+  --mist: #131315;
+  --ember: #FB923C;
+  --ember-deep: #F97316;
+  --on-ember: #221100;
+  --lime-soft: #E4FDB0;
+  --on-lime: #1A2405;
+  --lake: #7AA7FF;
+  --on-lake: #0A1230;
+  --inkband: #1E1E24;
+  --on-inkband: #F4F4F4;
+  --btn: #F4F4F4;
+  --on-btn: #000000;
+  --line: #D9D9E6;
+  --hard-shadow: #000000;
   --background: oklch(0.147 0.004 49.25);
+  --smokebackground: #000000;
   --foreground: oklch(0.985 0.001 106.423);
   --card: oklch(0.216 0.006 56.043);
   --card-foreground: oklch(0.985 0.001 106.423);
   --popover: oklch(0.216 0.006 56.043);
   --popover-foreground: oklch(0.985 0.001 106.423);
-  --primary: oklch(0.45 0.085 224.283);
-  --primary-foreground: oklch(0.984 0.019 200.873);
+  --primary: oklch(0.72 0.13 328);
+  --primary-foreground: oklch(0.12 0.01 328);
   --secondary: oklch(0.274 0.006 286.033);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.268 0.007 34.298);
@@ -128,6 +177,43 @@
     cursor: pointer;
   }
   html {
-    @apply font-mono;
+    @apply font-ubuntu;
+    scroll-behavior: smooth;
+  }
+  ::selection {
+    background: var(--ember);
+    color: var(--on-ember);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ember);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ember-deep);
+}
+
+/* Firefox fallback */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--ember) transparent;
   }
 }

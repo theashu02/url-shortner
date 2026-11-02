@@ -1,79 +1,150 @@
-import React from "react";
+"use client";
+
+import { useRef, useState } from "react";
+import type { ReactNode } from "react";
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useReducedMotion,
+} from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Zap, BarChart2, Globe, QrCode, Terminal, Shield } from "lucide-react";
+import { ScrollReveal } from "./scroll-reveal";
+import { Eyebrow } from "./eyebrow";
+import { fadeUpItem, popItem, staggerContainer } from "./motion-variants";
 
-export function Features() {
-  const features = [
-    {
-      title: "Lightning Fast Redirection",
-      description: "Powered by ElysiaJS and Redis edge caching for sub-millisecond responses globally.",
-      icon: <Zap className="h-6 w-6 text-[#4a044e]" />,
-      color: "bg-[#eac2ff]/30"
-    },
-    {
-      title: "Advanced Analytics",
-      description: "Real-time geographic, device, browser, OS, and referrer tracking at your fingertips.",
-      icon: <BarChart2 className="h-6 w-6 text-[#e0f2fe]" />,
-      color: "bg-[#4a044e]/80"
-    },
-    {
-      title: "Custom Domains",
-      description: "Build brand trust with custom branded domains like l.yourbrand.com for every link.",
-      icon: <Globe className="h-6 w-6 text-[#4a044e]" />,
-      color: "bg-[#e0f2fe]/60"
-    },
-    {
-      title: "Dynamic QR Codes",
-      description: "Secure, instant QR generation with downloadable PNGs. Perfect for offline marketing.",
-      icon: <QrCode className="h-6 w-6 text-[#4a044e]" />,
-      color: "bg-[#eac2ff]/30"
-    },
-    {
-      title: "Developer API",
-      description: "Secure API keys with simple REST endpoints for seamless integration into your apps.",
-      icon: <Terminal className="h-6 w-6 text-[#4a044e]" />,
-      color: "bg-[#e0f2fe]/60"
-    },
-    {
-      title: "Enterprise Security",
-      description: "Rate limiting, DDoS protection, and password-protected links keep your routing secure.",
-      icon: <Shield className="h-6 w-6 text-[#e0f2fe]" />,
-      color: "bg-[#4a044e]/80"
-    },
-  ];
+interface Feature {
+  title: string;
+  description: string;
+  icon: ReactNode;
+  color: string;
+}
+
+const FEATURES: Feature[] = [
+  {
+    title: "Lightning-fast redirects",
+    description: "Powered by ElysiaJS and Redis edge caching for sub-millisecond responses globally.",
+    icon: <Zap className="h-6 w-6 text-on-ember" />,
+    color: "bg-ember",
+  },
+  {
+    title: "Advanced analytics",
+    description: "Real-time geographic, device, browser, OS, and referrer tracking at your fingertips.",
+    icon: <BarChart2 className="h-6 w-6 text-on-lake" />,
+    color: "bg-lake",
+  },
+  {
+    title: "Custom domains",
+    description: "Build brand trust with custom branded domains like l.yourbrand.com for every link.",
+    icon: <Globe className="h-6 w-6 text-on-lime" />,
+    color: "bg-lime-soft",
+  },
+  {
+    title: "Dynamic QR codes",
+    description: "Secure, instant QR generation with downloadable PNGs. Perfect for offline marketing.",
+    icon: <QrCode className="h-6 w-6 text-on-ember" />,
+    color: "bg-ember",
+  },
+  {
+    title: "Developer API",
+    description: "Secure API keys with simple REST endpoints for seamless integration into your apps.",
+    icon: <Terminal className="h-6 w-6 text-on-lake" />,
+    color: "bg-lake",
+  },
+  {
+    title: "Enterprise security",
+    description: "Rate limiting, DDoS protection, and password-protected links keep your routing secure.",
+    icon: <Shield className="h-6 w-6 text-on-lime" />,
+    color: "bg-lime-soft",
+  },
+];
+
+function FeatureCard({ feature }: { feature: Feature }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const mouseX = useMotionValue(-999);
+  const mouseY = useMotionValue(-999);
+  const [hovering, setHovering] = useState(false);
+  const reduce = useReducedMotion();
+  const glow = useMotionTemplate`radial-gradient(240px circle at ${mouseX}px ${mouseY}px, color-mix(in srgb, var(--ember) 14%, transparent), transparent 70%)`;
 
   return (
-    <section id="features" className="py-24 px-4 md:px-6">
-      <div className="container mx-auto max-w-5xl">
-        <div className="text-center mb-16">
-          <h2 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-zinc-950 mb-4">
-            Everything you need. <br className="md:hidden" />
-            <span className="text-zinc-500">Nothing you don't.</span>
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature, idx) => (
-            <Card 
-              key={idx} 
-              className="bg-white/40 backdrop-blur-md border-white/60 shadow-lg shadow-zinc-200/30 hover:bg-white/60 transition-colors"
+    <motion.div
+      variants={fadeUpItem}
+      whileHover={reduce ? undefined : { y: -4 }}
+      transition={{ duration: 0.25 }}
+      onMouseMove={(event) => {
+        const rect = cardRef.current?.getBoundingClientRect();
+        if (!rect) return;
+        mouseX.set(event.clientX - rect.left);
+        mouseY.set(event.clientY - rect.top);
+      }}
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+      className="h-full"
+    >
+      <div ref={cardRef} className="relative h-full">
+        <Card className="bg-card border border-border hover:border-ember hover:shadow-md transition-colors duration-300 rounded-none overflow-hidden group h-full relative">
+          {!reduce && (
+            <motion.div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 z-0"
+              style={{ background: glow }}
+              animate={{ opacity: hovering ? 1 : 0 }}
+              transition={{ duration: 0.3 }}
+            />
+          )}
+          <CardHeader className="pb-3 relative z-10">
+            <motion.div
+              variants={popItem}
+              className={`w-12 h-12 rounded-none flex items-center justify-center mb-4 ${feature.color} transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105`}
             >
-              <CardHeader className="pb-4">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${feature.color}`}>
-                  {feature.icon}
-                </div>
-                <CardTitle className="font-heading text-xl font-bold text-zinc-950">
-                  {feature.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-zinc-600 leading-relaxed">
-                  {feature.description}
-                </p>
-              </CardContent>
-            </Card>
+              {feature.icon}
+            </motion.div>
+            <CardTitle className="font-heading text-xl font-semibold text-foreground tracking-tight">
+              {feature.title}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="relative z-10">
+            <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+              {feature.description}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    </motion.div>
+  );
+}
+
+export function Features() {
+  return (
+    <section id="features" aria-label="Product features" className="py-20 md:py-24 px-4 md:px-8 bg-mist relative overflow-hidden">
+
+      <div className="container mx-auto max-w-6xl relative z-10">
+        <ScrollReveal>
+          <div className="text-center mb-12 max-w-2xl mx-auto">
+            <Eyebrow>Features</Eyebrow>
+            <h2 className="font-display font-bold text-4xl md:text-5xl text-foreground mt-4 mb-4 tracking-tight leading-tight">
+              Everything you need.{" "}
+              <span className="text-ember-deep">Nothing you don&apos;t.</span>
+            </h2>
+            <p className="text-muted-foreground text-lg">
+              One simple toolkit for creating, sharing, and measuring short links.
+            </p>
+          </div>
+        </ScrollReveal>
+
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-80px" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          {FEATURES.map((feature) => (
+            <FeatureCard key={feature.title} feature={feature} />
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

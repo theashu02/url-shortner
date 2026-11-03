@@ -77,27 +77,32 @@ export function MailProviderCard({
   return (
     <div
       className={cn(
-        "group relative flex h-full flex-col justify-between rounded-2xl border border-border bg-card p-5 text-card-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-6",
+        "group relative flex h-full flex-col justify-between rounded-none border border-border bg-card p-4 text-card-foreground transition-colors hover:border-foreground/30",
         connected && "border-border"
       )}
     >
       {/* Top accent line for connected/error/connecting states */}
       <div
-        className={cn("absolute inset-x-5 top-0 h-1 rounded-b-full transition-colors", accentBarClass)}
+        className={cn("absolute inset-x-0 top-0 h-0.5 rounded-none transition-colors", accentBarClass)}
         aria-hidden="true"
       />
 
-      {/* Top section: Icon, Status badge, Title & Description */}
-      <div className="space-y-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-border bg-muted/50 text-foreground transition-colors group-hover:border-foreground/20 group-hover:bg-muted [&_svg]:size-6">
-            {icon}
+      {/* Top section: Icon + Title row with Status badge, and Description below */}
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between gap-2.5">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none border border-border bg-muted/50 text-foreground transition-colors group-hover:border-foreground/20 group-hover:bg-muted [&_svg]:size-4">
+              {icon}
+            </div>
+            <h3 className="truncate font-display text-sm font-bold uppercase tracking-wide text-foreground">
+              {title}
+            </h3>
           </div>
 
           <Badge
             variant="outline"
             className={cn(
-              "shrink-0 gap-1.5 rounded-full px-3 py-1 text-[11px] uppercase tracking-wider",
+              "shrink-0 gap-1.5 rounded-none px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
               badgeClass
             )}
           >
@@ -106,21 +111,16 @@ export function MailProviderCard({
           </Badge>
         </div>
 
-        <div className="space-y-1.5">
-          <h3 className="font-display text-lg font-bold tracking-tight text-foreground uppercase">
-            {title}
-          </h3>
-          <p className="min-h-[3rem] text-sm leading-relaxed text-muted-foreground">
-            {description}
-          </p>
-        </div>
+        <p className="min-h-9 text-xs leading-relaxed text-muted-foreground">
+          {description}
+        </p>
 
         {/* Connected account metadata pill */}
         {connected && connectedEmail && (
-          <div className="flex items-center gap-2 rounded-xl border border-border bg-muted/40 px-3.5 py-2.5">
-            <Check className="size-4 shrink-0 text-foreground" aria-hidden="true" />
+          <div className="flex items-center gap-2 rounded-none border border-border bg-muted/40 px-2.5 py-1.5 text-xs">
+            <Check className="size-3.5 shrink-0 text-foreground" aria-hidden="true" />
             <span
-              className="truncate font-mono text-sm text-foreground select-all"
+              className="truncate font-mono text-xs text-foreground select-all"
               title={connectedEmail}
             >
               {connectedEmail}
@@ -132,28 +132,28 @@ export function MailProviderCard({
         {error && (
           <div
             role="alert"
-            className="flex items-start gap-2.5 rounded-xl border border-destructive/25 bg-destructive/10 p-3 text-xs text-destructive"
+            className="flex items-start gap-2 rounded-none border border-destructive/25 bg-destructive/10 p-2 text-xs text-destructive"
           >
-            <AlertCircle className="size-4 shrink-0 mt-0.5" aria-hidden="true" />
-            <span className="flex-1 leading-relaxed break-words">{error}</span>
+            <AlertCircle className="size-3.5 shrink-0 mt-0.5" aria-hidden="true" />
+            <span className="flex-1 leading-relaxed wrap-break-word">{error}</span>
           </div>
         )}
       </div>
 
       {/* Bottom section: Actions and Footer */}
-      <div className="mt-8 space-y-4">
-        <div className="grid grid-cols-1 gap-2.5 min-[420px]:grid-cols-2">
+      <div className="mt-4 space-y-3">
+        <div className="grid grid-cols-2 gap-1.5">
           <Button
             onClick={onPrimary}
             disabled={primaryDisabled}
             variant={connected ? "outline" : "default"}
             size="sm"
             className={cn(
-              "h-11 w-full gap-2 rounded-xl text-sm font-semibold",
-              !connected && "min-[420px]:col-span-2"
+              "h-8 text-xs font-semibold rounded-none gap-1.5",
+              !connected ? "col-span-2 w-full" : (!onTest ? "col-span-2 w-full" : "w-full")
             )}
           >
-            {connecting && <Loader2 className="size-4 animate-spin" aria-hidden="true" />}
+            {connecting && <Loader2 className="size-3 animate-spin" aria-hidden="true" />}
             <span>{primaryLabel}</span>
           </Button>
 
@@ -163,16 +163,16 @@ export function MailProviderCard({
               disabled={testPending}
               variant="outline"
               size="sm"
-              className="h-11 w-full gap-2 rounded-xl text-sm"
+              className="h-8 w-full text-xs rounded-none gap-1.5"
             >
               {testPending ? (
                 <>
-                  <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                  <Loader2 className="size-3 animate-spin" aria-hidden="true" />
                   <span>Sending...</span>
                 </>
               ) : (
                 <>
-                  <Send className="size-4" aria-hidden="true" />
+                  <Send className="size-3" aria-hidden="true" />
                   <span>Send test</span>
                 </>
               )}
@@ -184,16 +184,16 @@ export function MailProviderCard({
               onClick={onDisconnect}
               variant="destructive"
               size="sm"
-              className="h-11 w-full gap-2 rounded-xl text-sm min-[420px]:col-span-2"
+              className="col-span-2 h-8 w-full text-xs rounded-none gap-1.5"
             >
-              <Trash2 className="size-4" aria-hidden="true" />
+              <Trash2 className="size-3" aria-hidden="true" />
               <span>Disconnect</span>
             </Button>
           )}
         </div>
 
         {footer && (
-          <div className="border-t border-border/60 pt-4 text-xs leading-relaxed text-muted-foreground">
+          <div className="border-t border-border/60 pt-2.5 text-[11px] leading-relaxed text-muted-foreground">
             {footer}
           </div>
         )}

@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { GmailConnectCard } from "./GmailConnectCard";
 import { OutlookConnectCard } from "./OutlookConnectCard";
 import { SmtpConnectCard } from "./SmtpConnectCard";
-import { useMailerConnect, PROVIDER_LABEL } from "./useMailerConnect";
+import { useMailerConnect } from "./useMailerConnect";
 
 const TOTAL_PROVIDERS = 3;
 
@@ -109,27 +109,6 @@ export function MailerConnectPage() {
             />
           </div>
         </div>
-
-        {connected.length > 0 ? (
-          <section
-            aria-label="Connected senders"
-            className="border bg-card p-4"
-          >
-            <p className="text-[11px] font-bold tracking-widest text-muted-foreground uppercase">
-              Ready to send from
-            </p>
-            <ul className="mt-2 flex flex-wrap gap-2">
-              {connected.map((c) => (
-                <li key={c.provider + ":" + (c.email ?? "")}>
-                  <Badge variant="secondary">
-                    {PROVIDER_LABEL[c.provider] ?? c.provider}
-                    {c.email ? " - " + c.email : ""}
-                  </Badge>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
 
         <section aria-label="Connection options" className="grid gap-4 md:grid-cols-3">
           <GmailConnectCard />

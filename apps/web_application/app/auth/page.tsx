@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -94,7 +95,9 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
                 <Separator className="h-0.5 flex-1 bg-line/20" />
               </div>
 
-              <EmailAuthForm />
+              <Suspense fallback={<div aria-busy="true" className="h-10 w-full animate-pulse bg-muted" />}>
+                <EmailAuthForm />
+              </Suspense>
             </CardContent>
           </Card>
         </div>

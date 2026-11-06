@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useMemo, useState } from "react";
+import { forwardRef, useCallback, useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { deleteLink } from "@/store/my-links-slice";
@@ -31,23 +31,26 @@ export const LinksTable = forwardRef<HTMLDivElement, LinksTableProps>(function L
     [],
   );
 
-  const confirmDelete = () => {
+  const confirmDelete = useCallback(() => {
     if (linkToDelete) {
       dispatch(deleteLink(linkToDelete));
       setLinkToDelete(null);
     }
-  };
+  }, [dispatch, linkToDelete]);
 
-  const tableProps = {
-    links,
-    origin,
-    loading,
-    search: debouncedSearch,
-    copiedId,
-    deletingId,
-    onCopy,
-    onDelete: setLinkToDelete,
-  };
+  const tableProps = useMemo(
+    () => ({
+      links,
+      origin,
+      loading,
+      search: debouncedSearch,
+      copiedId,
+      deletingId,
+      onCopy,
+      onDelete: setLinkToDelete,
+    }),
+    [links, origin, loading, debouncedSearch, copiedId, deletingId, onCopy],
+  );
 
   return (
     <>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useDeferredValue, useEffect, useState, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchAnalyticsSummary } from "@/store/analytics-slice";
 import {
@@ -61,15 +61,16 @@ export default function AnalyticsPage() {
   const [viewMode, setViewMode] = useState<ViewMode>("table");
   const [searchQuery, setSearchQuery] = useState("");
 
+  const deferredQuery = useDeferredValue(searchQuery);
   const filteredList = useMemo(() => {
-    if (!searchQuery.trim()) return summaryList;
-    const q = searchQuery.toLowerCase();
+    if (!deferredQuery.trim()) return summaryList;
+    const q = deferredQuery.toLowerCase();
     return summaryList.filter(
       (s) =>
         s.shortCode.toLowerCase().includes(q) ||
         s.originalUrl.toLowerCase().includes(q)
     );
-  }, [summaryList, searchQuery]);
+  }, [summaryList, deferredQuery]);
 
   const totals = useMemo(() => {
     return filteredList.reduce(

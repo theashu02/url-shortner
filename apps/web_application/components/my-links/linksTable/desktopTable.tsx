@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { Check, Copy, ExternalLink, MonitorSmartphone } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -109,7 +110,7 @@ interface DesktopRowProps {
   onDelete: (id: string) => void;
 }
 
-function DesktopRow({ link, origin, isCopied, isDeleting, onCopy, onDelete }: DesktopRowProps) {
+const DesktopRow = memo(function DesktopRow({ link, origin, isCopied, isDeleting, onCopy, onDelete }: DesktopRowProps) {
   const shortUrl = buildShortUrl(origin, link.shortCode);
   const expired = isExpired(link);
 
@@ -181,4 +182,4 @@ function DesktopRow({ link, origin, isCopied, isDeleting, onCopy, onDelete }: De
       </TableCell>
     </TableRow>
   );
-}
+});

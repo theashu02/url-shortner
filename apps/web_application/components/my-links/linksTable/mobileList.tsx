@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { MonitorSmartphone } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { LinkItem } from "@/components/my-links/types";
@@ -58,7 +59,7 @@ interface MobileCardProps {
   onDelete: (id: string) => void;
 }
 
-function MobileCard({ link, origin, isCopied, isDeleting, onCopy, onDelete }: MobileCardProps) {
+const MobileCard = memo(function MobileCard({ link, origin, isCopied, isDeleting, onCopy, onDelete }: MobileCardProps) {
   const shortUrl = buildShortUrl(origin, link.shortCode);
   const expired = isExpired(link);
 
@@ -100,4 +101,4 @@ function MobileCard({ link, origin, isCopied, isDeleting, onCopy, onDelete }: Mo
       </div>
     </div>
   );
-}
+});

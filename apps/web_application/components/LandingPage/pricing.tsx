@@ -75,7 +75,7 @@ export function Pricing() {
   const proPrice = billing === "yearly" ? YEARLY_PRICE : MONTHLY_PRICE;
 
   return (
-    <section id="pricing" aria-label="Pricing plans" className="py-20 md:py-24 px-4 md:px-8 bg-mist">
+    <section id="pricing" aria-label="Pricing plans" className="py-20 md:py-24 px-4 md:px-8 bg-mist cv-auto">
       <div className="container mx-auto max-w-6xl">
         <ScrollReveal>
           <div className="text-center mb-10 max-w-2xl mx-auto">

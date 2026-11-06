@@ -1,6 +1,4 @@
-"use client";
-
-import { motion, useReducedMotion } from "framer-motion";
+import type { CSSProperties } from "react";
 
 export interface FloatingSquare {
   left: string;
@@ -25,24 +23,27 @@ const HERO_SQUARES: FloatingSquare[] = [
 ];
 
 export function FloatingSquares({ items }: { items: FloatingSquare[] }) {
-  const reduce = useReducedMotion();
-
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-      {items.map((square, index) => (
-        <motion.span
-          key={index}
-          className={`absolute ${square.className}`}
-          style={{ left: square.left, top: square.top, width: square.size, height: square.size }}
-          initial={reduce ? false : { opacity: 0 }}
-          animate={reduce ? undefined : { opacity: [0, 1, 1, 0], y: [0, -square.drift], rotate: [0, square.spin] }}
-          transition={
-            reduce
-              ? undefined
-              : { duration: square.duration, delay: square.delay, repeat: Infinity, ease: "easeInOut", times: [0, 0.2, 0.8, 1] }
-          }
-        />
-      ))}
+      {items.map((square) => {
+        const style = {
+          left: square.left,
+          top: square.top,
+          width: square.size,
+          height: square.size,
+          animationDuration: square.duration + "s",
+          animationDelay: square.delay + "s",
+          "--drift": String(square.drift),
+          "--spin": square.spin + "deg",
+        } as CSSProperties;
+        return (
+          <span
+            key={square.left + "-" + square.top}
+            className={"hero-float absolute " + square.className}
+            style={style}
+          />
+        );
+      })}
     </div>
   );
 }

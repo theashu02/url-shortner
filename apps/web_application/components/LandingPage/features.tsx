@@ -118,7 +118,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
 
 export function Features() {
   return (
-    <section id="features" aria-label="Product features" className="py-20 md:py-24 px-4 md:px-8 bg-mist relative overflow-hidden">
+    <section id="features" aria-label="Product features" className="py-20 md:py-24 px-4 md:px-8 bg-mist relative overflow-hidden cv-auto">
 
       <div className="container mx-auto max-w-6xl relative z-10">
         <ScrollReveal>

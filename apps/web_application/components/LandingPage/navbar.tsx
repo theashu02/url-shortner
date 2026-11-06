@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,15 @@ import { EASE } from "./motion-variants";
 export function Navbar() {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
-  useMotionValueEvent(scrollY, "change", (value) => setScrolled(value > 24));
+  const scrolledRef = useRef(false);
+  // 60fps: framer fires per-pixel updates; only re-render when the threshold flips.
+  useMotionValueEvent(scrollY, "change", (value) => {
+    const next = value > 24;
+    if (scrolledRef.current !== next) {
+      scrolledRef.current = next;
+      setScrolled(next);
+    }
+  });
 
   return (
     <motion.header

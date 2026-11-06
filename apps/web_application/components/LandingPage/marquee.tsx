@@ -52,7 +52,7 @@ export function Marquee() {
   return (
     <section aria-label="Platform capabilities" className="overflow-hidden border-y border-border bg-card py-4">
       <motion.div
-        className="flex w-max"
+        className="flex w-max will-change-transform"
         animate={{ x: ["0%", "-50%"] }}
         transition={{ duration: 30, ease: "linear", repeat: Infinity }}
       >

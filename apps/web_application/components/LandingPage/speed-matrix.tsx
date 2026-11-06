@@ -1,6 +1,7 @@
 "use client";
 
 import type { ComponentType } from "react";
+import { useEffect, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Database, Activity, User, ExternalLink } from "lucide-react";
 import { ScrollReveal } from "./scroll-reveal";
@@ -25,9 +26,25 @@ const STEPS: Step[] = [
 
 export function SpeedMatrix() {
   const reduce = useReducedMotion();
+  const trackRef = useRef<HTMLDivElement | null>(null);
+
+  // 60fps: measure the pipeline height once and write it straight to the DOM.
+  // No setState here, so the pulse never triggers a re-render while scrolling.
+  useEffect(() => {
+    if (reduce) return;
+    const el = trackRef.current;
+    if (!el) return;
+    const update = () => {
+      el.style.setProperty("--pulse-travel", Math.max(0, el.clientHeight - 72) + "px");
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [reduce]);
 
   return (
-    <section aria-label="How SimpLx achieves faster redirects" className="py-20 md:py-24 px-4 md:px-8 bg-mist relative overflow-hidden">
+    <section aria-label="How SimpLx achieves faster redirects" className="py-20 md:py-24 px-4 md:px-8 bg-mist relative overflow-hidden cv-auto">
       <div className="container mx-auto max-w-6xl relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
 
@@ -51,17 +68,16 @@ export function SpeedMatrix() {
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, margin: "-80px" }}
+              ref={trackRef}
               className="flex flex-col gap-4 relative"
             >
               {/* Connecting line */}
               <div className="absolute left-6 top-8 bottom-8 w-px bg-border" />
               {/* Traveling pulse showing a click flowing through the pipeline */}
               {!reduce && (
-                <motion.span
+                <span
                   aria-hidden="true"
-                  className="absolute left-6 z-0 h-2 w-2 -translate-x-1/2 rotate-45 bg-ember"
-                  animate={{ top: ["2%", "98%"] }}
-                  transition={{ duration: 2.8, ease: "linear", repeat: Infinity }}
+                  className="pipeline-pulse absolute left-6 top-8 z-0 h-2 w-2 rotate-45 bg-ember"
                 />
               )}
 

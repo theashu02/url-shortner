@@ -217,3 +217,60 @@
     scrollbar-color: var(--ember) transparent;
   }
 }
+
+/* 60fps: compositor-only infinite animations (transform/opacity via individual properties). */
+@keyframes hero-float {
+  0% {
+    opacity: 0;
+    translate: 0 0;
+    rotate: 0deg;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    translate: 0 calc(var(--drift, 24) * -1px);
+    rotate: var(--spin, 90deg);
+  }
+}
+
+.hero-float {
+  animation-name: hero-float;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes pipeline-pulse {
+  from {
+    translate: -50% 0;
+  }
+  to {
+    translate: -50% var(--pulse-travel, 400px);
+  }
+}
+
+.pipeline-pulse {
+  animation: pipeline-pulse 2.8s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-float,
+  .pipeline-pulse {
+    animation: none;
+  }
+  .hero-float {
+    opacity: 1;
+  }
+}
+
+/* Skip rendering work for far off-screen sections until scrolled near. */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 640px;
+}

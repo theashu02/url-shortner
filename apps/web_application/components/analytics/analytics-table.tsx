@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import { Globe, Smartphone, Monitor, ArrowRight } from "lucide-react";
 import { AnalyticsSummaryItem } from "@/server/services/analytics";
 import {

@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
+import bundleAnalyzer from "@next/bundle-analyzer";
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
 
 const nextConfig: NextConfig = {
+  reactCompiler: true,
   images: {
     remotePatterns: [
       {
@@ -20,4 +26,4 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["nonpresidential-lukas-postaxial.ngrok-free.dev"],
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

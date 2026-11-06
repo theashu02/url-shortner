@@ -41,6 +41,7 @@
     "ua-parser-js": "^2.0.10"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.4.5",
     "@tailwindcss/postcss": "^4",
     "@types/accept-language-parser": "^1.5.8",
     "@types/node": "^20",
@@ -48,6 +49,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/ua-parser-js": "^0.7.39",
+    "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "prettier": "^3.9.9",

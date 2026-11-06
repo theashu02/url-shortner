@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import dynamic from "next/dynamic";
+import { useEffect, useRef, useCallback, useTransition } from "react";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAppSelector, useAppDispatch } from "@/store";
@@ -12,10 +13,10 @@ import {
 import { LinksHeader } from "@/components/my-links/links-header";
 import { LinksSearchBar } from "@/components/my-links/linksSearchBar";
 import { LinksTable } from "@/components/my-links/linksTable";
-import { EditLinkModal } from "@/components/my-links/edit-link-modal";
-import { QrModal } from "@/components/my-links/qr-modal";
-import { ShareModal } from "@/components/my-links/shareModal";
-import { AddToPageDialog } from "@/components/my-links/add-to-page-dialog";
+const EditLinkModal = dynamic(() => import("@/components/my-links/edit-link-modal").then((m) => m.EditLinkModal), { ssr: false });
+const QrModal = dynamic(() => import("@/components/my-links/qr-modal").then((m) => m.QrModal), { ssr: false });
+const ShareModal = dynamic(() => import("@/components/my-links/shareModal").then((m) => m.ShareModal), { ssr: false });
+const AddToPageDialog = dynamic(() => import("@/components/my-links/add-to-page-dialog").then((m) => m.AddToPageDialog), { ssr: false });
 import { setPageLink } from "@/store/my-links-slice";
 
 export default function MyLinksPage() {
@@ -33,6 +34,7 @@ export default function MyLinksPage() {
   const shareLink = useAppSelector((s) => s.myLinks.shareLink);
   const pageLink = useAppSelector((s) => s.myLinks.pageLink);
 
+  const [, startTransition] = useTransition();
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -42,9 +44,11 @@ export default function MyLinksPage() {
     return () => clearTimeout(t);
   }, [search, dispatch]);
 
-  // Fetch on filter/sort changes
+  // Fetch on filter/sort changes (non-urgent: keeps typing and scrolling at 60fps)
   useEffect(() => {
-    dispatch(fetchLinks({ page: 1, append: false }));
+    startTransition(() => {
+      dispatch(fetchLinks({ page: 1, append: false }));
+    });
   }, [debouncedSearch, dispatch]);
 
   // Copy handler timer cleanup

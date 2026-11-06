@@ -1,5 +1,8 @@
 "use client";
 
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { mergeTimeSeries } from "../../lib/timeseries-merge";
+import type { MergedTimeSeriesPoint } from "../../lib/timeseries-merge";
 import { AreaChart, Area, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp } from "lucide-react";
@@ -10,19 +13,51 @@ interface TimeSeriesChartProps {
   secondaryName?: string;
 }
 
+type TrafficTooltipEntry = {
+  name?: string | number;
+  value?: string | number;
+};
+
+function TrafficTooltip({ active, payload, label }: { active?: boolean; payload?: TrafficTooltipEntry[]; label?: string | number | Date }) {
+  if (!active || !payload || payload.length === 0) {
+    return null;
+  }
+  const displayLabel =
+    (label as unknown) instanceof Date
+      ? (label as unknown as Date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+      : (typeof label === 'string' || typeof label === 'number') && !isNaN(new Date(label).getTime())
+        ? new Date(label).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+        : String(label);
+  return (
+    <div className="bg-primary text-primary-foreground hover:bg-primary/90 px-3 py-2 text-xs shadow-md border border-border/10 rounded-none">
+      <div className="opacity-90 mb-1 font-medium">{displayLabel}</div>
+      <div className="flex flex-col gap-0.5 font-bold text-sm">
+        {payload.map((entry) => (
+          <span key={entry.name}>
+            {entry.name}: {entry.value}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function TimeSeriesChart({ data, secondary, secondaryName = "Block clicks" }: TimeSeriesChartProps) {
-  const merged = (() => {
-    const byDate = new Map<string, { date: string; count: number; secondary?: number }>();
-    for (const row of data ?? []) {
-      byDate.set(row.date, { date: row.date, count: row.count });
-    }
-    for (const row of secondary ?? []) {
-      const existing = byDate.get(row.date);
-      if (existing) existing.secondary = row.count;
-      else byDate.set(row.date, { date: row.date, count: 0, secondary: row.count });
-    }
-    return [...byDate.values()].sort((a, b) => (a.date < b.date ? -1 : 1));
-  })();
+  const formatTick = useCallback((val: string | number) => {
+    const d = new Date(val);
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  }, []);
+  const mergedSync = useMemo(() => mergeTimeSeries(data, secondary), [data, secondary]);
+  const useWorker = ((data ? data.length : 0) + (secondary ? secondary.length : 0)) >= 2000;
+  const [workerMerged, setWorkerMerged] = useState<MergedTimeSeriesPoint[] | null>(null);
+  useEffect(() => {
+    if (!useWorker) return;
+    const worker = new Worker(new URL("../../lib/timeseries-merge.worker.ts", import.meta.url));
+    worker.onmessage = (event: MessageEvent<MergedTimeSeriesPoint[]>) => setWorkerMerged(event.data);
+    worker.postMessage({ data, secondary });
+    return () => worker.terminate();
+  }, [useWorker, data, secondary]);
+  const merged = useWorker ? (workerMerged ?? mergedSync) : mergedSync;
   const hasData = merged.length > 0;
   const showSecondary = Array.isArray(secondary);
 
@@ -54,10 +89,7 @@ export function TimeSeriesChart({ data, secondary, secondaryName = "Block clicks
                   axisLine={false}
                   tickLine={false}
                   dy={10}
-                  tickFormatter={(val) => {
-                    const d = new Date(val);
-                    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-                  }}
+                  tickFormatter={formatTick}
                 />
                 <YAxis 
                   allowDecimals={false}
@@ -67,29 +99,7 @@ export function TimeSeriesChart({ data, secondary, secondaryName = "Block clicks
                   dx={-10}
                 />
                 <Tooltip 
-                  content={({ active, payload, label }) => {
-                    if (active && payload && payload.length) {
-                      const displayLabel = (label as unknown) instanceof Date 
-                        ? (label as unknown as Date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) 
-                        : (typeof label === 'string' || typeof label === 'number') && !isNaN(new Date(label).getTime())
-                          ? new Date(label).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
-                          : String(label);
-                          
-                      return (
-                        <div className="bg-primary text-primary-foreground hover:bg-primary/90 px-3 py-2 text-xs shadow-md border border-border/10 rounded-none">
-                          <div className="opacity-90 mb-1 font-medium">{displayLabel}</div>
-                          <div className="flex flex-col gap-0.5 font-bold text-sm">
-                            {payload.map((entry) => (
-                              <span key={entry.name}>
-                                {entry.name}: {entry.value}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
+                  content={<TrafficTooltip />}
                   cursor={{ stroke: "var(--primary)", strokeWidth: 1, strokeDasharray: "4 4", fill: "transparent" }}
                 />
                 <Area
@@ -123,3 +133,4 @@ export function TimeSeriesChart({ data, secondary, secondaryName = "Block clicks
     </Card>
   );
 }
+

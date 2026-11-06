@@ -1,11 +1,16 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchLinkAnalytics, clearDetailedAnalytics } from "@/store/analytics-slice";
 import { SummaryCards } from "@/components/analytics/summary-cards";
-import { TimeSeriesChart } from "@/components/analytics/time-series-chart";
+const TimeSeriesChart = dynamic(() => import("@/components/analytics/time-series-chart").then((m) => m.TimeSeriesChart), {
+  loading: () => (
+    <div aria-hidden="true" className="h-55 sm:h-65 w-full animate-pulse border border-dashed border-border/50 bg-muted/5" />
+  ),
+});
 import { AnalyticsDetailSkeleton } from "@/components/analytics/analytics-skeleton";
 import {
   AudienceSection,

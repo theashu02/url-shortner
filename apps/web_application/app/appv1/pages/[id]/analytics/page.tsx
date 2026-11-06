@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -8,7 +9,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BreakdownCard } from "@/components/analytics/breakdown-card";
-import { TimeSeriesChart } from "@/components/analytics/time-series-chart";
+const TimeSeriesChart = dynamic(() => import("@/components/analytics/time-series-chart").then((m) => m.TimeSeriesChart), {
+  loading: () => (
+    <div aria-hidden="true" className="h-55 sm:h-65 w-full animate-pulse border border-dashed border-border/50 bg-muted/5" />
+  ),
+});
 import { toast } from "@/components/ui/toast-manager";
 import { api } from "@/lib/eden";
 import { extractApiMessage } from "@/lib/apiError";

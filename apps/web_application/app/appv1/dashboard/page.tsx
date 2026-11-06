@@ -47,7 +47,7 @@ export default function DashboardPage() {
         <div className="w-full max-w-xl p-6 bg-card backdrop-blur-md border border-border rounded-2xl shadow-sm space-y-4 text-card-foreground">
           <div className="flex items-center gap-4">
             {user.image ? (
-              <Image src={user.image} alt={user.name ?? "Avatar"} width={30} height={30} className="h-14 w-14 rounded-full border-2 border-primary/20" />
+              <Image src={user.image} alt={user.name ?? "Avatar"} width={56} height={56} sizes="56px" className="h-14 w-14 rounded-full border-2 border-primary/20" />
             ) : (
               <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
                 <User className="h-6 w-6 text-primary" />

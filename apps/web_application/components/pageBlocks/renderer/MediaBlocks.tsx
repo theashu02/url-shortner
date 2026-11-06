@@ -70,6 +70,7 @@ export function VideoBlock({
           title={title}
           className="aspect-video w-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          loading="lazy"
           allowFullScreen
         />
       </div>

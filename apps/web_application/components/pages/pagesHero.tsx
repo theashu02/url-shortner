@@ -34,6 +34,7 @@ export function PagesHero() {
           width={880}
           height={560}
           className="mx-auto h-auto max-h-60 w-full object-contain lg:max-h-72"
+          sizes="(max-width: 880px) 100vw, 880px"
           priority
         />
       </div>

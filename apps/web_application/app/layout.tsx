@@ -10,6 +10,7 @@ import { Toaster } from "@/components/ui/toast";
 const ubuntu = Ubuntu({
   weight: ["300", "400", "500", "700"],
   subsets: ["latin"],
+  display: "swap",
   variable: "--font-ubuntu",
 });
 

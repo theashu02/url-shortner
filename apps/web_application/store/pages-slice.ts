@@ -164,7 +164,11 @@ export const deletePage = createAsyncThunk<string, string>(
   }
 );
 
-export const fetchPickerPages = createAsyncThunk<PickerPage[]>(
+export const fetchPickerPages = createAsyncThunk<
+  PickerPage[],
+  { force?: boolean } | undefined,
+  { state: RootState }
+>(
   "pages/fetchPickerPages",
   async () => {
     const res = await api.pages.mine.get({ query: { limit: "50" } });
@@ -177,6 +181,16 @@ export const fetchPickerPages = createAsyncThunk<PickerPage[]>(
       }));
     }
     throw new Error(extractApiMessage(res, "Could not load your pages."));
+  },
+  {
+    // Single-flight + cache: drops the StrictMode double-dispatch and
+    // reuses the cached list when the dialog reopens.
+    condition: (arg, { getState }) => {
+      const state = getState().pages;
+      if (state.pickerLoading) return false;
+      if (!arg?.force && state.pickerPages.length > 0) return false;
+      return true;
+    },
   }
 );
 
@@ -251,6 +265,12 @@ const pagesSlice = createSlice({
     resetPagePicker(state) {
       state.pickerPages = [];
       state.pickerLoading = false;
+      state.pickerError = null;
+      state.appending = false;
+      state.appendError = null;
+      state.appendedPageId = null;
+    },
+    resetPageAppend(state) {
       state.pickerError = null;
       state.appending = false;
       state.appendError = null;
@@ -352,6 +372,7 @@ export const {
   setSharePage,
   setDeleteTarget,
   resetPagePicker,
+  resetPageAppend,
   clearLiveSnapshot,
 } = pagesSlice.actions;
 

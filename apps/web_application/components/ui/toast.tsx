@@ -230,4 +230,5 @@ export {
   ToastProvider,
   ToastTitle,
   ToastViewport,
+  toast,
 };

@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "@/components/ui/toast-manager";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { appendLinkToPage, fetchPickerPages, resetPagePicker } from "@/store/pages-slice";
+import { appendLinkToPage, fetchPickerPages, resetPageAppend } from "@/store/pages-slice";
 import type { LinkItem } from "./types";
 
 function defaultLabel(url: string): string {
@@ -21,9 +21,22 @@ export function useAddToPageDialog(link: LinkItem) {
   const [pageId, setPageId] = useState("");
   const [label, setLabel] = useState(() => defaultLabel(link.url));
 
+  // Fresh form per link without wiping the cached page list.
   useEffect(() => {
-    dispatch(resetPagePicker());
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLabel(defaultLabel(link.url));
+    setPageId("");
+    dispatch(resetPageAppend());
+  }, [dispatch, link._id, link.url]);
+
+  // Fetch once per mount. The thunk condition single-flights StrictMode
+  // double-dispatch and skips when the list is already cached.
+  useEffect(() => {
     dispatch(fetchPickerPages());
+  }, [dispatch]);
+
+  const refreshPages = useCallback(() => {
+    dispatch(fetchPickerPages({ force: true }));
   }, [dispatch]);
 
   const selectedPageId = pageId || pages[0]?._id || "";
@@ -62,5 +75,6 @@ export function useAddToPageDialog(link: LinkItem) {
     label,
     setLabel,
     handleSubmit,
+    refreshPages,
   };
 }

@@ -5,13 +5,14 @@ import Image from "next/image";
 import { QRCodeSVG } from "qrcode.react";
 import { Copy, Download, Share } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { toast } from "@/components/ui/toast-manager";
 import { useAppSelector, useAppDispatch } from "@/store";
 import { setShareLink } from "@/store/my-links-slice";
 import { SOCIAL_LOGOS } from "@/lib/socialLogos";
@@ -24,6 +25,8 @@ export function ShareModal() {
   const link = useAppSelector((s) => s.myLinks.shareLink);
   const [mode, setMode] = useState<ShareMode>("link");
   const { qrRef, downloadQr } = useQrDownload();
+
+  const canShare = typeof navigator !== "undefined" && typeof navigator.share === "function";
 
   const origin = useMemo(
     () => (typeof window !== "undefined" ? window.location.origin : "http://localhost:3000"),
@@ -71,13 +74,17 @@ export function ShareModal() {
     },
   ];
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(shortUrl);
-    // Could add toast here
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shortUrl);
+      toast.success("Link copied to clipboard!");
+    } catch {
+      toast.error("Failed to copy link");
+    }
   };
 
   const handleNativeShareQr = async () => {
-    if (!navigator.share || !qrRef.current) {
+    if (typeof navigator === "undefined" || typeof navigator.share !== "function" || !qrRef.current) {
       alert("Native sharing is not supported on this browser/device.");
       return;
     }
@@ -88,7 +95,7 @@ export function ShareModal() {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
       const img = new window.Image();
-      
+
       // Wait for image to load to canvas
       await new Promise((resolve, reject) => {
         img.onload = () => {
@@ -108,14 +115,33 @@ export function ShareModal() {
       canvas.toBlob(async (blob) => {
         if (!blob) return;
         const file = new File([blob], `qr-${link.shortCode}.png`, { type: "image/png" });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            files: [file],
-            title: "QR Code",
-            text: "Check out this QR code!",
-          });
-        } else {
-          alert("Your system doesn't support sharing image files directly.");
+
+        let canShareFiles = false;
+        try {
+          canShareFiles = typeof navigator.canShare === "function" && navigator.canShare({ files: [file] });
+        } catch {
+          canShareFiles = false;
+        }
+
+        try {
+          if (canShareFiles) {
+            await navigator.share({
+              files: [file],
+              title: "QR Code",
+              text: "Check out this QR code!",
+            });
+          } else {
+            await navigator.share({
+              title: "QR Code",
+              text: `Check out this QR code: ${shortUrl}`,
+              url: shortUrl,
+            });
+          }
+        } catch (err) {
+          if (err instanceof Error && err.name === "AbortError") {
+            return;
+          }
+          console.error("Error sharing QR code", err);
         }
       });
     } catch (err) {
@@ -211,9 +237,9 @@ export function ShareModal() {
               <div className="bg-white p-4 shadow-2xs ring-1 ring-border">
                 <QRCodeSVG ref={qrRef} value={shortUrl} size={160} level="H" marginSize={1} />
               </div>
-              
+
               <div className="w-full pt-2 flex flex-col gap-2">
-                {typeof navigator !== "undefined" && navigator.canShare() && (
+                {canShare && (
                   <Button
                     onClick={handleNativeShareQr}
                     className="w-full h-9 text-xs font-semibold gap-2 rounded-none bg-primary text-primary-foreground hover:bg-primary/90"

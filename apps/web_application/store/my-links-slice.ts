@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { api } from "@/lib/eden";
 import type { LinkItem } from "@/components/my-links/types";
-import type { RootState } from "./index";
 
 export interface MyLinksState {
   links: LinkItem[];
@@ -84,7 +83,7 @@ interface FetchLinksArg {
 export const fetchLinks = createAsyncThunk<
   { links: LinkItem[]; total: number; hasMore: boolean; page: number; append: boolean },
   FetchLinksArg,
-  { state: RootState }
+  { state: { myLinks: MyLinksState } }
 >(
   "myLinks/fetchLinks",
   async ({ page = 1, append = false }, { getState }) => {
@@ -148,8 +147,7 @@ export const fetchLinks = createAsyncThunk<
 
 export const updateLink = createAsyncThunk<
   LinkItem,
-  { id: string; url: string; slug: string; deviceCapture: boolean },
-  { state: RootState }
+  { id: string; url: string; slug: string; deviceCapture: boolean }
 >("myLinks/updateLink", async ({ id, url, slug, deviceCapture }) => {
   const res = await api.url.update.patch({
     id,
@@ -172,8 +170,7 @@ export const updateLink = createAsyncThunk<
 
 export const deleteLink = createAsyncThunk<
   string,
-  string,
-  { state: RootState }
+  string
 >("myLinks/deleteLink", async (id) => {
   const res = await api.url.remove({ id }).delete();
   if (res.data && "message" in res.data) {
@@ -289,5 +286,7 @@ export const {
   setPageLink,
   setCopiedId,
 } = myLinksSlice.actions;
+
+export const selectMyLinks = (state: { myLinks: MyLinksState }) => state.myLinks;
 
 export default myLinksSlice.reducer;

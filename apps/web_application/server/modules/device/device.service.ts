@@ -7,6 +7,7 @@ import {
 } from "@/server/lib/click-capture";
 import type { DeviceDetails } from "@/lib/device-info";
 import type { IRateLimiter } from "@/server/core/rate-limit";
+import { getIpConfig } from "@/server/core/request-guard";
 import type { IDeviceClickRepository } from "./device.repository";
 import type { IGeoProvider } from "./geo";
 
@@ -15,10 +16,6 @@ export interface CaptureConfig {
   hashSalt: string;
 }
 
-/**
- * DeviceService owns the interstitial click + device-detail flow (SRP).
- * DIP: persistence, rate limiting and geo lookup behind interfaces (OCP/LSP).
- */
 export class DeviceService {
   constructor(
     private readonly clicks: IDeviceClickRepository,
@@ -28,7 +25,7 @@ export class DeviceService {
 
   getCaptureConfig(): CaptureConfig {
     return {
-      ip: { behindCloudflare: false, trustedProxyCount: 0 },
+      ip: getIpConfig(),
       hashSalt: process.env.IP_HASH_SALT ?? "default-dev-salt-change-in-prod",
     };
   }
@@ -38,7 +35,9 @@ export class DeviceService {
   }
 
   checkRateLimit(ip: string | null): Promise<boolean> {
-    if (!ip) return Promise.resolve(true);
+    // No anonymous bypass: traffic without a resolvable IP shares one
+    // strict bucket instead of skipping the limit entirely.
+    if (!ip) return this.limiter.check("device:unknown", 60, 60);
     return this.limiter.check(`device:${ip}`, 120, 60);
   }
 

@@ -11,9 +11,10 @@ import {
 } from "@/lib/constant";
 import { trackClickAsync } from "@/server/services/clickQueue";
 import { captureVisitor } from "@/server/lib/click-capture";
+import { checkRedirectBudget, getIpConfig } from "@/server/core/request-guard";
 
 const CAPTURE_CONFIG = {
-  ip: { behindCloudflare: false, trustedProxyCount: 0 },
+  ip: getIpConfig(),
   hashSalt: process.env.IP_HASH_SALT ?? "default-dev-salt-change-in-prod",
 };
 
@@ -26,6 +27,18 @@ export async function GET(
 
   if (!shortCode || !SHORT_CODE_RE.test(shortCode)) {
     return NextResponse.redirect(new URL("/", baseUrl));
+  }
+
+  // Flood guard: reject per-IP redirect abuse before any Redis/Mongo work.
+  const flood = checkRedirectBudget(request);
+  if (!flood.allowed) {
+    return new Response("Too many requests. Try again shortly.", {
+      status: 429,
+      headers: {
+        ...NO_CACHE_HEADERS,
+        "retry-after": String(flood.retryAfterSeconds),
+      },
+    });
   }
 
   try {

@@ -146,10 +146,10 @@ export function MailProviderCard({
           <Button
             onClick={onPrimary}
             disabled={primaryDisabled}
-            variant={connected ? "outline" : "default"}
-            size="sm"
+            variant="default"
+            size="lg"
             className={cn(
-              "h-8 text-xs font-semibold rounded-none gap-1.5",
+              "rounded-none gap-1.5",
               !connected ? "col-span-2 w-full" : (!onTest ? "col-span-2 w-full" : "w-full")
             )}
           >
@@ -161,9 +161,9 @@ export function MailProviderCard({
             <Button
               onClick={onTest}
               disabled={testPending}
-              variant="outline"
-              size="sm"
-              className="h-8 w-full text-xs rounded-none gap-1.5"
+              variant="default"
+              size="lg"
+              className="w-full rounded-none gap-1.5"
             >
               {testPending ? (
                 <>
@@ -183,8 +183,8 @@ export function MailProviderCard({
             <Button
               onClick={onDisconnect}
               variant="destructive"
-              size="sm"
-              className="col-span-2 h-8 w-full text-xs rounded-none gap-1.5"
+              size="lg"
+              className="col-span-2 w-full rounded-none gap-1.5"
             >
               <Trash2 className="size-3" aria-hidden="true" />
               <span>Disconnect</span>

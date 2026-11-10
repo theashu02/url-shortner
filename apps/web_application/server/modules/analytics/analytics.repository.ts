@@ -2,6 +2,15 @@ import { ClickEventModel } from "@/server/models/clickEvent";
 import { UrlModel } from "@/server/models/url";
 import type { PipelineStage } from "mongoose";
 import type { IDatabase } from "@/server/core/database";
+import type { ICache } from "@/server/core/cache";
+
+/**
+ * Analytics tolerates brief staleness: one computation serves all viewers
+ * for this window instead of re-running the full aggregation per view.
+ */
+const DETAIL_CACHE_TTL_SECONDS = 120;
+
+const detailCacheKey = (shortCode: string) => `analytics:detail:${shortCode.slice(0, 128)}`;
 
 /** One `{ _id, count }` breakdown row from a `$group` facet branch. */
 export interface FacetCountRow {
@@ -75,7 +84,10 @@ export interface IAnalyticsRepository {
 }
 
 export class MongoAnalyticsRepository implements IAnalyticsRepository {
-  constructor(private readonly db: IDatabase) {}
+  constructor(
+    private readonly db: IDatabase,
+    private readonly cache?: ICache,
+  ) {}
 
   async findUserShortCodes(userId: string): Promise<{ shortCode: string; url: string }[]> {
     await this.db.connect();
@@ -96,6 +108,22 @@ export class MongoAnalyticsRepository implements IAnalyticsRepository {
     await this.db.connect();
     const pipeline: PipelineStage[] = [
       { $match: { shortCode: { $in: shortCodes } } },
+      // Slim documents before the fan-out: only fields the facets read.
+      {
+        $project: {
+          _id: 0,
+          shortCode: 1,
+          visitorHash: 1,
+          continued: 1,
+          capturedAt: 1,
+          clickedAt: 1,
+          geoCountry: 1,
+          deviceType: 1,
+          referrerType: 1,
+          screenWidth: 1,
+          screenHeight: 1,
+        },
+      },
       {
         $facet: {
           basicStats: [
@@ -149,8 +177,41 @@ export class MongoAnalyticsRepository implements IAnalyticsRepository {
 
   async detailAggregate(shortCode: string): Promise<DetailAggregateResult | undefined> {
     await this.db.connect();
+    if (this.cache) {
+      try {
+        const cached = await this.cache.get(detailCacheKey(shortCode));
+        if (cached) return JSON.parse(cached) as DetailAggregateResult;
+      } catch {
+        // Cache read failures fall through to the live aggregation.
+      }
+    }
     const pipeline: PipelineStage[] = [
       { $match: { shortCode } },
+      // Slim documents before the fan-out: only fields the facets read.
+      {
+        $project: {
+          _id: 0,
+          deviceType: 1,
+          browser: 1,
+          os: 1,
+          geoCountry: 1,
+          geoCity: 1,
+          referrerType: 1,
+          utmSource: 1,
+          utmMedium: 1,
+          utmCampaign: 1,
+          botReason: 1,
+          language: 1,
+          inAppBrowser: 1,
+          connectionType: 1,
+          screenWidth: 1,
+          screenHeight: 1,
+          visitorHash: 1,
+          continued: 1,
+          capturedAt: 1,
+          clickedAt: 1,
+        },
+      },
       {
         $facet: {
           summary: [
@@ -199,7 +260,15 @@ export class MongoAnalyticsRepository implements IAnalyticsRepository {
       },
     ];
     const results = (await ClickEventModel.aggregate(pipeline).allowDiskUse(true).option({ maxTimeMS: 30000 })) as unknown as DetailAggregateResult[];
-    return results[0];
+    const result = results[0];
+    if (this.cache && result) {
+      try {
+        await this.cache.setex(detailCacheKey(shortCode), DETAIL_CACHE_TTL_SECONDS, JSON.stringify(result));
+      } catch {
+        // Cache write failures must never fail the request.
+      }
+    }
+    return result;
   }
 }
 

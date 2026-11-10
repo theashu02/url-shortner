@@ -61,7 +61,7 @@ class AppContainer {
   readonly urlService = new UrlService(this.urlRepository, this.cache, new CryptoShortCodeGenerator());
   readonly urlController = new UrlController(this.auth, this.urlService);
 
-  readonly analyticsRepository = new MongoAnalyticsRepository(this.db);
+  readonly analyticsRepository = new MongoAnalyticsRepository(this.db, this.cache);
   readonly analyticsService = new AnalyticsService(this.analyticsRepository);
   readonly analyticsController = new AnalyticsController(this.auth, this.analyticsService);
 
